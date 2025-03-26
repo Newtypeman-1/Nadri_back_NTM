@@ -1,5 +1,9 @@
 package kr.co.iei.member.model.dao;
 
-public interface MemberDao {
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
+public interface MemberDao {
+	
+	int exists(String memberNickname);
 }
