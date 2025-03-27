@@ -19,9 +19,6 @@ public class EmailSender {
 	private JavaMailSender sender;
 	
 	public void sendMail(String emailTitle, String receiver, String emailContent) {
-		System.out.println(emailTitle);
-		System.out.println(receiver);
-		System.out.println(emailContent);
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		System.out.println(receiver);
