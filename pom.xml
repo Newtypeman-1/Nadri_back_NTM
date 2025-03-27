@@ -31,6 +31,13 @@
 	</properties>
 	<dependencies>
 	
+
+			<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.18.3</version>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
