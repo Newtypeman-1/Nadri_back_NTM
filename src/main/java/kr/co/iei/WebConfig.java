@@ -13,8 +13,7 @@ import kr.co.iei.chat.model.service.ChatHandler;
 @Configuration
 @EnableWebSocket
 public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
-	@Value("${file.root}")
-	private String root;
+	
 	@Autowired
 	private ChatHandler chat;
 	
