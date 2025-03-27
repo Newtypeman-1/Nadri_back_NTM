@@ -43,11 +43,10 @@ public class MemberService {
 		int result = memberDao.insertMember(member);
 		return result;
 	}
-    
+
     //비밀번호 재설정
 	public int updatePw(MemberDTO member) {
 		int result = memberDao.updatePw(member);
 		return result;
 	}
-
 }

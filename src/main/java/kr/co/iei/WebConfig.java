@@ -11,7 +11,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 import kr.co.iei.chat.model.service.ChatHandler;
 @Configuration
-public class WebConfig implements WebMvcConfigurer{
+@EnableWebSocket
+public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
   	@Autowired
 	private ChatHandler chat;
 	
