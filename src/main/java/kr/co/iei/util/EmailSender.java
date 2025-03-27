@@ -19,6 +19,9 @@ public class EmailSender {
 	private JavaMailSender sender;
 	
 	public void sendMail(String emailTitle, String receiver, String emailContent) {
+		System.out.println(emailTitle);
+		System.out.println(receiver);
+		System.out.println(emailContent);
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		System.out.println(receiver);
@@ -27,7 +30,7 @@ public class EmailSender {
 			//메일 전송 시간 설정
 			helper.setSentDate(new Date());
 			//보내는 사람 정보
-			helper.setFrom(new InternetAddress("khwoojin123@gamil.com","KH 당산 A클래스"));
+			helper.setFrom(new InternetAddress("admin@nadri.com","NADRI"));
 			//받는 사람 이메일 주소
 			helper.setTo(receiver);
 			//제목설정
@@ -37,10 +40,8 @@ public class EmailSender {
 			//이메일 전송
 			sender.send(message);
 		} catch (MessagingException e) {
-			System.out.println("에러1");
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			System.out.println("에러2");
 			e.printStackTrace();
 		}
 			
