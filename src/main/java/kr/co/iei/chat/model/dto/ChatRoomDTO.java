@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Alias("chatList")
-public class ChatListDTO {
+public class ChatRoomDTO {
 	private int chatNo;
 	private String chatTitle;
 	private String chatGroupNo;
