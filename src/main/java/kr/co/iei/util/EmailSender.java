@@ -13,7 +13,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-@Service
+@Component
 public class EmailSender {
 	@Autowired
 	private JavaMailSender sender;
@@ -21,6 +21,7 @@ public class EmailSender {
 	public void sendMail(String emailTitle, String receiver, String emailContent) {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
+		System.out.println(receiver);
 		
 		try {
 			//메일 전송 시간 설정
@@ -36,8 +37,10 @@ public class EmailSender {
 			//이메일 전송
 			sender.send(message);
 		} catch (MessagingException e) {
+			System.out.println("에러1");
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
+			System.out.println("에러2");
 			e.printStackTrace();
 		}
 			
