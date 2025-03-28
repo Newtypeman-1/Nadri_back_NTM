@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Alias("chatList")
+@Alias("chatRoom")
 public class ChatRoomDTO {
 	private int chatNo;
 	private String chatTitle;
-	private String chatGroupNo;
 	private String groupSize;
 	private int notRead; 
 }

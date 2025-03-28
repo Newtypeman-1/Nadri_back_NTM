@@ -1,5 +1,6 @@
 package kr.co.iei.chat.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,13 @@ public class ChatService {
 	private ChatDao chatDao;
 
 	public List selectGroupList(String memberNickname) {
-		List groupList = chatDao.selectGroupList(memberNickname);
-		return groupList;
+		List chatList = chatDao.selectGroupList(memberNickname);
+		return chatList;
+	}
+
+	public List selectRoomData(ArrayList<Integer> chatList) {
+		List roomDataList = chatDao.selectRoomData(chatList);
+		return roomDataList;
 	}
 	
 }

@@ -31,7 +31,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	// 채팅리스트 조회 함수
 	public ChatHandler() {
 		super();
-		allChatList = new HashMap<>();
+		loginGroup = new HashMap<>();
 		om = new ObjectMapper();
 	}
 
@@ -54,10 +54,23 @@ public class ChatHandler extends TextWebSocketHandler {
 		URI uri = session.getUri();
 		String memberNickname = getMemberNickname(uri.getQuery());
 		//해당 닉네임이 속한 그룹 리스트 조회
-		List groupList = chatService.selectGroupList(memberNickname);
-		System.out.println(groupList);
+		ArrayList<Integer> chatList = (ArrayList<Integer>)chatService.selectGroupList(memberNickname);
+		// loginGroup 에 세션 추가
+		for(int chatNo : chatList) {
+			if(loginGroup.containsKey(chatNo)) {
+				loginGroup.get(chatNo).add(session);
+			}else {
+				List sessionList = new ArrayList<>();
+				sessionList.add(session);
+				loginGroup.put(chatNo, sessionList);
+			}	
+		}
+		//채팅방 조회
+		List roomDataList = chatService.selectRoomData(chatList);
+		String data = om.writeValueAsString(roomDataList);  // 객체를 다시 문자열로
+		TextMessage sendData = new TextMessage(data);
+		session.sendMessage(sendData);
 	}
-
 	// 클라이언트가 소켓으로 데이터를 전송하면 실행되는 메소드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
