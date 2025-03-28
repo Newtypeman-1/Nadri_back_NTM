@@ -60,7 +60,7 @@ public class MemberService {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberType());
 			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberType());
-			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberType());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberType());
 			System.out.println(loginMember);
 			return loginMember;
 		}
