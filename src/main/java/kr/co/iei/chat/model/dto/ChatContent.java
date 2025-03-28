@@ -1,5 +1,7 @@
 package kr.co.iei.chat.model.dto;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ChatDTO {
-	private String type;
+@Alias("chatContent")
+public class ChatContent {
 	private int chatNo;
-	private String message;
+	private String MemberNickname;
+	private String chatImg;
+	private String chatContent;
 }
