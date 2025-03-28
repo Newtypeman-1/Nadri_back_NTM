@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Alias("chatContent")
 public class ChatContent {
+	private int chatNo;
 	private String MemberNickname;
 	private String chatImg;
 	private String chatContent;

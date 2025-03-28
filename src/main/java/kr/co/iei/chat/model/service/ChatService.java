@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.chat.model.dao.ChatDao;
+import kr.co.iei.chat.model.dto.ChatContent;
 
 @Service
 public class ChatService {
@@ -26,6 +28,11 @@ public class ChatService {
 	public List selectChatContent(int chatNo) {
 		List chatContent = chatDao.selectChatContent(chatNo);
 		return chatContent;
+	}
+	@Transactional
+	public int insertText(ChatContent cc) {
+		int result = chatDao.insertText(cc);
+		return result;
 	}
 	
 }

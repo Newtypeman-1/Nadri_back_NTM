@@ -14,5 +14,7 @@
   <select id="selectChatContent" resultType="chatContent">
   	select member_nickname, chat_img,chat_content from chat_content where chat_no=#{chatNo}
   </select>
-  
+  <insert id="insertText">
+  	insert into chat_content values(chat_content_seq.nextval, #{memberNickname},#{chatNo},null,#{chatContent})
+  </insert>
 </mapper>
