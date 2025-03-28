@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.member.model.dao.MemberDao;
+import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.member.model.dto.MemberDTO;
 import kr.co.iei.util.JwtUtils;
 
@@ -46,7 +47,23 @@ public class MemberService {
 
     //비밀번호 재설정
 	public int updatePw(MemberDTO member) {
+		String encPw = encoder.encode(member.getMemberPw());
+		member.setMemberPw(encPw);
 		int result = memberDao.updatePw(member);
 		return result;
+	}
+
+	public LoginMemberDTO login(MemberDTO member) {
+
+		MemberDTO m = memberDao.selectOneMember(member.getMemberEmail());
+		if(m != null && encoder.matches(member.getMemberPw(), m.getMemberPw())) {
+			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberType());
+			System.out.println("accessToken : "+accessToken);
+			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberType());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberType());
+			System.out.println(loginMember);
+			return loginMember;
+		}
+		return null;
 	}
 }

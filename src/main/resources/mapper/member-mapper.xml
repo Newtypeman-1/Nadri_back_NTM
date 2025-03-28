@@ -25,6 +25,10 @@
 	</insert>
 	
 	<update id="updatePw">
-		update member set member_pw where member_email = #{memberEmail}
+		update member set member_pw = #{memberPw} where member_email = #{memberEmail}
 	</update>
+	
+	<select id="selectOneMember" resultType="member">
+		select * from member where member_email= #{memberEmail}
+	</select>
 </mapper>

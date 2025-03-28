@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.member.model.dto.MemberDTO;
 import kr.co.iei.member.model.service.MemberService;
 
@@ -45,9 +46,21 @@ public class MemberController {
 	}
 	
 	//비밀번호 재설정
-	@PatchMapping(value="/updatrePw")
-	public ResponseEntity<Integer> updatePw(@PathVariable MemberDTO member){
+	@PatchMapping(value="/updatePw")
+	public ResponseEntity<Integer> updatePw(@RequestBody MemberDTO member){
+		System.out.println(member);
 		int result = memberService.updatePw(member);
 		return ResponseEntity.ok(result);
+	}
+	
+	//로그인
+	@PostMapping(value="/login")
+	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
+		LoginMemberDTO loginMember = memberService.login(member);
+		if(loginMember != null) {
+			return ResponseEntity.ok(loginMember);
+		}else {
+			return ResponseEntity.status(404).build();
+		}
 	}
 }
