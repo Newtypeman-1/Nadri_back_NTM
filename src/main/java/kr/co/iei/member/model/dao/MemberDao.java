@@ -14,4 +14,6 @@ public interface MemberDao {
 	int existsEmail(String memberEmail);
 
 	int updatePw(MemberDTO member);
+
+	MemberDTO selectOneMember(String memberEmail);
 }
