@@ -1,5 +1,6 @@
 package kr.co.iei.chat.model.service;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -67,17 +68,15 @@ public class ChatHandler extends TextWebSocketHandler {
 		}
 		//채팅방 조회
 		List roomDataList = chatService.selectRoomData(chatList);
-		String data = om.writeValueAsString(roomDataList);  // 객체를 다시 문자열로
-		TextMessage sendData = new TextMessage(data);
-		session.sendMessage(sendData);
+		sendMessage(roomDataList, session);
 	}
 	// 클라이언트가 소켓으로 데이터를 전송하면 실행되는 메소드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		ChatDTO chat = om.readValue(message.getPayload(), ChatDTO.class);
-		if (chat.getType().equals("list")) {
-			List<ChatRoomDTO> list = selectChatList(chat.getMemberNickname());
-			allChatList.put(session, list);
+		if (chat.getType().equals("select")) {
+			List chatContent = chatService.selectChatContent(chat.getChatNo());
+			sendMessage(chatContent, session);
 		}
 	}
 
@@ -87,4 +86,10 @@ public class ChatHandler extends TextWebSocketHandler {
 
 	}
 
+	//클라이언트에 메세지변경 및 전달 함수
+	private void sendMessage(Object obj,WebSocketSession session) throws IOException {
+		String data =om.writeValueAsString(obj) ;
+		TextMessage sendData = new TextMessage(data);
+		session.sendMessage(sendData);
+	}
 }

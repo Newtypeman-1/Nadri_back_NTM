@@ -12,4 +12,6 @@ public interface ChatDao {
 
 	List selectRoomData(ArrayList<Integer> chatList);
 
+	List selectChatContent(int chatNo);
+
 }

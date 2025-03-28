@@ -22,5 +22,10 @@ public class ChatService {
 		List roomDataList = chatDao.selectRoomData(chatList);
 		return roomDataList;
 	}
+
+	public List selectChatContent(int chatNo) {
+		List chatContent = chatDao.selectChatContent(chatNo);
+		return chatContent;
+	}
 	
 }

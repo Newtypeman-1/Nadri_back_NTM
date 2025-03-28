@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class ChatDTO {
 	private String type;
-	private String memberNickname;
+	private int chatNo;
 	private String message;
 }

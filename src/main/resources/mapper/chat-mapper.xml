@@ -11,5 +11,8 @@
 			#{chatNo}
 		</foreach>
   </select>
+  <select id="selectChatContent" resultType="chatContent">
+  	select member_nickname, chat_img,chat_content from chat_content where chat_no=#{chatNo}
+  </select>
   
 </mapper>
