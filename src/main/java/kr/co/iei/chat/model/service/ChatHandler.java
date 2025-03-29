@@ -25,7 +25,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	private ChatService chatService;
 	private ObjectMapper om;
 	// 로그인 세션을 관리할 변수
-	private HashMap<Integer, List<String>> loginGroup;
+	private HashMap<Integer, List<String>> chatRooms;
 	
 	private HashMap<String, WebSocketSession> loginMembers;
 	
@@ -34,7 +34,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	public ChatHandler() {
 		super();
 		loginMembers = new HashMap<>();
-		loginGroup = new HashMap<>();
+		chatRooms = new HashMap<>();
 		
 		om = new ObjectMapper();
 	}
@@ -58,24 +58,28 @@ public class ChatHandler extends TextWebSocketHandler {
 		// 로그인한 사람 그룹 로드
 		URI uri = session.getUri();
 		String memberNickname = getMemberNickname(uri.getQuery());
+		// 로그인한 세션 저장
 		loginMembers.put(memberNickname,session);
-		//해당 닉네임이 속한 그룹 리스트 조회
+		//해당 닉네임이 속한 채팅 리스트 조회
 		ArrayList<Integer> chatList = (ArrayList<Integer>)chatService.selectGroupList(memberNickname);
-		// loginGroup 에 세션 추가
-		for(int chatNo : chatList) {
-			if(loginGroup.containsKey(chatNo)) {
-				loginGroup.get(chatNo).add(memberNickname);
-			}else {
-				List nickList = new ArrayList<String>();
-				nickList.add(memberNickname);
-				loginGroup.put(chatNo, nickList);
-			}	
+		// chatRooms 에 세션 추가
+		if(!chatList.isEmpty()) {
+			for(int chatNo : chatList) {
+				if(chatRooms.containsKey(chatNo)) {
+					chatRooms.get(chatNo).add(memberNickname);
+				}else {
+					List nickList = new ArrayList<String>();
+					nickList.add(memberNickname);
+					chatRooms.put(chatNo, nickList);
+				}	
+			}
+			//채팅방 조회
+			List roomDataList = chatService.selectRoomData(chatList);
+			HashMap<String, List> map = new HashMap<>();
+			map.put("room", roomDataList);
+			sendMessage(map, session);
 		}
-		//채팅방 조회
-		List roomDataList = chatService.selectRoomData(chatList);
-		HashMap<String, List> map = new HashMap<>();
-		map.put("room", roomDataList);
-		sendMessage(map, session);
+		
 	}
 	// 클라이언트가 소켓으로 데이터를 전송하면 실행되는 메소드
 	@Override
@@ -98,7 +102,7 @@ public class ChatHandler extends TextWebSocketHandler {
 				List chatContent = chatService.selectChatContent(chat.getChatNo());
 				HashMap<String, List> map = new HashMap<>();
 				map.put("content", chatContent);
-				ArrayList<String> nickList = (ArrayList<String>)loginGroup.get(chatNo); 
+				ArrayList<String> nickList = (ArrayList<String>)chatRooms.get(chatNo); 
 				for(String nick : nickList) {
 					sendMessage(map, loginMembers.get(nick));
 				}
@@ -113,8 +117,8 @@ public class ChatHandler extends TextWebSocketHandler {
 		URI uri = session.getUri();
 		String memberNickname = getMemberNickname(uri.getQuery());
 		loginMembers.remove(memberNickname);
-		for(int chatNo : loginGroup.keySet()) {
-			List list = loginGroup.get(chatNo);
+		for(int chatNo : chatRooms.keySet()) {
+			List list = chatRooms.get(chatNo);
 			list.remove(memberNickname);
 		}
 	}
