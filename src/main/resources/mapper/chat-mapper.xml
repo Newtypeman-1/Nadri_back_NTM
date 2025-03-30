@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.chat.model.dao.ChatDao">
-  <select id ="selectGroupList" resultType="int">
+  <select id ="selectRoomList" resultType="int">
   	select chat_no from chat_group where member_nickname=#{memberNickname}
   </select>
+  <select id="selectGroupSet" resultType="String">
+  	select member_nickname from chat_group where chat_no=#{chatNo}
+  </select>
   <select id="selectRoomData" resultType="chatRoom">
-  	select c.*, (select count(*) from chat_group where chat_no=c.chat_no) group_size, (select count(*) from chat_not_read) not_read
-	from chat c where c.chat_no in
-		<foreach collection="chatList" item="chatNo" open="(" close=")" separator="," >
-			#{chatNo}
-		</foreach>
+	SELECT 
+	    c.chat_no, c.chat_title,
+	    (SELECT COUNT(*) 
+	     FROM chat_group g2 
+	     WHERE g2.chat_no = c.chat_no) AS group_size,
+		    (
+	        SELECT COUNT(*) 
+	        FROM chat_content cc 
+	        WHERE cc.chat_no = c.chat_no
+	        AND cc.chat_content_no > COALESCE((
+	            SELECT rs.chat_content_no 
+	            FROM chat_read_status rs
+	            WHERE rs.chat_no = c.chat_no 
+	              AND rs.member_nickname = '길우진'
+	        ), 0)
+	    ) AS not_read
+	FROM chat c
+	ORDER BY c.chat_no DESC
   </select>
   <select id="selectChatContent" resultType="chatContent">
   	select member_nickname, chat_img,chat_content from chat_content where chat_no=#{chatNo}
