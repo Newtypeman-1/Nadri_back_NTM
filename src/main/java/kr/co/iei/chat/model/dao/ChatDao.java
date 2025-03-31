@@ -37,5 +37,9 @@ public interface ChatDao {
 
 	int updateTitle(ChatRoomDTO crd);
 
+	int selectLatestChatContentNo(int chatNo);
+
+	void updateReadStatus(ChatRoomDTO crd);
+
 	
 }

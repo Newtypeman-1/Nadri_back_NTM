@@ -78,5 +78,14 @@ public class ChatService {
 		int result = chatDao.updateTitle(crd);
 		return result;
 	}
+
+	public int selectLatestChatContentNo(int chatNo) {
+		int no = chatDao.selectLatestChatContentNo(chatNo);
+		return no;
+	}
+
+	public void updateReadStatus(ChatRoomDTO crd) {
+		chatDao.updateReadStatus(crd);
+	}
 	
 }

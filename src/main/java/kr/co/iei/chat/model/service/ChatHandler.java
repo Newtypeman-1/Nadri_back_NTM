@@ -122,6 +122,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	    }
 	}
 
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		URI uri = session.getUri();
@@ -180,7 +181,15 @@ public class ChatHandler extends TextWebSocketHandler {
 	}
 	//session 으로 방정보만 전송
 	private void handleSelectRoom(int chatNo, WebSocketSession session) throws IOException {
+		//최신 메세지 번호 가져오기
+	    URI uri = session.getUri();
+	    String memberNickname = getMemberNickname(uri.getQuery());
+		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, 0, latestContentNo);
+		chatService.updateReadStatus(crd);
+		
 		List<ChatContentDTO> chatContent = chatService.selectChatContent(chatNo);
+		
         Map<String, Object> map = new HashMap<>();
         map.put("type", "CHAT_CONTENT");
         map.put("content", chatContent);
@@ -212,12 +221,11 @@ public class ChatHandler extends TextWebSocketHandler {
 	//채팅방 제목 수정 메소드
 	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
 		int chatNo = chat.getChatNo();
-		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(), null, 0);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, 0, 0);
 		int result = chatService.updateTitle(crd);
 		if(result>0) {
 			refreshGroup(chatNo);		
 		}
-		
 	}
 
 }

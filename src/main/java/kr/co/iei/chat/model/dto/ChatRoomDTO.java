@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ChatRoomDTO {
 	private int chatNo;
 	private String chatTitle;
-	private String groupSize;
-	private int notRead; 
+	private String memberNickname;
+	private int groupSize;
+	private int latestContentNo; 
 }

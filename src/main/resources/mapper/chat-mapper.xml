@@ -71,4 +71,19 @@
   <update id="updateTitle">
   	update chat set chat_title = #{chatTitle} where chat_no=#{chatNo}
   </update>
+  <select id="selectLatestChatContentNo" resultType="int">
+	  SELECT MAX(chat_content_no)
+	  FROM chat_content
+	  WHERE chat_no = #{chatNo}
+  </select>
+  <insert id="updateReadStatus">
+	  MERGE INTO chat_read_status rs
+	  USING dual
+	  ON (rs.chat_no = #{chatNo} AND rs.member_nickname = #{memberNickname})
+	  WHEN MATCHED THEN
+	    UPDATE SET chat_content_no = #{latestContentNo}
+	  WHEN NOT MATCHED THEN
+	    INSERT (chat_no, member_nickname, chat_content_no)
+	    VALUES (#{chatNo}, #{memberNickname}, #{latestContentNo})
+  </insert>
 </mapper>
