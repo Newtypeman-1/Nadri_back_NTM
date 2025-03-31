@@ -83,6 +83,12 @@ public class ChatHandler extends TextWebSocketHandler {
 	        	int chatNo = chat.getChatNo();
 	        	handleSelectRoom(chatNo);
 	        	break;
+	        case "SEND_MESSAGE":
+	            handleSendMessage(session, chat);
+	            break;
+	        case "CREATE_ROOM":
+	            handleCreateRoom(session, chat);
+	            break;
 
 	        default:
 	            session.sendMessage(new TextMessage("알 수 없는 요청 타입: " + type));
@@ -117,7 +123,6 @@ public class ChatHandler extends TextWebSocketHandler {
 	    URI uri = session.getUri();
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();
-
 	    ChatContent cc = new ChatContent(chatNo, memberNickname, null, chat.getMessage());
 	    int result = chatService.insertText(cc);
 	    if (result > 0) {
