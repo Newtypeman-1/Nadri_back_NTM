@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.iei.review.model.service.ReviewService;
+import kr.co.iei.review.model.service.PlanReviewService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value="/review")
-public class ReviewController {
+@RequestMapping(value="/palnreview")
+public class PlanReviewController {
 	@Autowired
-	private ReviewService reviewService;
+	private PlanReviewService planReviewService;
 
 }
