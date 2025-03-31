@@ -28,9 +28,18 @@
 	ORDER BY c.chat_no DESC
   </select>
   <select id="selectChatContent" resultType="chatContent">
-  	select member_nickname, chat_img,chat_content from chat_content where chat_no=#{chatNo}
+  	select member_nickname,chat_no ,chat_img,chat_content from chat_content where chat_no=#{chatNo}
   </select>
   <insert id="insertText">
   	insert into chat_content values(chat_content_seq.nextval, #{memberNickname},#{chatNo},null,#{chatContent})
+  </insert>
+  <insert id="createRoom">
+  	insert into chat values(#{chatNo},#{memberNickname}||'님의 방')
+  		<selectKey order="BEFORE" resultType="int" keyProperty="chatNo">
+  			select chat_seq.nextval from dual
+  		</selectKey>
+  </insert>
+  <insert id="createGroup">
+ 	 insert into chat_group values(#{chatNo},#{memberNickname})
   </insert>
 </mapper>

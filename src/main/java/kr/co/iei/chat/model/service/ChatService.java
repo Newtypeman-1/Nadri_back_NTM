@@ -41,5 +41,14 @@ public class ChatService {
 		Set groupSet = new HashSet<>(chatDao.selectGroupSet(chatNo)) ;
 		return groupSet;
 	}
+	@Transactional
+	public int createRoom(ChatContent cc) {
+		int result = chatDao.createRoom(cc);
+		if(result>0) {
+			result += chatDao.createGroup(cc);
+			//트리거로 최초 채팅 넣기
+		}
+		return result;
+	}
 	
 }

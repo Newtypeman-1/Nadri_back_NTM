@@ -18,8 +18,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.iei.chat.model.dto.ChatContent;
-import kr.co.iei.chat.model.dto.ChatDTO;
 import kr.co.iei.chat.model.dto.ChatRoomDTO;
+import kr.co.iei.chat.model.dto.MessageDTO;
 
 
 @Component
@@ -69,12 +69,14 @@ public class ChatHandler extends TextWebSocketHandler {
 				chatRooms.put(chatNo, groupSet);
 			}
 		}
+		
 	}
 	// 클라이언트가 소켓으로 데이터를 전송하면 실행되는 메소드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-	    ChatDTO chat = om.readValue(message.getPayload(), ChatDTO.class);
+		MessageDTO chat = om.readValue(message.getPayload(), MessageDTO.class);
 	    String type = chat.getType();
+	    System.out.println(chat);
 	    switch (type) {
 	        case "FETCH_ROOM_LIST":
 	            handleFetchRoomList(session);
@@ -87,19 +89,33 @@ public class ChatHandler extends TextWebSocketHandler {
 	            handleSendMessage(session, chat);
 	            break;
 	        case "CREATE_ROOM":
-	            handleCreateRoom(session, chat);
+	            handleCreateRoom(session);
 	            break;
 
 	        default:
 	            session.sendMessage(new TextMessage("알 수 없는 요청 타입: " + type));
 	    }
 	}
+	private void handleCreateRoom(WebSocketSession session) throws Exception {
+		URI uri = session.getUri();
+	    String memberNickname = getMemberNickname(uri.getQuery());
+	    ChatContent cc= new ChatContent();
+	    cc.setMemberNickname(memberNickname);
+	    int result = chatService.createRoom(cc);
+	    if(result>0) {
+	    	int chatNo = cc.getChatNo();
+	    	Set groupSet = chatService.selectGroupSet(chatNo);
+			chatRooms.put(chatNo, groupSet);
+	    	handleFetchRoomList(session);
+	    	handleSelectRoom(chatNo);
+	    }
+	}
+
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		URI uri = session.getUri();
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    // 세션 제거
-	    
 	    loginMembers.remove(memberNickname);
 	}
 	private void handleSelectRoom(int chatNo) throws IOException {
@@ -119,7 +135,7 @@ public class ChatHandler extends TextWebSocketHandler {
         }
 	}
 	//메시지 전송받았을 때 작업
-	private void handleSendMessage(WebSocketSession session, ChatDTO chat) throws Exception {
+	private void handleSendMessage(WebSocketSession session, MessageDTO chat) throws Exception {
 	    URI uri = session.getUri();
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();

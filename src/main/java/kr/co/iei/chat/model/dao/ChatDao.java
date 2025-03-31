@@ -21,4 +21,8 @@ public interface ChatDao {
 
 	Set selectGroupSet(int chatNo);
 
+	int createRoom(ChatContent cc);
+
+	int createGroup(ChatContent cc);
+
 }
