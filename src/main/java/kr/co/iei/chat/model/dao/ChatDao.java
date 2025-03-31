@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
-
-import kr.co.iei.chat.model.dto.ChatContent;
+import kr.co.iei.chat.model.dto.ChatContentDTO;
 
 @Mapper
 public interface ChatDao {
@@ -17,12 +16,23 @@ public interface ChatDao {
 
 	List selectChatContent(int chatNo);
 
-	int insertText(ChatContent cc);
+	int insertText(ChatContentDTO cc);
 
 	Set selectGroupSet(int chatNo);
 
-	int createRoom(ChatContent cc);
+	int createRoom(ChatContentDTO cc);
 
-	int createGroup(ChatContent cc);
+	int insertGroup(ChatContentDTO cc);
 
+	int leaveGroup(ChatContentDTO cc);
+
+	int checkGroup(int chatNo);
+
+	int deleteChat(int chatNo);
+
+	void insertLeaveMsg(ChatContentDTO cc);
+
+	void insertInviteMsg(ChatContentDTO cc);
+
+	
 }

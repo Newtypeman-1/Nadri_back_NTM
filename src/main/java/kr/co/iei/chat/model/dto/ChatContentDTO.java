@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Alias("chatContent")
-public class ChatContent {
+public class ChatContentDTO {
 	private int chatNo;
 	private String MemberNickname;
 	private String chatImg;

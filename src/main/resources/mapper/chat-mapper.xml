@@ -8,30 +8,41 @@
   	select member_nickname from chat_group where chat_no=#{chatNo}
   </select>
   <select id="selectRoomData" resultType="chatRoom">
-	SELECT 
-	    c.chat_no, c.chat_title,
+	  SELECT 
+	    c.chat_no, 
+	    c.chat_title,
 	    (SELECT COUNT(*) 
 	     FROM chat_group g2 
 	     WHERE g2.chat_no = c.chat_no) AS group_size,
-		    (
-	        SELECT COUNT(*) 
-	        FROM chat_content cc 
-	        WHERE cc.chat_no = c.chat_no
-	        AND cc.chat_content_no > COALESCE((
-	            SELECT rs.chat_content_no 
-	            FROM chat_read_status rs
-	            WHERE rs.chat_no = c.chat_no 
-	              AND rs.member_nickname = '길우진'
+	    (
+	      SELECT COUNT(*) 
+	      FROM chat_content cc 
+	      WHERE cc.chat_no = c.chat_no
+	        AND cc.chat_content_no > COALESCE(( 
+	          SELECT rs.chat_content_no 
+	          FROM chat_read_status rs
+	          WHERE rs.chat_no = c.chat_no 
+	            AND rs.member_nickname = #{memberNickname}
 	        ), 0)
-	    ) AS not_read
-	FROM chat c
-	ORDER BY c.chat_no DESC
+	    ) AS not_read,
+	    (
+	      SELECT MAX(cc.chat_content_no)
+	      FROM chat_content cc
+	      WHERE cc.chat_no = c.chat_no
+	    ) AS latest_content_no
+	  FROM chat c
+	  JOIN chat_group g ON c.chat_no = g.chat_no
+	  WHERE g.member_nickname = #{memberNickname}
+	  ORDER BY latest_content_no DESC
   </select>
   <select id="selectChatContent" resultType="chatContent">
-  	select member_nickname,chat_no ,chat_img,chat_content from chat_content where chat_no=#{chatNo}
+  	  SELECT member_nickname, chat_no, chat_img, chat_content
+	  FROM chat_content
+	  WHERE chat_no = #{chatNo}
+	  ORDER BY chat_content_no ASC
   </select>
   <insert id="insertText">
-  	insert into chat_content values(chat_content_seq.nextval, #{memberNickname},#{chatNo},null,#{chatContent})
+  	insert into chat_content values(chat_content_seq.nextval, #{memberNickname},#{chatNo},null,#{chatContent},default)
   </insert>
   <insert id="createRoom">
   	insert into chat values(#{chatNo},#{memberNickname}||'님의 방')
@@ -39,7 +50,22 @@
   			select chat_seq.nextval from dual
   		</selectKey>
   </insert>
-  <insert id="createGroup">
+  <insert id="insertGroup">
  	 insert into chat_group values(#{chatNo},#{memberNickname})
+  </insert>
+    <insert id="insertInviteMsg">
+  	insert into chat_content values(chat_content_seq.nextval, '길우진' ,#{chatNo},null,#{memberNickname}||'님이 채팅방에 초대되었습니다.',default)
+  </insert>
+  <delete id="leaveGroup">
+  	delete from chat_group where chat_no=#{chatNo} and member_nickname=#{memberNickname}
+  </delete>
+  <select id="checkGroup" resultType="int">
+  	select count(*) from chat_group where chat_no=#{chatNo}
+  </select>
+  <delete id="deleteChat">
+  	delete from chat where chat_no=#{chatNo}
+  </delete>
+  <insert id="insertLeaveMsg">
+  	insert into chat_content values(chat_content_seq.nextval, '길우진' ,#{chatNo},null,#{memberNickname}||'님이 채팅방을 떠났습니다.',default)
   </insert>
 </mapper>
