@@ -186,10 +186,11 @@ public class ChatHandler extends TextWebSocketHandler {
 	    String memberNickname = getMemberNickname(uri.getQuery());
 		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
 		ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, 0, latestContentNo);
-		chatService.updateReadStatus(crd);
-		
+		// 최신 메시지가 없으면 → chat_read_status 업데이트 안 함
+		if (latestContentNo > 0) {
+			chatService.updateReadStatus(crd);
+		}
 		List<ChatContentDTO> chatContent = chatService.selectChatContent(chatNo);
-		
         Map<String, Object> map = new HashMap<>();
         map.put("type", "CHAT_CONTENT");
         map.put("content", chatContent);
@@ -204,7 +205,25 @@ public class ChatHandler extends TextWebSocketHandler {
 	    ChatContentDTO cc = new ChatContentDTO(chatNo, memberNickname, null, chat.getMessage());
 	    int result = chatService.insertText(cc);
 	    if (result > 0) {
-	    	handleSelectRoom(chatNo,session);
+	    	 // 1. 해당 채팅방 전체 채팅 전송
+	        Set<String> nickSet = chatRooms.get(chatNo);
+	        if (nickSet != null) {
+	            for (String nick : nickSet) {
+	                WebSocketSession target = loginMembers.get(nick);
+	                if (target != null && target.isOpen()) {
+	                    handleSelectRoom(chatNo, target); // 같은 방이면 메시지 즉시 전송
+	                }
+	            }
+	        }
+	        // 2. 나머지 유저들에게는 방 목록만 갱신
+	        for (String nick : loginMembers.keySet()) {
+	            if (nickSet == null || !nickSet.contains(nick)) {
+	                WebSocketSession target = loginMembers.get(nick);
+	                if (target != null && target.isOpen()) {
+	                    handleFetchRoomList(target); // 목록 갱신 (NEW! 반영)
+	                }
+	            }
+	        }
 	    }
 	}
 	//방목록 최신화

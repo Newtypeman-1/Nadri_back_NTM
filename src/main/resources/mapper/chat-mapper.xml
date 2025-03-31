@@ -72,7 +72,7 @@
   	update chat set chat_title = #{chatTitle} where chat_no=#{chatNo}
   </update>
   <select id="selectLatestChatContentNo" resultType="int">
-	  SELECT MAX(chat_content_no)
+	  SELECT NVL(MAX(chat_content_no), 0)
 	  FROM chat_content
 	  WHERE chat_no = #{chatNo}
   </select>
