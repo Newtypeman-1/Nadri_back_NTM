@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.chat.model.dto.ChatContentDTO;
+import kr.co.iei.chat.model.dto.ChatRoomDTO;
 
 @Mapper
 public interface ChatDao {
@@ -33,6 +34,8 @@ public interface ChatDao {
 	void insertLeaveMsg(ChatContentDTO cc);
 
 	void insertInviteMsg(ChatContentDTO cc);
+
+	int updateTitle(ChatRoomDTO crd);
 
 	
 }

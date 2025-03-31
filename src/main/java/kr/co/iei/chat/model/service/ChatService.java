@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.chat.model.dao.ChatDao;
 import kr.co.iei.chat.model.dto.ChatContentDTO;
+import kr.co.iei.chat.model.dto.ChatRoomDTO;
 
 @Service
 public class ChatService {
@@ -70,6 +71,11 @@ public class ChatService {
 				chatDao.insertLeaveMsg(cc);
 			}
 		}
+		return result;
+	}
+	@Transactional
+	public int updateTitle(ChatRoomDTO crd) {
+		int result = chatDao.updateTitle(crd);
 		return result;
 	}
 	

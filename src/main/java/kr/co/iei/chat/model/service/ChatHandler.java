@@ -64,6 +64,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	        WebSocketSession session = loginMembers.get(nick);
 	        if (session != null && session.isOpen()) {
 	            handleFetchRoomList(session);
+	            handleSelectRoom(chatNo,session);
 	        }
 	    }
 	}
@@ -113,11 +114,13 @@ public class ChatHandler extends TextWebSocketHandler {
 	        case "LEAVE_ROOM":
 	        	handleLeaveRoom(session, chat);
 	        	break;
+	        case "UPDATE_TITLE":
+	        	handleUpdateTitle(session, chat);
+	        	break;
 	        default:
 	            session.sendMessage(new TextMessage("알 수 없는 요청 타입: " + type));
 	    }
 	}
-
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -205,4 +208,16 @@ public class ChatHandler extends TextWebSocketHandler {
 	    response.put("room", roomDataList);
 	    sendMessage(response, session);
 	}
+
+	//채팅방 제목 수정 메소드
+	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
+		int chatNo = chat.getChatNo();
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(), null, 0);
+		int result = chatService.updateTitle(crd);
+		if(result>0) {
+			refreshGroup(chatNo);		
+		}
+		
+	}
+
 }

@@ -68,4 +68,7 @@
   <insert id="insertLeaveMsg">
   	insert into chat_content values(chat_content_seq.nextval, '길우진' ,#{chatNo},null,#{memberNickname}||'님이 채팅방을 떠났습니다.',default)
   </insert>
+  <update id="updateTitle">
+  	update chat set chat_title = #{chatTitle} where chat_no=#{chatNo}
+  </update>
 </mapper>
