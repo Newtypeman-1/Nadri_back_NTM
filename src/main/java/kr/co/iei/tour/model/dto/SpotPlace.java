@@ -1,4 +1,4 @@
-package kr.co.iei.tour.controller;
+package kr.co.iei.tour.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
