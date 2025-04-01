@@ -9,22 +9,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.PongMessage;
 import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.co.iei.chat.model.dto.ChatContent;
+import kr.co.iei.chat.model.dto.ChatContentDTO;
 import kr.co.iei.chat.model.dto.ChatRoomDTO;
 import kr.co.iei.chat.model.dto.MessageDTO;
+import kr.co.iei.member.model.service.MemberService;
 
 
 @Component
 public class ChatHandler extends TextWebSocketHandler {
-
+	@Autowired
+	@Lazy
+	private MemberService memberService;
 	@Autowired
 	private ChatService chatService;
 	private ObjectMapper om;
@@ -45,12 +47,27 @@ public class ChatHandler extends TextWebSocketHandler {
 	    String encoded = query.substring("memberNickname=".length());
 	    return URLDecoder.decode(encoded, StandardCharsets.UTF_8);
 	}
-	//클라이언트에 메세지 전송함수
+	// 클라이언트에 메세지 전송함수
 	private void sendMessage(Object obj,WebSocketSession session) throws IOException {
 		String data =om.writeValueAsString(obj) ;
 		TextMessage sendData = new TextMessage(data);
 		session.sendMessage(sendData);
 	}
+	// 채팅 그룹 최신화 메소드
+	private void refreshGroup(int chatNo) throws Exception {
+		// 1. 그룹 멤버셋 DB에서 다시 조회 후 저장
+	    Set<String> groupSet = chatService.selectGroupSet(chatNo);
+	    chatRooms.put(chatNo, groupSet);
+
+	    // 2. 모든 로그인 유저에게 방 목록 새로 보내기
+	    for (String nick : loginMembers.keySet()) {
+	        WebSocketSession session = loginMembers.get(nick);
+	        if (session != null && session.isOpen()) {
+	            handleFetchRoomList(session);
+	        }
+	    }
+	}
+	
 	// 클라이언트가 소켓에 최초 접속하면 자동으로 실행되는 메소드
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -65,8 +82,7 @@ public class ChatHandler extends TextWebSocketHandler {
 		if(!roomList.isEmpty()) {
 			for(int chatNo : roomList) {
 				//채팅방에 속한 사람들 조회
-				Set groupSet = chatService.selectGroupSet(chatNo);
-				chatRooms.put(chatNo, groupSet);
+				refreshGroup(chatNo);
 			}
 		}
 		
@@ -76,14 +92,14 @@ public class ChatHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		MessageDTO chat = om.readValue(message.getPayload(), MessageDTO.class);
 	    String type = chat.getType();
+	    int chatNo = chat.getChatNo();
 	    System.out.println(chat);
 	    switch (type) {
 	        case "FETCH_ROOM_LIST":
 	            handleFetchRoomList(session);
 	            break;
 	        case "SELECT_ROOM":
-	        	int chatNo = chat.getChatNo();
-	        	handleSelectRoom(chatNo);
+	        	handleSelectRoom(session, chat);
 	        	break;
 	        case "SEND_MESSAGE":
 	            handleSendMessage(session, chat);
@@ -91,25 +107,23 @@ public class ChatHandler extends TextWebSocketHandler {
 	        case "CREATE_ROOM":
 	            handleCreateRoom(session);
 	            break;
-
+	        case "INVITE_ROOM":
+	            handleInviteRoom(session, chat);
+	            break;
+	        case "LEAVE_ROOM":
+	        	handleLeaveRoom(session, chat);
+	        	break;
+	        case "UPDATE_TITLE":
+	        	handleUpdateTitle(session, chat);
+	        	break;
+	        case "UPDATE_STATUS":
+	        	handleUpdateStatus(session,chat);
+	        	break;
 	        default:
 	            session.sendMessage(new TextMessage("알 수 없는 요청 타입: " + type));
 	    }
 	}
-	private void handleCreateRoom(WebSocketSession session) throws Exception {
-		URI uri = session.getUri();
-	    String memberNickname = getMemberNickname(uri.getQuery());
-	    ChatContent cc= new ChatContent();
-	    cc.setMemberNickname(memberNickname);
-	    int result = chatService.createRoom(cc);
-	    if(result>0) {
-	    	int chatNo = cc.getChatNo();
-	    	Set groupSet = chatService.selectGroupSet(chatNo);
-			chatRooms.put(chatNo, groupSet);
-	    	handleFetchRoomList(session);
-	    	handleSelectRoom(chatNo);
-	    }
-	}
+
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
@@ -118,31 +132,99 @@ public class ChatHandler extends TextWebSocketHandler {
 	    // 세션 제거
 	    loginMembers.remove(memberNickname);
 	}
-	private void handleSelectRoom(int chatNo) throws IOException {
-		List<ChatContent> chatContent = chatService.selectChatContent(chatNo);
+	//채팅방 초대
+	private void handleInviteRoom(WebSocketSession session, MessageDTO chat) throws Exception {
+		//1.닉네임 조회
+		String nickname = chat.getMessage();
+		int result = memberService.exists(nickname);
+		if(result==0) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("type", "NOT_EXIST");
+		    sendMessage(map, session);
+			return;
+		}
+		//2. 초대작업
+		ChatContentDTO cc = new ChatContentDTO(chat.getChatNo(), nickname, null, null);
+		result += chatService.inviteRoom(cc);
+		if(result==1) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("type", "ERROR");
+		    sendMessage(map, session);
+			return;
+		}
+		refreshGroup(cc.getChatNo());
+		handleSelectRoom(session,chat);
+	
+	}
+	//채팅방떠나기
+	private void handleLeaveRoom(WebSocketSession session, MessageDTO chat) throws Exception {
+		URI uri = session.getUri();
+	    String memberNickname = getMemberNickname(uri.getQuery());
+	    ChatContentDTO cc = new ChatContentDTO(chat.getChatNo(), memberNickname, null, null);
+	    int result = chatService.leaveRoom(cc);
+	    if(result>0) {
+	    	System.out.println(cc.getMemberNickname()+"님이 떠남");
+	    	refreshGroup(cc.getChatNo());
+	    	handleFetchRoomList(session);
+	    }
+		
+	}
+	//채팅방 생성
+	private void handleCreateRoom(WebSocketSession session) throws Exception {
+		URI uri = session.getUri();
+	    String memberNickname = getMemberNickname(uri.getQuery());
+	    ChatContentDTO cc= new ChatContentDTO();
+	    cc.setMemberNickname(memberNickname);
+	    int result = chatService.createRoom(cc);
+	    if(result>0) {
+	    	int chatNo = cc.getChatNo();
+	    	refreshGroup(chatNo);
+	    }
+	}
+	//채팅 읽은 상태 수정
+	private void handleUpdateStatus(WebSocketSession session, MessageDTO chat) throws Exception {
+	    URI uri = session.getUri();
+	    String memberNickname = getMemberNickname(uri.getQuery());
+	    int chatNo = chat.getChatNo();
+		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, null, 0,latestContentNo);
+		// 최신 메시지가 없으면 → chat_read_status 업데이트 안 함
+		if (latestContentNo > 0) {
+			chatService.updateReadStatus(crd);
+		}
+		handleFetchRoomList(session);
+	}
+	//session 으로 방정보만 전송
+	private void handleSelectRoom(WebSocketSession session, MessageDTO chat) throws Exception {
+		handleUpdateStatus(session, chat);
+		int chatNo = chat.getChatNo();
+		List<ChatContentDTO> chatContent = chatService.selectChatContent(chatNo);
         Map<String, Object> map = new HashMap<>();
         map.put("type", "CHAT_CONTENT");
         map.put("content", chatContent);
-        //해당 채팅방으로 로그인한 닉네임 불러옴
-        Set<String> nickSet = chatRooms.get(chatNo);
-        if (nickSet != null) {
-            for (String nick : nickSet) {
-                WebSocketSession target = loginMembers.get(nick);
-                if (target != null && target.isOpen()) {
-                    sendMessage(map, target);
-                }
-            }
-        }
+        sendMessage(map, session);
 	}
 	//메시지 전송받았을 때 작업
 	private void handleSendMessage(WebSocketSession session, MessageDTO chat) throws Exception {
 	    URI uri = session.getUri();
-	    String memberNickname = getMemberNickname(uri.getQuery());
+	    String senderNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();
-	    ChatContent cc = new ChatContent(chatNo, memberNickname, null, chat.getMessage());
+	    ChatContentDTO cc = new ChatContentDTO(chatNo, senderNickname, null, chat.getMessage());
 	    int result = chatService.insertText(cc);
 	    if (result > 0) {
-	    	handleSelectRoom(chatNo);
+	        Set<String> nickSet = chatRooms.get(chatNo);
+	        for (String nick : loginMembers.keySet()) {
+	            WebSocketSession target = loginMembers.get(nick);
+	            if (target != null && target.isOpen()) {
+	                if (nick.equals(senderNickname)) {
+	                    // 보낸 사람 메시지만 갱신 (읽음처리 안함)
+	                    handleSelectRoom(target, chat);
+	                } else {
+	                    // 다른 사람 목록 갱신
+	                    handleFetchRoomList(target);
+	                }
+	            }
+	        }
 	    }
 	}
 	//방목록 최신화
@@ -155,4 +237,15 @@ public class ChatHandler extends TextWebSocketHandler {
 	    response.put("room", roomDataList);
 	    sendMessage(response, session);
 	}
+
+	//채팅방 제목 수정 메소드
+	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
+		int chatNo = chat.getChatNo();
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0);
+		int result = chatService.updateTitle(crd);
+		if(result>0) {
+			refreshGroup(chatNo);		
+		}
+	}
+
 }
