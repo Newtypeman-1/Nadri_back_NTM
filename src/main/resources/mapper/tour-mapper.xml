@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.tour.model.dao.TourDao">
+	<insert id="insertCommon" parameterType="list">
+		insert all
+			<foreach collection="list" item="ContentCommonDTO">
+				into content values(#{ContentCommonDTO.contentId}, #{ContentCommonDTO.contentTypeId}, #{ContentCommonDTO.contentTitle}, #{ContentCommonDTO.contentAddr}, #{ContentCommonDTO.contentTel},
+				#{ContentCommonDTO.areaCode}, #{ContentCommonDTO.sigunguCode}, null, #{ContentCommonDTO.contentCat1}, #{ContentCommonDTO.contentCat2}, #{ContentCommonDTO.contentCat3}, ROUND(#{ContentCommonDTO.mapLat}, 6), ROUND(#{ContentCommonDTO.mapLng}, 6), #{ContentCommonDTO.contentThumb}, null, null,null)
+			</foreach>
+		select * from dual
+	</insert>
+	
+	
+	<select id="totalCount">
+		select count(*) from content
+	</select>
+	
+	<select id="selectTourList" resultType="commonContent">
+				select * from
+		    (select rownum as rnum, c.* from
+		        (select 
+		        	content_thumb,
+		            area_code,
+		            sigungu_code,
+		            content_title,
+		            content_cat3
+		        from content order by content_title asc)c)
+		where rnum between #{start} and #{end}
+	</select>
+</mapper>

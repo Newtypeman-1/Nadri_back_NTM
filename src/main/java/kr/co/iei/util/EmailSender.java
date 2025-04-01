@@ -20,9 +20,7 @@ public class EmailSender {
 	
 	public void sendMail(String emailTitle, String receiver, String emailContent) {
 		MimeMessage message = sender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-		System.out.println(receiver);
-		
+		MimeMessageHelper helper = new MimeMessageHelper(message);	
 		try {
 			//메일 전송 시간 설정
 			helper.setSentDate(new Date());

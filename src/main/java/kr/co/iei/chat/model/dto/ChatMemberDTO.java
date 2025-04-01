@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Alias("chatContent")
-public class ChatContent {
-	private int chatNo;
-	private String MemberNickname;
-	private String chatImg;
-	private String chatContent;
+@Alias("chatMember")
+public class ChatMemberDTO {
+    private String memberNickname;
+    private String profileImg;
 }
