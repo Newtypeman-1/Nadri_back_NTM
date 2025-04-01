@@ -93,6 +93,12 @@ public class TourController {
 	return null;
 	}
 	
-
+	@GetMapping
+	public ResponseEntity<Map> tourList(@RequestParam int reqPage){
+		Map map = tourService.selectTourList(reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	
 
 }

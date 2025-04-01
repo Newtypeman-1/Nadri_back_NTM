@@ -9,4 +9,22 @@
 			</foreach>
 		select * from dual
 	</insert>
+	
+	
+	<select id="totalCount">
+		select count(*) from content
+	</select>
+	
+	<select id="selectTourList" resultType="commonContent">
+				select * from
+		    (select rownum as rnum, c.* from
+		        (select 
+		        	content_thumb,
+		            area_code,
+		            sigungu_code,
+		            content_title,
+		            content_cat3
+		        from content order by content_title asc)c)
+		where rnum between #{start} and #{end}
+	</select>
 </mapper>
