@@ -28,4 +28,8 @@ public class SpotPlace {
 	private String usetime;
 	private String restdate;
 	private String parking;
+	
+	//여기서부터는 content 컬럼에 없습니다
+	private int contentRating; //장소에 대한 평점
+	private int contentReview; //장소에 대한 리뷰 수
 }
