@@ -88,4 +88,6 @@ public class ContentDataController {
 				
 	return null;
 	}
+	
+	//지역기반 관광정보 조회(contentTypeId: 12)
 }

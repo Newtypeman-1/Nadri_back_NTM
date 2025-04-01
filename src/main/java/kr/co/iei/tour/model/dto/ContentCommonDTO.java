@@ -24,4 +24,7 @@ public class ContentCommonDTO {
 	private String contentAddr;
 	private int contentId;
 	private int contentTypeId;
+	private String areaName;
+	private String sigunguName;
+	private String cat3Name;
 }
