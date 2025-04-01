@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.chat.model.dao.ChatDao;
 import kr.co.iei.chat.model.dto.ChatContentDTO;
+import kr.co.iei.chat.model.dto.ChatMemberDTO;
 import kr.co.iei.chat.model.dto.ChatRoomDTO;
 
 @Service
@@ -25,6 +26,10 @@ public class ChatService {
 
 	public List selectRoomData(String memberNickname) {
 		List roomDataList = chatDao.selectRoomData(memberNickname);
+		for(ChatRoomDTO r : (ArrayList<ChatRoomDTO>)roomDataList) {
+			List<ChatMemberDTO> groupInfo  = chatDao.selectGroupInfo(r.getChatNo());
+			r.setGroupInfo(groupInfo);
+		}
 		return roomDataList;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.chat.model.dto.ChatContentDTO;
+import kr.co.iei.chat.model.dto.ChatMemberDTO;
 import kr.co.iei.chat.model.dto.ChatRoomDTO;
 
 @Mapper
@@ -40,6 +41,8 @@ public interface ChatDao {
 	int selectLatestChatContentNo(int chatNo);
 
 	void updateReadStatus(ChatRoomDTO crd);
+
+	List<ChatMemberDTO> selectGroupInfo(int chatNo);
 
 	
 }

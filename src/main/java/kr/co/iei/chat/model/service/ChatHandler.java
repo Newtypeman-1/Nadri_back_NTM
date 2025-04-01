@@ -187,7 +187,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();
 		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
-		ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, 0, 0,latestContentNo);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, null, 0,latestContentNo);
 		// 최신 메시지가 없으면 → chat_read_status 업데이트 안 함
 		if (latestContentNo > 0) {
 			chatService.updateReadStatus(crd);
@@ -241,7 +241,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	//채팅방 제목 수정 메소드
 	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
 		int chatNo = chat.getChatNo();
-		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, 0,0,0);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0);
 		int result = chatService.updateTitle(crd);
 		if(result>0) {
 			refreshGroup(chatNo);		
