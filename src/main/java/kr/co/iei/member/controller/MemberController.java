@@ -63,4 +63,11 @@ public class MemberController {
 			return ResponseEntity.status(404).build();
 		}
 	}
+	
+	//마이페이지 회원정보
+	@GetMapping(value="/selectMember")
+	public ResponseEntity<MemberDTO> selectMember(@RequestParam String memberNickname){
+		MemberDTO member = memberService.selectMember(memberNickname);
+		return ResponseEntity.ok(member);
+	}
 }

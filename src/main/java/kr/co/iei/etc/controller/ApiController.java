@@ -59,7 +59,7 @@ public class ApiController {
 								+"[<span style='color:red;'>"
 								+sb.toString()
 								+"</span>]</h3>"
-								+"<h4>※ 이 코드는 10분 내에만 유효합니다. </h3>"
+								+"<h4>※ 이 코드는 3분 내에만 유효합니다. </h3>"
 								+"<h4>NADRI 드림.</h3>";
 		emailSender.sendMail(emailTitle, email, emailContent);
 		return ResponseEntity.ok(sb.toString());			
