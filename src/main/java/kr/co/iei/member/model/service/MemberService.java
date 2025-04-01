@@ -66,4 +66,9 @@ public class MemberService {
 		}
 		return null;
 	}
+
+	public MemberDTO selectMember(String memberNickname) {
+		MemberDTO member = memberDao.selectOneMember(memberNickname);
+		return member;
+	}
 }
