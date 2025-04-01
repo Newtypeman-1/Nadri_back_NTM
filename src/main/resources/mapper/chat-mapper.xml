@@ -8,32 +8,30 @@
   	select member_nickname from chat_group where chat_no=#{chatNo}
   </select>
   <select id="selectRoomData" resultType="chatRoom">
-	  SELECT 
-	    c.chat_no, 
-	    c.chat_title,
-	    (SELECT COUNT(*) 
-	     FROM chat_group g2 
-	     WHERE g2.chat_no = c.chat_no) AS group_size,
-	    (
-	      SELECT COUNT(*) 
-	      FROM chat_content cc 
-	      WHERE cc.chat_no = c.chat_no
-	        AND cc.chat_content_no > COALESCE(( 
-	          SELECT rs.chat_content_no 
-	          FROM chat_read_status rs
-	          WHERE rs.chat_no = c.chat_no 
-	            AND rs.member_nickname = #{memberNickname}
-	        ), 0)
-	    ) AS not_read,
-	    (
-	      SELECT MAX(cc.chat_content_no)
-	      FROM chat_content cc
-	      WHERE cc.chat_no = c.chat_no
-	    ) AS latest_content_no
-	  FROM chat c
-	  JOIN chat_group g ON c.chat_no = g.chat_no
-	  WHERE g.member_nickname = #{memberNickname}
-	  ORDER BY latest_content_no DESC
+	SELECT 
+	  c.chat_no, 
+	  c.chat_title,
+	  (SELECT COUNT(*) FROM chat_group g2 WHERE g2.chat_no = c.chat_no) AS group_size,
+	  (
+	    SELECT COUNT(*) 
+	    FROM chat_content cc 
+	    WHERE cc.chat_no = c.chat_no
+	      AND cc.chat_content_no > COALESCE((
+	        SELECT rs.chat_content_no 
+	        FROM chat_read_status rs
+	        WHERE rs.chat_no = c.chat_no 
+	          AND rs.member_nickname = #{memberNickname}
+	      ), 0)
+	  ) AS not_read,
+	  (
+	    SELECT MAX(chat_content_no)
+	    FROM chat_content
+	    WHERE chat_no = c.chat_no
+	  ) AS latest_content_no
+	FROM chat c
+	JOIN chat_group g ON c.chat_no = g.chat_no
+	WHERE g.member_nickname = #{memberNickname}
+	ORDER BY latest_content_no DESC
   </select>
   <select id="selectChatContent" resultType="chatContent">
   	  SELECT member_nickname, chat_no, chat_img, chat_content

@@ -14,5 +14,6 @@ public class ChatRoomDTO {
 	private String chatTitle;
 	private String memberNickname;
 	private int groupSize;
+	private int notRead;
 	private int latestContentNo; 
 }
