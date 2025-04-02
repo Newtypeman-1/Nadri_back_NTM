@@ -8,17 +8,17 @@
 		FROM (
 			SELECT
 			    c.content_id, c.content_thumb, c.content_title, c.content_type_id, c.content_addr, c.map_lat, c.map_lng,
-			    nvl(r.avg_rate, 0) as content_rating, nvl(r.review_count, 0) as content_review,
+			    NVL(r.avg_rate, 0) as content_rating, NVL(r.review_count, 0) AS content_review,
 			    6371000 * ACOS(
 			        COS(#{lat} * 3.141592 / 180) * COS(map_lat * 3.141592 / 180) *
 			        COS((map_lng - #{lng}) * 3.141592 / 180) +
 			        SIN(#{lat} * 3.141592 / 180) * SIN(map_lat * 3.141592 / 180)
-				) as distance
+				) AS distance
 			FROM
 			    content c
 			LEFT JOIN (
 			    SELECT
-			        content_id, avg(star_rate) as avg_rate, count(review_no) as review_count
+			        content_id, AVG(star_rate) as avg_rate, COUNT(review_no) AS review_count
 			    FROM
 			        review
 			    GROUP BY
@@ -26,7 +26,7 @@
 			) r ON c.content_id = r.content_id
 		) inner
 		WHERE distance <![CDATA[<=]]> #{radius}
-		ORDER BY distance asc
+		ORDER BY distance ASC
 	</select>
 	
 </mapper>
