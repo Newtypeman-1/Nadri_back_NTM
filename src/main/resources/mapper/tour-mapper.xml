@@ -16,23 +16,27 @@
 	</select>
 	
 	<select id="selectTourList" resultType="commonContent">
-				select * from
-				    (select rownum as rnum, c.* from
-				        (select 
-				        	con.content_thumb,
-				            con.area_code,
-				            a.area_name,
-				            con.sigungu_code,
-				            s.sigungu_name,
-				            con.content_title,
-				            con.content_cat3,
-				            cat.cat3_name
-				        from content con
-				        LEFT JOIN area_code a ON con.area_code = a.area_code
-     				    LEFT JOIN sigungu_code s ON con.sigungu_code = s.sigungu_code
-       				    LEFT JOIN content_cat3 cat ON con.content_cat3 = cat.cat3
-				        order by con.content_title asc)
-				        c)
-				where rnum between #{start} and #{end}
-	</select>
+	  SELECT * FROM (
+	    SELECT rownum AS rnum, c.* FROM (
+	      SELECT 
+	      	con.content_id,
+	        con.content_thumb,
+	        con.area_code,
+	        a.area_name,
+	        con.sigungu_code,
+	        s.sigungu_name,
+	        con.content_title,
+	        con.content_cat3,
+	        cat.cat3_name
+	      FROM content con
+	      LEFT JOIN area_code a ON con.area_code = a.area_code
+	      LEFT JOIN sigungu_code s 
+	        ON con.sigungu_code = s.sigungu_code 
+	       AND con.area_code = s.area_code
+	      LEFT JOIN content_cat3 cat ON con.content_cat3 = cat.cat3
+	      ORDER BY con.content_title ASC
+	    ) c
+	  )
+	  WHERE rnum BETWEEN #{start} AND #{end}
+</select>
 </mapper>
