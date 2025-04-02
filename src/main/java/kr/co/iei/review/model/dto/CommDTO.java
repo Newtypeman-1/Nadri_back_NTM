@@ -1,4 +1,4 @@
-package kr.co.iei.comm.model.dto;
+package kr.co.iei.review.model.dto;
 
 import org.apache.ibatis.type.Alias;
 
