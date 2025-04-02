@@ -3,15 +3,22 @@ package kr.co.iei.member.model.service;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.iei.member.model.dao.MemberDao;
 import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.member.model.dto.MemberDTO;
+import kr.co.iei.util.FileUtils;
 import kr.co.iei.util.JwtUtils;
 
 @Service
@@ -57,18 +64,25 @@ public class MemberService {
 
 		MemberDTO m = memberDao.selectOneMember(member.getMemberEmail());
 		if(m != null && encoder.matches(member.getMemberPw(), m.getMemberPw())) {
-			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberType());
+			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
 			System.out.println("accessToken : "+accessToken);
-			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberType());
-			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberType());
+			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel());
 			System.out.println(loginMember);
 			return loginMember;
 		}
 		return null;
 	}
-
-	public MemberDTO selectMember(String memberNickname) {
-		MemberDTO member = memberDao.selectOneMember(memberNickname);
+	
+	//마이페이지 회원정보 출력
+	public MemberDTO selectMemberInfo(String memberNickname) {
+		MemberDTO member = memberDao.selectMemberInfo(memberNickname);
 		return member;
 	}
+	//마이페이지 회원정보 수정
+	public int updateMember(MemberDTO member) {
+		int result = memberDao.updateMember(member);
+		return result;
+	}
+	
 }
