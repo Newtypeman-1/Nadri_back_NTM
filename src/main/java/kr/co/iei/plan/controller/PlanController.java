@@ -19,11 +19,10 @@ public class PlanController {
 	@Autowired
 	private PlanService planService;
 	
-	
+	//유저 마커 반경 내 장소 데이터 수집
 	@GetMapping(value="/nearby")
 	public ResponseEntity<List> selectNearby(@RequestParam double lat, @RequestParam double lng, @RequestParam int radius){
-		System.out.println(lat + " " + lng + " " + radius);
 		List list = planService.selectNearby(lat, lng, radius);
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(list);
 	}
 }
