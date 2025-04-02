@@ -30,6 +30,7 @@
 review_no,
 review_title,
 review_content,
+star_rate,
 member_nickname,
 review_date
 from review 
