@@ -14,7 +14,11 @@ public interface ReviewDao {
 
 	List selectBoardList(HashMap<String, Object> map);
 
-	//List selectBoardList(PageInfo pi, String value);
+	int reviewTotalCount();
+
+	List allBoardList(PageInfo pi);
+
+
 
 
 

@@ -20,9 +20,7 @@ public class ReviewController {
 	private ReviewService reviewService;
 	@GetMapping
 	public ResponseEntity<Map> reviewlist(@RequestParam int reqPage, @RequestParam String value){
-	
 		Map map = reviewService.reviewList(reqPage,value);
 		return ResponseEntity.ok(map);
 	}
-
 }
