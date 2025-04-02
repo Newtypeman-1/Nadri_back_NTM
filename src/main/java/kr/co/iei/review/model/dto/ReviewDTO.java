@@ -14,7 +14,7 @@ public class ReviewDTO {
  private int reviewNo;
  private String memberNickname;
  private String reviewTitle;
- private String reviewContnent;
+ private String reviewContent;
  private int starRate;
  private String reviewDate;
  private String contnetType;

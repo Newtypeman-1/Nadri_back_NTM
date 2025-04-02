@@ -31,12 +31,12 @@ review_no,
 review_title,
 review_content,
 member_nickname,
-to_char(review_date,'yyyy-mm-dd') as review_date
+review_date
 from review 
 <where>
  <choose>
 <when test="value == 'plan'">
-	content_type = 'plan'
+	content_type = #{value}
 </when>
 <when test="value == 'spot'">
 	 content_type_id = 12
@@ -52,7 +52,7 @@ from review
 </when>
  </choose>
  </where>
- order by review_date desc)r)
-where rnum between #{start} and #{end}
+ order by review_no desc)r)
+where rnum between #{pi.start} and #{pi.end}
   </select>
 </mapper>

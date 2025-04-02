@@ -28,6 +28,7 @@ public class ReviewService {
 		PageInfo pi =  pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		map.put("pi", pi);
 		List list = reviewDao.selectBoardList(map);
+		System.out.println(list);
 		map.put("list",list);
 		return map;
 	}
