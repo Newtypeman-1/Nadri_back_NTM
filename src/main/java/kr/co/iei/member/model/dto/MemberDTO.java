@@ -21,5 +21,4 @@ public class MemberDTO {
 	private String profileImg;
 	private int memberLevel;
 	private String memberDel;
-	private int memberType;
 }
