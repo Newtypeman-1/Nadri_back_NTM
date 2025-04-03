@@ -31,6 +31,7 @@ public class ContentDataController {
 	@GetMapping(value="/commonContent")
 	public List spotPlace() {
 		
+		
 		//지역기반 관광정보 조회(contentTypeId: 12)
 		String url = "https://apis.data.go.kr/B551011/KorService1/areaBasedList1";
 		try {
@@ -74,7 +75,7 @@ public class ContentDataController {
 					String contentAddr = item.get("addr1").getAsString();
 					int contentId = item.get("contentid").getAsInt();
 					int contentTypeId = Integer.parseInt(item.get("contenttypeid").getAsString());
-					ContentCommonDTO ccd = new ContentCommonDTO(contentThumb, mapLat, mapLng, areaCode, sigunguCode, contentCat1, contentCat2, contentCat3, contentTel, contentTitle, contentAddr, contentId, contentTypeId);
+					ContentCommonDTO ccd = new ContentCommonDTO(contentThumb, mapLat, mapLng, areaCode, sigunguCode, contentCat1, contentCat2, contentCat3, contentTel, contentTitle, contentAddr, contentId, contentTypeId, contentTitle, sigunguCode, contentAddr);
 					list.add(ccd);
 				}
 				int commonResult = tourService.insertCommon(list);
