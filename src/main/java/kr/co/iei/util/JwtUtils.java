@@ -74,10 +74,10 @@ public class JwtUtils {
 									.parse(accessToken)
 									.getPayload();
 		String memberEmail = (String)claims.get("memberEmail");
-		int memberType = (int)claims.get("memberType");
+		int memberLevel = (int)claims.get("memberLevel");
 		LoginMemberDTO loginMember = new LoginMemberDTO();
 		loginMember.setMemberEmail(memberEmail);
-		loginMember.setMemberType(memberType);
+		loginMember.setMemberLevel(memberLevel);
 		return loginMember;
 	}
 	
