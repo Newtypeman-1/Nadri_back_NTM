@@ -57,7 +57,6 @@ public class MemberController {
 	//비밀번호 재설정
 	@PatchMapping(value="/updatePw")
 	public ResponseEntity<Integer> updatePw(@RequestBody MemberDTO member){
-		System.out.println(member);
 		int result = memberService.updatePw(member);
 		return ResponseEntity.ok(result);
 	}
@@ -65,7 +64,6 @@ public class MemberController {
 	//로그인
 	@PostMapping(value="/login")
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
-		System.out.println(member);
 		LoginMemberDTO loginMember = memberService.login(member);
 		if(loginMember != null) {
 			return ResponseEntity.ok(loginMember);
@@ -84,8 +82,6 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		System.out.println(member);
-		System.out.println(uploadProfile);
 		//프로필사진을 첨부한 경우에만
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
@@ -97,9 +93,9 @@ public class MemberController {
 	}
 	
 	//회원탈퇴
-	@DeleteMapping(value="/{memberNickname}")
-	public ResponseEntity<Integer> deleteMember(@PathVariable String memberNickname){
-		int result = memberService.deleteMember(memberNickname);
+	@PatchMapping(value="/deleteMember")
+	public ResponseEntity<Integer> deleteMember(@RequestBody MemberDTO member){
+		int result = memberService.deleteMember(member);
 		return ResponseEntity.ok(result);
 	}
 }

@@ -45,7 +45,11 @@
 		where member_email = #{memberEmail}
 	</update>
 	
-	<delete id="deleteMember">
-		delete from member where member_nickname = #{memberNickname}
-	</delete>
+	<update id="deleteMember">
+		update member set member_del = 'Y' where member_nickname = #{memberNickname}
+	</update>
+	
+	<insert id="insertDelMember">
+		insert into del_member values(#{memberNo}, to_char(sysdate,'yyyy-mm-dd'), null)
+	</insert>
 </mapper>

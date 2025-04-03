@@ -22,5 +22,7 @@ public interface MemberDao {
 
 	int updateMember(MemberDTO member);
 
-	int deleteMember(String memberNickname);
+	int deleteMember(MemberDTO memberNickname);
+
+	int insertDelMember(MemberDTO member);
 }
