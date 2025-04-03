@@ -74,7 +74,7 @@ public class ContentDataController {
 					String contentAddr = item.get("addr1").getAsString();
 					int contentId = item.get("contentid").getAsInt();
 					int contentTypeId = Integer.parseInt(item.get("contenttypeid").getAsString());
-					ContentCommonDTO ccd = new ContentCommonDTO(contentThumb, mapLat, mapLng, areaCode, sigunguCode, contentCat1, contentCat2, contentCat3, contentTel, contentTitle, contentAddr, contentId, contentTypeId);
+					ContentCommonDTO ccd = new  ContentCommonDTO(contentThumb, mapLat, mapLng, areaCode, sigunguCode, contentCat1, contentCat2, contentCat3, contentTel, contentTitle, contentAddr, contentId, contentTypeId);
 					list.add(ccd);
 				}
 				int commonResult = tourService.insertCommon(list);

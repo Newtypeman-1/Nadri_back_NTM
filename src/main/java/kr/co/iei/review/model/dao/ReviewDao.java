@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
@@ -17,6 +18,8 @@ public interface ReviewDao {
 	int reviewTotalCount();
 
 	List allBoardList(PageInfo pi);
+
+	ReviewDTO selectOneReview(int reviewNo);
 
 
 

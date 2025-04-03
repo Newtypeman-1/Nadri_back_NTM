@@ -58,5 +58,7 @@ from review
  order by review_no desc)r)
 where rnum between #{pi.start} and #{pi.end}
   </select>
-
+<select id="selectOneReview" resultType="review">
+select *from review where review_no=#{reviewNo}
+</select>
 </mapper>
