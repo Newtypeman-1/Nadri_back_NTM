@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -56,7 +57,6 @@ public class MemberController {
 	//비밀번호 재설정
 	@PatchMapping(value="/updatePw")
 	public ResponseEntity<Integer> updatePw(@RequestBody MemberDTO member){
-		System.out.println(member);
 		int result = memberService.updatePw(member);
 		return ResponseEntity.ok(result);
 	}
@@ -82,8 +82,6 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		System.out.println(member);
-		System.out.println(uploadProfile);
 		//프로필사진을 첨부한 경우에만
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
@@ -91,6 +89,13 @@ public class MemberController {
 			member.setProfileImg(filepath);
 		}	
 		int result = memberService.updateMember(member);
+		return ResponseEntity.ok(result);
+	}
+	
+	//회원탈퇴
+	@PatchMapping(value="/deleteMember")
+	public ResponseEntity<Integer> deleteMember(@RequestBody MemberDTO member){
+		int result = memberService.deleteMember(member);
 		return ResponseEntity.ok(result);
 	}
 }

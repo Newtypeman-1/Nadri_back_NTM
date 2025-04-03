@@ -44,4 +44,12 @@
 			profile_img = #{profileImg}
 		where member_email = #{memberEmail}
 	</update>
+	
+	<update id="deleteMember">
+		update member set member_del = 'Y' where member_nickname = #{memberNickname}
+	</update>
+	
+	<insert id="insertDelMember">
+		insert into del_member values(#{memberNo}, to_char(sysdate,'yyyy-mm-dd'), null)
+	</insert>
 </mapper>
