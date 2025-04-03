@@ -44,4 +44,8 @@
 			profile_img = #{profileImg}
 		where member_email = #{memberEmail}
 	</update>
+	
+	<delete id="deleteMember">
+		delete from member where member_nickname = #{memberNickname}
+	</delete>
 </mapper>
