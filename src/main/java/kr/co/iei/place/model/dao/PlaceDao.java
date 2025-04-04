@@ -11,7 +11,7 @@ import kr.co.iei.util.PageInfo;
 @Mapper
 public interface PlaceDao {
 
-	int insertCommon(List list);
+//	int insertCommon(List list);
 
 	int totalCount();
 
@@ -24,5 +24,7 @@ public interface PlaceDao {
 	void insertSpotInfo(SpotDTO spot);
 
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
+
+	List selectSpotList(PageInfo pi);
 	
 }

@@ -3,7 +3,7 @@
 <mapper namespace="kr.co.iei.place.model.dao.PlaceDao">
 	<insert id="insertCommon" parameterType="list">
 		insert all
-			<foreach collection="list" item="ContentCommonDTO">
+			<foreach collection="list" item="Place">
 				into content values(#{ContentCommonDTO.contentId}, #{ContentCommonDTO.contentTypeId}, #{ContentCommonDTO.contentTitle}, #{ContentCommonDTO.contentAddr}, #{ContentCommonDTO.contentTel},
 				#{ContentCommonDTO.areaCode}, #{ContentCommonDTO.sigunguCode}, null, #{ContentCommonDTO.contentCat1}, #{ContentCommonDTO.contentCat2}, #{ContentCommonDTO.contentCat3}, ROUND(#{ContentCommonDTO.mapLat}, 6), ROUND(#{ContentCommonDTO.mapLng}, 6), #{ContentCommonDTO.contentThumb}, null, null,null)
 			</foreach>
@@ -12,36 +12,67 @@
 	
 	
 	<select id="totalCount">
-		select count(*) from content
+		select count(*) from place_info
 	</select>
 	
-<!-- 
-	<select id="selectPlaceList" resultType="commonContent">
+
+	<select id="selectPlaceList" resultType="Place">
 	  SELECT * FROM (
 	    SELECT rownum AS rnum, c.* FROM (
 	      SELECT 
-	      	con.content_id,
-	        con.content_thumb,
-	        con.area_code,
+	      	p.place_id,
+	        p.place_thumb,
+	        p.area_code,
 	        a.area_name,
-	        con.sigungu_code,
+	        p.sigungu_code,
 	        s.sigungu_name,
-	        con.content_title,
-	        con.content_cat3,
+	        p.place_title,
+	        p.place_cat3,
 	        cat.cat3_name
-	      FROM content con
-	      LEFT JOIN area_code a ON con.area_code = a.area_code
+	      FROM place_info p
+	      LEFT JOIN area_code a ON p.area_code = a.area_code
 	      LEFT JOIN sigungu_code s 
-	        ON con.sigungu_code = s.sigungu_code 
-	       AND con.area_code = s.area_code
-	      LEFT JOIN content_cat3 cat ON con.content_cat3 = cat.cat3
-	      ORDER BY con.content_title ASC
+	        ON p.sigungu_code = s.sigungu_code 
+	       AND p.area_code = s.area_code
+	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+	      ORDER BY p.place_title ASC
 	    ) c
 	  )
 	  WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
-	 -->
+	
+	<!-- spot 리스트 조회 -->
+	<select id="selectSpotList" resultType="spot">
+		  SELECT * FROM (
+		    SELECT rownum AS rnum, c.* FROM (
+		      SELECT 
+		      	p.place_id,
+		        p.place_thumb,
+		        p.area_code,
+		        a.area_name,
+		        p.sigungu_code,
+		        s.sigungu_name,
+		        p.place_title,
+		        p.place_cat3,
+		        cat.cat3_name
+		      FROM place_info p
+		      LEFT JOIN area_code a ON p.area_code = a.area_code
+		      LEFT JOIN sigungu_code s 
+		        ON p.sigungu_code = s.sigungu_code 
+		       AND p.area_code = s.area_code
+		      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+		      ORDER BY p.place_title ASC
+		    ) c
+		  )
+		  WHERE rnum BETWEEN #{start} AND #{end}
+	</select> 
+	
+	
+	
+	
+
 	 
+	 <!--  초기 데이터: place데이터 -->
 	<insert id="insertPlaceInfoList" parameterType="java.util.List">
 	    INSERT INTO place_info (
 	        place_id, place_type_id, place_title, place_addr, place_tel,
@@ -60,8 +91,8 @@
 	</insert>
 		 
 	 
-	  
-	<select id="selectSpotDetail" resultType="placeInfo">
+	<!--  spot detail 추가 쿼리! 추후 수정 필요 -->
+	<select id="selectSpotDetail" resultType="place">
     	SELECT * FROM place_info WHERE place_type_id = 12
 	</select>
 	

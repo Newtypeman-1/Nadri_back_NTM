@@ -19,11 +19,12 @@ public class PlaceService {
 	@Autowired
 	private PageInfoUtil pageInfoUtil;
 	
-	@Transactional
-	public int insertCommon(List list) {
-		int result = placeDao.insertCommon(list);
-		return 0;
-	}
+//	@Transactional
+//	public int insertCommon(List list) {
+//		int result = placeDao.insertCommon(list);
+//		return 0;
+//	}
+	
 	public Map selectPlaceList(int reqPage) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
@@ -40,6 +41,19 @@ public class PlaceService {
 	public void insertPlace() {
 		// TODO Auto-generated method stub
 		
+	}
+	public Map selectSpotList(int reqPage) {
+		int numPerPage = 12;
+		int pageNaviSize = 5;
+		int totalCount = placeDao.totalCount();
+		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
+		
+		List list = placeDao.selectSpotList(pi);
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pi", pi);
+		
+		return map;
 	}
 	
 	

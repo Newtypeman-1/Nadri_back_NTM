@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
-import kr.co.iei.place.model.dto.SpotPlace;
 import kr.co.iei.place.model.service.PlaceService;
 
 @CrossOrigin("*")
@@ -35,6 +34,14 @@ public class PlaceController {
 		Map map = placeService.selectPlaceList(reqPage);
 		return ResponseEntity.ok(map);
 	}
+	
+	@GetMapping(value="/spot")
+	public ResponseEntity<Map> spotList(@RequestParam int reqPage){
+		Map map = placeService.selectSpotList(reqPage);
+		return ResponseEntity.ok(map);
+	}
+	
+	
 	
 	
 	
