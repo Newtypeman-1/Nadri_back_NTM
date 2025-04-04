@@ -41,7 +41,17 @@
 			member_nickname = #{memberNickname},
 			member_phone = #{memberPhone},
 			member_gender = #{memberGender},
+			member_birth = #{memberBirth},
 			profile_img = #{profileImg}
+		where member_email = #{memberEmail}
+	</update>
+	
+	<update id="updateMember2">
+		update member set
+			member_nickname = #{memberNickname},
+			member_phone = #{memberPhone},
+			member_gender = #{memberGender},
+			member_birth = #{memberBirth}
 		where member_email = #{memberEmail}
 	</update>
 	

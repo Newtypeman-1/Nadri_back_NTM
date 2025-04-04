@@ -22,7 +22,10 @@ public interface MemberDao {
 
 	int updateMember(MemberDTO member);
 
+	int updateMember2(MemberDTO member);
+	
 	int deleteMember(MemberDTO memberNickname);
 
 	int insertDelMember(MemberDTO member);
+
 }
