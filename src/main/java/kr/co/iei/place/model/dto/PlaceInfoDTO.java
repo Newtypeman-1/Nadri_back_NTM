@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="placeInfo")
+@Alias(value="place")
 public class PlaceInfoDTO {
 	private String placeThumb;
 	private double mapLat;
@@ -29,7 +29,13 @@ public class PlaceInfoDTO {
 	private String restDate;
 	private String parking;
 	
+	//PlaceInfo 테이블에 없음(테이블 조인)
 	private String areaName;
 	private String sigunguName;
 	private String cat3Name;
+	
+	//PlaceInfo 테이블에 없음
+	private int contentRating; //장소에 대한 평점
+	private int contentReview; //장소에 대한 리뷰 수
+	private double distance; //마커로부터 장소까지의 거리(m)
 }
