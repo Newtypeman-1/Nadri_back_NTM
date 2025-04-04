@@ -82,13 +82,18 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
+		int result = 0;
 		//프로필사진을 첨부한 경우에만
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
-		}	
-		int result = memberService.updateMember(member);
+			result = memberService.updateMember(member);
+			//프로필사진을 첨부하지 않은 경우에만
+		}else {			
+			result = memberService.updateMember2(member);
+		}
+		
 		return ResponseEntity.ok(result);
 	}
 	

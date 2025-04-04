@@ -84,6 +84,11 @@ public class MemberService {
 		int result = memberDao.updateMember(member);
 		return result;
 	}
+	//마이페이지 회원정보 수정2
+	public int updateMember2(MemberDTO member) {
+		int result = memberDao.updateMember2(member);
+		return result;
+	}
 	//회원탈퇴
 	@Transactional
 	public int deleteMember(MemberDTO member) {
@@ -91,5 +96,6 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
+
 	
 }

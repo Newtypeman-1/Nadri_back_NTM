@@ -46,6 +46,15 @@
 		where member_email = #{memberEmail}
 	</update>
 	
+	<update id="updateMember2">
+		update member set
+			member_nickname = #{memberNickname},
+			member_phone = #{memberPhone},
+			member_gender = #{memberGender},
+			member_birth = #{memberBirth}
+		where member_email = #{memberEmail}
+	</update>
+	
 	<update id="deleteMember">
 		update member set member_del = 'Y' where member_nickname = #{memberNickname}
 	</update>
