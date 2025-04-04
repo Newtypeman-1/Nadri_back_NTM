@@ -7,15 +7,15 @@
 			*
 		FROM (
 			SELECT
-			    c.content_id, c.content_thumb, c.content_title, c.content_type_id, c.content_addr, c.map_lat, c.map_lng,
-			    NVL(r.avg_rate, 0) as content_rating, NVL(r.review_count, 0) AS content_review,
+			    p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr, p.map_lat, p.map_lng,
+			    NVL(r.avg_rate, 0) as place_rating, NVL(r.review_count, 0) AS place_review,
 			    6371000 * ACOS(
-			        COS(#{lat} * 3.141592 / 180) * COS(map_lat * 3.141592 / 180) *
-			        COS((map_lng - #{lng}) * 3.141592 / 180) +
-			        SIN(#{lat} * 3.141592 / 180) * SIN(map_lat * 3.141592 / 180)
+			        COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
+			        COS((p.map_lng - #{lng}) * 3.141592 / 180) +
+			        SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
 				) AS distance
 			FROM
-			    content c
+			    place_info p
 			LEFT JOIN (
 			    SELECT
 			        content_id, AVG(star_rate) as avg_rate, COUNT(review_no) AS review_count
@@ -23,10 +23,17 @@
 			        review
 			    GROUP BY
 			        content_id
-			) r ON c.content_id = r.content_id
+			) r ON p.place_id = r.content_id
 		) inner
 		WHERE distance <![CDATA[<=]]> #{radius}
 		ORDER BY distance ASC
+	</select>
+	
+	<select id="verifyPlan" resultType="group">
+		SELECT pg.*
+		FROM plan_group pg
+		JOIN member m ON pg.member_nickname = m.member_nickname
+		WHERE m.member_email = #{memberEmail} AND pg.plan_no = #{planNo}
 	</select>
 	
 </mapper>
