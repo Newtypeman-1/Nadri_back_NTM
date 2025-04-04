@@ -1,4 +1,4 @@
-package kr.co.iei.tour.controller;
+package kr.co.iei.place.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,24 +19,26 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import kr.co.iei.tour.model.dto.ContentCommonDTO;
-import kr.co.iei.tour.model.dto.SpotPlace;
-import kr.co.iei.tour.model.service.TourService;
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.place.model.dto.SpotPlace;
+import kr.co.iei.place.model.service.PlaceService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value="/content")
-public class TourController {
-	@Value(value="${tourapi.key}")
-	private String serviceKey;
+@RequestMapping(value="/place")
+public class PlaceController {
 	@Autowired
-	private TourService tourService;
+	private PlaceService placeService;
 	
 	@GetMapping
 	public ResponseEntity<Map> tourList(@RequestParam int reqPage){
-		Map map = tourService.selectTourList(reqPage);
+		Map map = placeService.selectPlaceList(reqPage);
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	
+	
 	
 	
 

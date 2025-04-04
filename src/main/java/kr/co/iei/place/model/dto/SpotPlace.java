@@ -1,4 +1,4 @@
-package kr.co.iei.tour.model.dto;
+package kr.co.iei.place.model.dto;
 
 import org.apache.ibatis.type.Alias;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Alias(value="spot")
+
 public class SpotPlace {
 	private int contentId;
 	private int contentTypeId;

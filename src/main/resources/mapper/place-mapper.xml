@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="kr.co.iei.tour.model.dao.TourDao">
+<mapper namespace="kr.co.iei.place.model.dao.PlaceDao">
 	<insert id="insertCommon" parameterType="list">
 		insert all
 			<foreach collection="list" item="ContentCommonDTO">
@@ -15,7 +15,8 @@
 		select count(*) from content
 	</select>
 	
-	<select id="selectTourList" resultType="commonContent">
+<!-- 
+	<select id="selectPlaceList" resultType="commonContent">
 	  SELECT * FROM (
 	    SELECT rownum AS rnum, c.* FROM (
 	      SELECT 
@@ -38,5 +39,43 @@
 	    ) c
 	  )
 	  WHERE rnum BETWEEN #{start} AND #{end}
-</select>
+	</select>
+	 -->
+	 
+	<insert id="insertPlaceInfoList" parameterType="java.util.List">
+	    INSERT INTO place_info (
+	        place_id, place_type_id, place_title, place_addr, place_tel,
+	        area_code, sigungu_code,
+	        place_cat1, place_cat2, place_cat3,
+	        map_lat, map_lng, place_thumb
+	    )
+	    <foreach collection="list" item="place" separator="union all">
+	        SELECT
+	        #{place.placeId}, #{place.placeTypeId}, #{place.placeTitle}, #{place.placeAddr}, #{place.placeTel},
+	        #{place.areaCode}, #{place.sigunguCode},
+	        #{place.placeCat1}, #{place.placeCat2}, #{place.placeCat3},
+	        #{place.mapLat}, #{place.mapLng}, #{place.placeThumb}
+	        FROM DUAL
+	    </foreach>
+	</insert>
+		 
+	 
+	  
+	<select id="selectSpotDetail" resultType="placeInfo">
+    	SELECT * FROM place_info WHERE place_type_id = 12
+	</select>
+	
+	<update id="updateDetailInfo" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
+	    UPDATE place_info
+	    SET use_time = #{useTime},
+	        rest_date = #{restDate},
+	        parking = #{parking}
+	    WHERE place_id = #{placeId}
+	</update>
+
+	<insert id="insertSpotInfo" parameterType="kr.co.iei.place.model.dto.SpotDTO">
+    	INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season)
+    	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})
+	</insert>
+	  
 </mapper>
