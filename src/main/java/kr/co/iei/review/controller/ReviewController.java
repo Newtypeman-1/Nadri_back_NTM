@@ -27,7 +27,7 @@ public class ReviewController {
 	}
 	@GetMapping(value="/{reviewNo}")
 	public ResponseEntity<ReviewDTO>selectOneReview(@PathVariable int reviewNo){
-		System.out.println(reviewNo);
+	
 		ReviewDTO review =reviewService.selectOneReview(reviewNo);
 		return ResponseEntity.ok(review);
 	}

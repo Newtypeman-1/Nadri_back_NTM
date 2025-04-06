@@ -33,7 +33,7 @@ public class ReviewService {
 	}
 	public ReviewDTO selectOneReview(int reviewNo) {
 		ReviewDTO  review = reviewDao.selectOneReview(reviewNo);
-		System.out.println(review);
+		
 		return review;
 	}
 

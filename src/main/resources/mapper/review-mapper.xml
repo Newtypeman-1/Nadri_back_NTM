@@ -61,4 +61,10 @@ where rnum between #{pi.start} and #{pi.end}
 <select id="selectOneReview" resultType="review">
 select *from review where review_no=#{reviewNo}
 </select>
+ <select id="commList" resultType="comm">
+ 	select comm_no, member_nickname, comm_content from comm where review_no=#{reviewNo}
+ </select>
+ <delete id="deleteComm">
+ delete comm where comm_no=#{commNo}
+ </delete>
 </mapper>

@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Alias(value="comm")
-public class CommDTO {
+public class CommDTO {	
 private int commNo;
-private int reviewNo;
+private String memberNickname;
 private String commContent;
+private int reviewNo;
 }

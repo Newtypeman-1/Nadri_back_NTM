@@ -22,6 +22,13 @@ public interface ReviewDao {
 	ReviewDTO selectOneReview(int reviewNo);
 
 
+	List commList(int reviewNo);
+
+	int deleteComm(int commNo);
+
+	
+
+
 
 
 
