@@ -1,5 +1,7 @@
 package kr.co.iei.event.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,5 +17,13 @@ public class EventService {
 	public int insertEvent(EventDTO event) {
 		int result= eventDao.insertEvent(event);
 		return result;
+	}
+	public List selectOnGoingEvent(String date) {
+		List eventList = eventDao.selectOnGoingEvent(date);
+		return eventList;
+	}
+	public List selectMonthEvent(String month) {
+		List eventList = eventDao.selectMonthEvent(month);
+		return eventList;
 	}
 }
