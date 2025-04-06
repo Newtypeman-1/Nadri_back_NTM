@@ -55,6 +55,11 @@ public class PlaceService {
 		
 		return map;
 	}
+
+	public List selectPlaceType() {
+		List placeTypeList = placeDao.selectPlaceType();
+		return placeTypeList;
+	}
 	
 	
 	

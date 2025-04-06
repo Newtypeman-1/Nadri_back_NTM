@@ -41,7 +41,11 @@ public class PlaceController {
 		return ResponseEntity.ok(map);
 	}
 	
-	
+	@GetMapping("/type")
+	public ResponseEntity<List> placeType(){
+		List placeTypeList = placeService.selectPlaceType();
+		return ResponseEntity.ok(placeTypeList);
+	}
 	
 	
 	

@@ -26,5 +26,7 @@ public interface PlaceDao {
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
 
 	List selectSpotList(PageInfo pi);
+
+	List selectPlaceType();
 	
 }

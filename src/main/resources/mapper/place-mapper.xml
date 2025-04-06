@@ -66,9 +66,11 @@
 		  )
 		  WHERE rnum BETWEEN #{start} AND #{end}
 	</select> 
-	
-	
-	
+	<!-- place 타입 테이블 조회 -->
+	<select id="selectPlaceType" resultType="map">
+	    select place_type_id as "id", place_type_name as "name"
+    	from place_type
+	</select>
 	
 
 	 
