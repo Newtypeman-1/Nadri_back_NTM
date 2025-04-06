@@ -19,7 +19,6 @@ public class ReviewDTO {
  private String reviewDate;
  private String contnetType;
  private int planNo;
- private int contentId;
- private int contentTypeId;
- private int likeNo;
+ private int placeId;
+ private int placeTypeId;
 }

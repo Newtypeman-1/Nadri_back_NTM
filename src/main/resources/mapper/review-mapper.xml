@@ -9,16 +9,16 @@
 	content_type = #{value}
 </when>
 <when test="value == 'spot'">
-	 content_type_id = 12
+	place_type_id = 12
 </when>
 <when test="value == 'food'">
-	 content_type_id = 39
+	 place_type_id = 39
 </when>
 <when test="value == 'room'">
-	 content_type_id = 32
+	 place_type_id = 32
 </when>
 <when test="value == 'todo'">
-	 content_type_id IN (14, 15, 38, 28)
+	 place_type_id IN (14, 15, 38, 28)
 </when>
 
  </choose>
@@ -41,16 +41,16 @@ from review
 	content_type = #{value}
 </when>
 <when test="value == 'spot'">
-	 content_type_id = 12
+	 place_type_id = 12
 </when>
 <when test="value == 'food'">
-	 content_type_id = 39
+	 place_type_id = 39
 </when>
 <when test="value == 'room'">
-	 content_type_id = 32
+	 place_type_id = 32
 </when>
 <when test="value == 'todo'">
-	 content_type_id IN (14, 15, 38, 28)
+	place_type_id IN (14, 15, 38, 28)
 </when>
 
  </choose>
