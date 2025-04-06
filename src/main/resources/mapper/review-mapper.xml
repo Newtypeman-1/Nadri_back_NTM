@@ -67,4 +67,7 @@ select *from review where review_no=#{reviewNo}
  <delete id="deleteComm">
  delete comm where comm_no=#{commNo}
  </delete>
+<insert id="insertComm">
+insert into comm values(comm_seq.nextval,#{memberNickname},#{commContent},#{reviewNo})
+</insert>
 </mapper>
