@@ -8,12 +8,29 @@
 			and  to_date(end_date, 'YYYY-MM-DD')
 	</select>
 	<select id="selectMonthEvent" resultType="event">
-	SELECT * FROM event
-	WHERE
-	  TO_DATE(start_date, 'YYYY-MM-DD')  &lt;= LAST_DAY(TO_DATE(#{month}, 'YYYY-MM')) AND
-	  TO_DATE(end_date, 'YYYY-MM-DD') &gt;= TO_DATE(#{month}, 'YYYY-MM')
+		SELECT * FROM event
+		WHERE
+		  TO_DATE(start_date, 'YYYY-MM-DD')  &lt;= LAST_DAY(TO_DATE(#{month}, 'YYYY-MM')) AND
+		  TO_DATE(end_date, 'YYYY-MM-DD') &gt;= TO_DATE(#{month}, 'YYYY-MM')
 	</select>
   	<insert id="insertEvent">
   		insert into event values(event_seq.nextval,#{placeTypeId},#{eventTitle},#{eventContent},#{startDate},#{endDate},#{eventImg})
   	</insert>
+  	<select id="selectDelFile" resultType="String">
+  		select event_img from event where event_no=#{eventNo}
+  	</select>
+  	<update id="updateEvent">
+  		update event set event_title=#{eventTitle}, place_type_id=#{placeTypeId},event_content=#{eventContent},start_date=#{startDate},end_date=#{endDate}
+  		<if test="eventImg != null">
+			,event_img=#{eventImg}
+		</if>
+		where event_no=#{eventNo}
+  	</update>
+  	<select id="selectEndEvent" resultType="event">
+  		select * from event 
+		where to_date(#{date}, 'YYYY-MM-DD') &gt; to_date(end_date,'YYYY-MM-DD')
+  	</select>
+  	<delete id="deleteEvent" >
+  		delete from event where event_no=#{eventNo}
+  	</delete>
 </mapper>

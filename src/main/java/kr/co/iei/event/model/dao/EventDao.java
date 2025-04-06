@@ -14,5 +14,13 @@ public interface EventDao {
 	List selectOnGoingEvent(String date);
 
 	List selectMonthEvent(String month);
+
+	int updateEvent(EventDTO event);
+
+	String selectDelFile(int eventNo);
+
+	List selectEndEvent(String date);
+
+	int deleteEvent(int eventNo);
 	
 }

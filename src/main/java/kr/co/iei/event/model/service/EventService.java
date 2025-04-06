@@ -13,11 +13,7 @@ import kr.co.iei.event.model.dto.EventDTO;
 public class EventService {
 	@Autowired
 	private EventDao eventDao;
-	@Transactional
-	public int insertEvent(EventDTO event) {
-		int result= eventDao.insertEvent(event);
-		return result;
-	}
+	
 	public List selectOnGoingEvent(String date) {
 		List eventList = eventDao.selectOnGoingEvent(date);
 		return eventList;
@@ -25,5 +21,32 @@ public class EventService {
 	public List selectMonthEvent(String month) {
 		List eventList = eventDao.selectMonthEvent(month);
 		return eventList;
+	}
+	@Transactional
+	public int insertEvent(EventDTO event) {
+		int result= eventDao.insertEvent(event);
+		return result;
+	}
+	@Transactional
+	public String updateEvent(EventDTO event) {
+		String filepath = null;
+		if(event.getEventImg()!=null) {
+			filepath = eventDao.selectDelFile(event.getEventNo());
+		}
+		int result= eventDao.updateEvent(event);
+		return filepath;
+	}
+	public List selectEndEvent(String date) {
+		List eventList = eventDao.selectEndEvent(date);
+		return eventList;
+	}
+	@Transactional
+	public String deleteEvent(int eventNo) {
+		String filepath= eventDao.selectDelFile(eventNo);
+		int result = eventDao.deleteEvent(eventNo);
+		if(result>0) {
+			return filepath;
+		}
+		return null;
 	}
 }
