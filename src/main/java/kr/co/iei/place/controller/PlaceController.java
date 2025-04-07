@@ -30,7 +30,7 @@ public class PlaceController {
 	private PlaceService placeService;
 	
 	@GetMapping
-	public ResponseEntity<Map> tourList(@RequestParam int reqPage){
+	public ResponseEntity<Map> placeList(@RequestParam int reqPage){
 		Map map = placeService.selectPlaceList(reqPage);
 		return ResponseEntity.ok(map);
 	}

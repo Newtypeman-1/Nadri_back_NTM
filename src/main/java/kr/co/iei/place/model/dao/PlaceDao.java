@@ -16,18 +16,20 @@ public interface PlaceDao {
 	int totalCount();
 
 	List selectPlaceList(PageInfo pi);
+	
+	
+	//SPOT관련 PLACE_DETAIL 및 SPOT_DETATIL추가
+	List<PlaceInfoDTO> selectSpotDetail();//PlaceDataApi에서
 
-	List<PlaceInfoDTO> selectSpotDetail();
-
+	//
 	void updateDetailInfo(PlaceInfoDTO place);
-
 	void insertSpotInfo(SpotDTO spot);
+	List selectSpotList(PageInfo pi);
 	
-	
-
+	//DB초기 세팅
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
 
-	List selectSpotList(PageInfo pi);
+	
 
 	List selectPlaceType();
 	

@@ -95,10 +95,11 @@
 	</insert>
 		 
 	 
-	<!--  spot detail 추가 쿼리! 추후 수정 필요 -->
+	<!--  spot detail 추가 쿼리! 추후 수정 필요
 	<select id="selectSpotDetail" resultType="place">
     	SELECT * FROM place_info WHERE place_type_id = 12
 	</select>
+	
 	
 	<update id="updateDetailInfo" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
 	    UPDATE place_info
@@ -112,5 +113,6 @@
     	INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season)
     	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})
 	</insert>
+	 -->
 	  
 </mapper>

@@ -152,10 +152,10 @@ public class PlaceDataApi {
                     JsonObject itemObj = element.getAsJsonObject();
                     
                     spot.setPlaceId(place.getPlaceId());
-                    spot.setHeritage1(itemObj.has("heritage1") ? itemObj.get("heritage1").getAsInt() : null);
-                    spot.setHeritage2(itemObj.has("heritage2") ? itemObj.get("heritage2").getAsInt() : null);
-                    spot.setHeritage3(itemObj.has("heritage3") ? itemObj.get("heritage3").getAsInt() : null);
-                    spot.setUseSeason(itemObj.has("useseason") ? itemObj.get("useseason").getAsString() : null); // 컬럼명에 맞춤
+//                    spot.setHeritage1(itemObj.has("heritage1") ? itemObj.get("heritage1").getAsInt() : null);
+//                    spot.setHeritage2(itemObj.has("heritage2") ? itemObj.get("heritage2").getAsInt() : null);
+//                    spot.setHeritage3(itemObj.has("heritage3") ? itemObj.get("heritage3").getAsInt() : null);
+//                    spot.setUseSeason(itemObj.has("useseason") ? itemObj.get("useseason").getAsString() : null); // 컬럼명에 맞춤
 
                 placeDao.insertSpotInfo(spot);
                 }
