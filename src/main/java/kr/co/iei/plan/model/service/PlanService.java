@@ -29,4 +29,15 @@ public class PlanService {
 		return list;
 	}
 
+	public List selectPlanItineraries(int planNo) {
+		List list = planDao.selectPlanItineraries(planNo);
+		return list;
+	}
+
+	public boolean isPlanOwner(String refreshToken, int planNo) {
+		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
+		int count = planDao.isPlanOwner(loginMember.getMemberEmail(), planNo);
+		return count > 0;
+	}
+
 }
