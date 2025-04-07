@@ -38,6 +38,6 @@ public class CommController {
 	@PostMapping
 	public ResponseEntity<Integer> insertComm(@ModelAttribute CommDTO comm ){
 		int result = commService.insertComm(comm);
-		return null;
+		return ResponseEntity.ok(result);
 	}
 }

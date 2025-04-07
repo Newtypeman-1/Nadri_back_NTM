@@ -30,7 +30,7 @@ public class CommService {
 	public int insertComm(CommDTO comm) {
 		System.out.println(comm);
 int result = reviewDao.insertComm(comm);
-		return 0;
+		return result;
 	}
 
 }
