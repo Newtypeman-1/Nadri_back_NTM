@@ -13,4 +13,8 @@ public interface PlanDao {
 
 	PlanDTO verifyPlan(String memberEmail, int planNo);
 
+	List selectPlanItineraries(int planNo);
+
+	int isPlanOwner(String memberEmail, int planNo);
+
 }

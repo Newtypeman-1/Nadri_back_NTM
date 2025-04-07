@@ -1,6 +1,8 @@
 package kr.co.iei.plan.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,25 @@ public class PlanController {
 	
 	//플래너 진입 시 새 플래너인지, 기존 플래너인지 체크 (+ 자기 그룹의 플래너가 맞는지도 체크)
 	@GetMapping(value="/verify/{planNo}")
-	public ResponseEntity<Boolean> verifyPlan(@RequestHeader("Authorization") String refreshToken, @PathVariable int planNo){
-//		PlanDTO plan = planService.selectOnePlan(planNo); 이렇게 해서 일단 plan_status부터 체크하도록 바꿔야 함.
+	public ResponseEntity<Map> verifyPlan(@RequestHeader("Authorization") String refreshToken, @PathVariable int planNo){
+		//plan_status가 1(공개 상태)이거나, 해당 plan의 plan_group에 대하여 소속되어 있는 계정인지
+		//즉, "열람 권한"이 있는지 체크
 		PlanDTO plan = planService.verifyPlan(refreshToken, planNo);
-		return ResponseEntity.ok(plan != null);
+		
+		//열람 권한이 없다면 취소
+		if(plan == null) {
+			return ResponseEntity.ok(null);
+		}
+
+		//열람 권한이 있다면, 반환할 map을 구성: 플랜 정보 + 저장된 여행지들 + 수정/삭제 권한 여부 
+		Map<String, Object> map = new HashMap<>();
+		map.put("plan", plan);
+		List list = planService.selectPlanItineraries(planNo);
+		map.put("itineraries", list);
+		boolean isOwner = planService.isPlanOwner(refreshToken, planNo);
+		map.put("isOwner", isOwner);
+		
+		return ResponseEntity.ok(map);
 	}
 	
 	//유저 마커 반경 내 장소 데이터 수집
