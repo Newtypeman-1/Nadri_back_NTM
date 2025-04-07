@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.search.model.dao.SearchDao">
+	<select id="selectKeyword" resultType="String">
+		select keyword from search_keyword where keyword like '%'||
+		<if test="query != null">
+			#{query}
+		</if>
+		||'%'
+		<if test="type != null and type.length>0">
+			and place_type in (
+			<foreach collection="type" item="item" separator=",">
+				#{item}					
+			</foreach>
+			)
+		</if>
+	</select>
+
+</mapper>
