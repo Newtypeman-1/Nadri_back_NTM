@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.iei.review.model.dao.ReviewDao;
+import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -24,13 +25,16 @@ public class ReviewService {
 		 HashMap<String, Object> map = new HashMap<>();
 		 map.put("value",value);
 		 int totalCount=reviewDao.totalCount(map);
-		 System.out.println(totalCount);
 		PageInfo pi =  pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		map.put("pi", pi);
 		List list = reviewDao.selectBoardList(map);
-		System.out.println(list);
 		map.put("list",list);
 		return map;
+	}
+	public ReviewDTO selectOneReview(int reviewNo) {
+		ReviewDTO  review = reviewDao.selectOneReview(reviewNo);
+		
+		return review;
 	}
 
 }

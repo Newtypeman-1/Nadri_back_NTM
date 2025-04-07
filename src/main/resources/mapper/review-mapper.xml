@@ -9,16 +9,16 @@
 	content_type = #{value}
 </when>
 <when test="value == 'spot'">
-	 content_type_id = 12
+	place_type_id = 12
 </when>
 <when test="value == 'food'">
-	 content_type_id = 39
+	 place_type_id = 39
 </when>
 <when test="value == 'room'">
-	 content_type_id = 32
+	 place_type_id = 32
 </when>
 <when test="value == 'todo'">
-	 content_type_id IN (14, 15, 38, 28)
+	 place_type_id IN (14, 15, 38, 28)
 </when>
 
  </choose>
@@ -41,16 +41,16 @@ from review
 	content_type = #{value}
 </when>
 <when test="value == 'spot'">
-	 content_type_id = 12
+	 place_type_id = 12
 </when>
 <when test="value == 'food'">
-	 content_type_id = 39
+	 place_type_id = 39
 </when>
 <when test="value == 'room'">
-	 content_type_id = 32
+	 place_type_id = 32
 </when>
 <when test="value == 'todo'">
-	 content_type_id IN (14, 15, 38, 28)
+	place_type_id IN (14, 15, 38, 28)
 </when>
 
  </choose>
@@ -58,5 +58,22 @@ from review
  order by review_no desc)r)
 where rnum between #{pi.start} and #{pi.end}
   </select>
-
+<select id="selectOneReview" resultType="review">
+select *from review where review_no=#{reviewNo}
+</select>
+ <select id="commList" resultType="comm">
+ 	select comm_no, member_nickname, comm_content from comm where review_no=#{reviewNo}
+ </select>
+ <delete id="deleteComm">
+ delete comm where comm_no=#{commNo}
+ </delete>
+<insert id="insertComm">
+insert into comm values(#{commNo},#{memberNickname},#{commContent},#{reviewNo})
+<selectKey order="BEFORE" resultType="int" keyProperty="commNo">
+select comm_seq.nextval from dual
+</selectKey>
+</insert>
+<select id="currentComm" resultType="comm">
+select *from comm where comm_no =#{commNo}
+</select>
 </mapper>
