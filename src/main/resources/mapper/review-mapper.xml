@@ -73,4 +73,7 @@ insert into comm values(#{commNo},#{memberNickname},#{commContent},#{reviewNo})
 select comm_seq.nextval from dual
 </selectKey>
 </insert>
+<select id="currentComm" resultType="comm">
+select *from comm where comm_no =#{commNo}
+</select>
 </mapper>

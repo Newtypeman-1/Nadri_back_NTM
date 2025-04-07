@@ -36,8 +36,8 @@ public class CommController {
 		 return ResponseEntity.ok(result);
 	}
 	@PostMapping
-	public ResponseEntity<Integer> insertComm(@ModelAttribute CommDTO comm ){
-		int result = commService.insertComm(comm);
-		return ResponseEntity.ok(result);
+	public ResponseEntity<CommDTO> insertComm(@ModelAttribute CommDTO comm ){
+		CommDTO comment = commService.insertComm(comm);
+		return ResponseEntity.ok(comment);
 	}
 }

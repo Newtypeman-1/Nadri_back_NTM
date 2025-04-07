@@ -29,6 +29,8 @@ public interface ReviewDao {
 
 	int insertComm(CommDTO comm);
 
+	CommDTO currentComm(int commNo);
+
 	
 
 

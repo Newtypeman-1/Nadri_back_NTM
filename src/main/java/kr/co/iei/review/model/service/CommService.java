@@ -27,10 +27,14 @@ public class CommService {
 		return result;
 	}
 	@Transactional
-	public int insertComm(CommDTO comm) {
-		System.out.println(comm);
+	public CommDTO insertComm(CommDTO comm) {
+	
 int result = reviewDao.insertComm(comm);
-		return result;
+
+int commNo= comm.getCommNo();
+System.out.println(commNo);
+CommDTO comment = reviewDao.currentComm(commNo);
+		return comment;
 	}
 
 }
