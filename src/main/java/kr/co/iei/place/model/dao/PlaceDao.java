@@ -22,6 +22,8 @@ public interface PlaceDao {
 	void updateDetailInfo(PlaceInfoDTO place);
 
 	void insertSpotInfo(SpotDTO spot);
+	
+	
 
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
 

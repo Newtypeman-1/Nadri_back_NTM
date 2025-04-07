@@ -41,15 +41,15 @@ public class PlaceDataApi {
 	    int pageNo = 1;
 
 	    try {
-	        while (pageNo <= 27) {
+	        while (pageNo <= 32) {
 	            String result = Jsoup.connect(url)
-	                    .data("serviceKey", serviceKey)
+	                    .data("serviceKey", "pvRJJMc1wFDv3/ZHxWYn6lN1hwI7T4OcYmBiX+0kaTuuBpz4Y/l13ZmJKoQgn2utTqNdOcmz3Orokb0SN0yhKA==")
 	                    .data("MobileOS", "ETC")
 	                    .data("MobileApp", "nadri")
 	                    .data("_type", "json")
 	                    .data("numOfRows", "500")
 	                    .data("pageNo", String.valueOf(pageNo))
-	                    .data("contentTypeId", "12") // 관광지
+	                    .data("contentTypeId", "39") // 관광지
 	                    .ignoreContentType(true)
 	                    .get()
 	                    .text();
@@ -98,62 +98,79 @@ public class PlaceDataApi {
 	
 	
 	
-    // ✅ 관광지 상세 정보 보충 및 spot 저장
+    // ✅ 관광지 상세 정보 보충 및 spot 저장 ==> placeId(126508)하나만 테스트 완료
     @Transactional
     public void spotPlaceData() {
         List<PlaceInfoDTO> spots = placeDao.selectSpotDetail();  // 변경된 메서드명 사용
-       
 
-        for (PlaceInfoDTO place : spots) {
+
+        PlaceInfoDTO place = new PlaceInfoDTO();
+        place.setPlaceId(126508);
             try {
                 String result = Jsoup.connect("https://apis.data.go.kr/B551011/KorService1/detailIntro1")
-                        .data("serviceKey", serviceKey)
+                        .data("serviceKey", "pvRJJMc1wFDv3/ZHxWYn6lN1hwI7T4OcYmBiX+0kaTuuBpz4Y/l13ZmJKoQgn2utTqNdOcmz3Orokb0SN0yhKA==")
                         .data("MobileOS", "ETC")
                         .data("MobileApp", "nadri")
                         .data("_type", "json")
-                        .data("contentId", String.valueOf(place.getPlaceId()))
-                        .data("contentTypeId", String.valueOf(place.getPlaceTypeId()))
+                        .data("contentId", "126508")
+                        .data("contentTypeId", "12")
                         .ignoreContentType(true)
                         .get()
                         .text();
+                JsonObject json = JsonParser.parseString(result).getAsJsonObject();
 
-                JsonObject item = JsonParser.parseString(result)
-                        .getAsJsonObject()
-                        .getAsJsonObject("response")
-                        .getAsJsonObject("body")
-                        .getAsJsonObject("items")
-                        .getAsJsonObject("item");
+                JsonArray items = json.getAsJsonObject()
+				                        .getAsJsonObject("response")
+				                        .getAsJsonObject("body")
+				                        .getAsJsonObject("items")
+				                        .getAsJsonArray("item");
 
                 // ✅ place_info 보충 정보
-                String useTime = item.has("usetime") ? item.get("usetime").getAsString() : null;
-                String restDate = item.has("restdate") ? item.get("restdate").getAsString() : null;
-                String parking = item.has("parking") ? item.get("parking").getAsString() : null;
 
-                place.setUseTime(useTime);
-                place.setRestDate(restDate);
-                place.setParking(parking);
+                for (JsonElement element : items) {
+                    JsonObject itemObj = element.getAsJsonObject();
+
+                    String useTime = itemObj.has("usetime") ? itemObj.get("usetime").getAsString() : null;
+                    String restDate = itemObj.has("restdate") ? itemObj.get("restdate").getAsString() : null;
+                    String parking = itemObj.has("parking") ? itemObj.get("parking").getAsString() : null;
+
+                   //DB 저장
+//                 System.out.println("usetime: " + useTime);
+//                 System.out.println("restdate: " + restDate);
+//                 System.out.println("parking: " + parking);
+                   place.setUseTime(useTime);
+                   place.setRestDate(restDate);
+                   place.setParking(parking);
+                }
                 
+
                 placeDao.updateDetailInfo(place);
 
                 // ✅ spot 테이블 데이터 삽입
                 SpotDTO spot = new SpotDTO();
-                spot.setPlaceId(place.getPlaceId());
-                spot.setHeritage1(item.has("heritage1") ? item.get("heritage1").getAsInt() : null);
-                spot.setHeritage2(item.has("heritage2") ? item.get("heritage2").getAsInt() : null);
-                spot.setHeritage3(item.has("heritage3") ? item.get("heritage3").getAsInt() : null);
-                spot.setUseSeason(item.has("useseason") ? item.get("useseason").getAsString() : null); // 컬럼명에 맞춤
-                System.out.println(place.getPlaceId());
+                for (JsonElement element : items) {
+                    JsonObject itemObj = element.getAsJsonObject();
+                    
+                    spot.setPlaceId(place.getPlaceId());
+                    spot.setHeritage1(itemObj.has("heritage1") ? itemObj.get("heritage1").getAsInt() : null);
+                    spot.setHeritage2(itemObj.has("heritage2") ? itemObj.get("heritage2").getAsInt() : null);
+                    spot.setHeritage3(itemObj.has("heritage3") ? itemObj.get("heritage3").getAsInt() : null);
+                    spot.setUseSeason(itemObj.has("useseason") ? itemObj.get("useseason").getAsString() : null); // 컬럼명에 맞춤
+
                 placeDao.insertSpotInfo(spot);
+                }
 
             } catch (Exception e) {
                 System.out.println("❌ 에러 발생 - place_id: " + place.getPlaceId());
                 e.printStackTrace();
             }
-        }
+
 
         System.out.println("✅ 관광지 상세 데이터 보충 완료");
+    
     }
 }
+
 	
 	
 	
