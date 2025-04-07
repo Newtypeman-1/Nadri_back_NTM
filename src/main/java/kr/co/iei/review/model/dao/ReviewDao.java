@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.iei.review.model.dto.CommDTO;
+import kr.co.iei.review.model.dto.LikeDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 
@@ -32,6 +33,10 @@ public interface ReviewDao {
 	CommDTO currentComm(int commNo);
 
 	int deleteReview(int reviewNo);
+
+	LikeDTO reviewLike(int reviewNo);
+
+	int reviewCount(int reviewNo);
 
 	
 

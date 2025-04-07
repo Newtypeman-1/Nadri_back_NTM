@@ -38,7 +38,7 @@ public class ReviewService {
 	}
 	public int deleteReview(int reviewNo) {
 		int result = reviewDao.deleteReview(reviewNo);
-		return 0;
+		return result;
 	}
 
 }

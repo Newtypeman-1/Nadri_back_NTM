@@ -79,4 +79,10 @@ select *from comm where comm_no =#{commNo}
 <delete id="deleteReview">
 delete review where review_no=#{reviewNo}
 </delete>
+<select id="reviewLike" resultType="likes">
+select member_nickname from likes where review_no=#{reviewNo}
+</select>
+<select id="reviewCount" resultType="int">
+select count(*) from likes where review_no=#{reviewNo}
+</select>
 </mapper>
