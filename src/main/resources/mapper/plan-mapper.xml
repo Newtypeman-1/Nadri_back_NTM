@@ -18,12 +18,12 @@
 			    place_info p
 			LEFT JOIN (
 			    SELECT
-			        content_id, AVG(star_rate) as avg_rate, COUNT(review_no) AS review_count
+			        place_id, AVG(star_rate) as avg_rate, COUNT(review_no) AS review_count
 			    FROM
 			        review
 			    GROUP BY
-			        content_id
-			) r ON p.place_id = r.content_id
+			        place_id
+			) r ON p.place_id = r.place_id
 		) inner
 		WHERE distance <![CDATA[<=]]> #{radius}
 		ORDER BY distance ASC
