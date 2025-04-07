@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.plan.model.dao.PlanDao">
 
-	<select id="selectNearby" resultType="spot">
+	<select id="selectNearby" resultType="place">
 		SELECT
 			*
 		FROM (
@@ -29,11 +29,37 @@
 		ORDER BY distance ASC
 	</select>
 	
+<!-- 
 	<select id="verifyPlan" resultType="group">
 		SELECT pg.*
 		FROM plan_group pg
 		JOIN member m ON pg.member_nickname = m.member_nickname
 		WHERE m.member_email = #{memberEmail} AND pg.plan_no = #{planNo}
+	</select>
+ -->
+
+	<select id="verifyPlan" resultType="plan">
+		SELECT tp.*
+		FROM trip_plan tp
+		LEFT JOIN plan_group pg ON tp.plan_no = pg.plan_no
+		LEFT JOIN member m ON pg.member_nickname = m.member_nickname
+		WHERE tp.plan_no = #{planNo}
+			AND (
+				tp.plan_status = 1
+				OR
+				m.member_email = #{memberEmail}
+			)
+	</select>
+	
+	<select id="selectPlanItineraries" resultType="itinerary">
+		SELECT * FROM trip_itinerary WHERE plan_no = #{planNo}
+		ORDER BY itinerary_order
+	</select>
+	
+	<select id="isPlanOwner" resultType="int">
+		SELECT COUNT(*)
+		FROM plan_group
+		WHERE plan_no = #{planNo} AND member_email = #{memberEmail}
 	</select>
 	
 </mapper>
