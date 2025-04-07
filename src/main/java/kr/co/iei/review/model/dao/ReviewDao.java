@@ -31,6 +31,8 @@ public interface ReviewDao {
 
 	CommDTO currentComm(int commNo);
 
+	int deleteReview(int reviewNo);
+
 	
 
 
