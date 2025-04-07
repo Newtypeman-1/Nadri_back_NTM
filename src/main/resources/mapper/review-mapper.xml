@@ -85,4 +85,12 @@ select member_nickname from likes where review_no=#{reviewNo}
 <select id="reviewCount" resultType="int">
 select count(*) from likes where review_no=#{reviewNo}
 </select>
+<insert id="insertLike">
+insert into likes values ( #{memberNickname},#{reviewNo})
+</insert>
+<delete id="deleteLike">
+delete from likes
+WHERE review_no = #{reviewNo}
+      AND member_nickname = #{memberNickname}
+</delete>
 </mapper>

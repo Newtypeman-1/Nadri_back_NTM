@@ -38,6 +38,10 @@ public interface ReviewDao {
 
 	int reviewCount(int reviewNo);
 
+	int insertLike(int reviewNo, String memberNickname);
+
+	int deleteLike(int reviewNo, String memberNickname);
+
 	
 
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.LikeDTO;
@@ -21,6 +22,16 @@ public class LikeService {
 		 map.put("likes",likes);
 		 map.put("likeMember", likeMember);
 		return map;
+	}
+	@Transactional
+	public int addLike(int reviewNo, String memberNickname) {
+		int result= reviewDao.insertLike(reviewNo, memberNickname);
+		return result;
+	}
+	@Transactional
+	public int removeLike(int reviewNo, String memberNickname) {
+		int result= reviewDao.deleteLike(reviewNo, memberNickname);
+		return result;
 	}
 
 	
