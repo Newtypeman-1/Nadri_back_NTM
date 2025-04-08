@@ -11,4 +11,6 @@ public interface SearchDao {
 
 	List selectKeyword(SearchDTO search);
 
+	List searchResult(SearchDTO search);
+
 }

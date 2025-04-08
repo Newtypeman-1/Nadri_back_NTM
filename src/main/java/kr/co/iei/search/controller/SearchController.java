@@ -28,4 +28,10 @@ public class SearchController {
 		List keywordList = searchService.selectKeyword(search);
 		return ResponseEntity.ok(keywordList);
 	}
+	@GetMapping
+	public ResponseEntity<List> searchResult(@RequestParam String query,@RequestParam(required = false) String[] type){
+		SearchDTO search = new SearchDTO(query, type);
+		List searchList = searchService.searchResult(search);
+		return ResponseEntity.ok(searchList);
+	}
 }

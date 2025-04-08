@@ -15,5 +15,9 @@
 			)
 		</if>
 	</select>
+	<select id="searchResult">
+		select placeTypeId,	 placeTitle,	 placeAddr,	 area,	 sigungu,	 placeThumb
+		from place_info where placeTitle = 
+	</select>
 
 </mapper>

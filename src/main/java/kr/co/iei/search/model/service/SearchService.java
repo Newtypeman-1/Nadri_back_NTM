@@ -18,4 +18,9 @@ public class SearchService {
 		return keywordList;
 	}
 
+	public List searchResult(SearchDTO search) {
+		List searchList = searchDao.searchResult(search);
+		return searchList;
+	}
+
 }
