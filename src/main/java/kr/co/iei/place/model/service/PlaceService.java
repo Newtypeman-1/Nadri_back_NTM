@@ -27,14 +27,14 @@ public class PlaceService {
 //	}
 	
 	//placeInfo 조회(필터없는 전체조회)
-	public Map selectPlaceList(int reqPage, int placeCat) {
+	public Map selectPlaceList(int reqPage, int placeTypeId) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
 		int totalCount = placeDao.totalCount();
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("placeCat", placeCat);
+		map.put("placeCat", placeTypeId);
 		map.put("pi", pi);
 		
 		List<PlaceInfoDTO> list = placeDao.selectPlaceList(map);

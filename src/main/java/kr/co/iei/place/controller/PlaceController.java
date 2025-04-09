@@ -30,9 +30,9 @@ public class PlaceController {
 	private PlaceService placeService;
 	
 	@GetMapping
-	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int placeCat){
-		Map map = placeService.selectPlaceList(reqPage, placeCat);
-		System.out.println(placeCat);
+	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int placeTypeId){
+		Map map = placeService.selectPlaceList(reqPage, placeTypeId);
+		System.out.println(placeTypeId);
 		return ResponseEntity.ok(map);
 	}
 	
