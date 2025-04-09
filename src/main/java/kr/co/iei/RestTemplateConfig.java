@@ -14,7 +14,7 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList()<>();
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
         messageConverters.add(new FormHttpMessageConverter());
         restTemplate.setMessageConverters(messageConverters);
 
