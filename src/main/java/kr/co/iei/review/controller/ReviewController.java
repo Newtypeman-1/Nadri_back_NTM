@@ -23,7 +23,7 @@ public class ReviewController {
 	private ReviewService reviewService;
 	@GetMapping
 	public ResponseEntity<Map> reviewlist(@RequestParam int reqPage, @RequestParam String value){
-		System.out.println(value);
+	
 		Map map = reviewService.reviewList(reqPage,value);
 		return ResponseEntity.ok(map);
 	}
@@ -35,7 +35,7 @@ public class ReviewController {
 	}
 	@DeleteMapping(value="/{reviewNo}")
 	public ResponseEntity<Integer>deleteReview(@PathVariable int reviewNo){
-		System.out.println(reviewNo);
+		
 		int result = reviewService.deleteReview(reviewNo);
 		return ResponseEntity.ok(result);
 	}

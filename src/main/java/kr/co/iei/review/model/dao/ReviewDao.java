@@ -45,6 +45,8 @@ public interface ReviewDao {
 
 	int insertReport(ReportDTO reportDTO);
 
+	int patchComment(CommDTO commDTO);
+
 	
 
 
