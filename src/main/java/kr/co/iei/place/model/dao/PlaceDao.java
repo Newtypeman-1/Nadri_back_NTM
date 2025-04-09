@@ -12,20 +12,15 @@ import kr.co.iei.util.PageInfo;
 @Mapper
 public interface PlaceDao {
 
-//	int insertCommon(List list);
+	int totalCount(int placeTypeId);
 
-	int totalCount();
-
+	//플레이스리스트조회
 	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
 	
 	
 	//SPOT관련 PLACE_DETAIL 및 SPOT_DETATIL추가
 	List<PlaceInfoDTO> selectSpotDetail();//PlaceDataApi에서
 
-	//
-	void updateDetailInfo(PlaceInfoDTO place);
-	void insertSpotInfo(SpotDTO spot);
-	List selectSpotList(PageInfo pi);
 	
 	//DB초기 세팅
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
