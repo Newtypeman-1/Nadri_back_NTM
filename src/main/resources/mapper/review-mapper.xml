@@ -97,4 +97,9 @@ WHERE review_no = #{reviewNo}
 <insert id="insertReport">
 insert into report values(report_seq.nextval,#{reportNickname},#{reportReason},#{reviewNo})
 </insert>
+<update id="patchComment">
+update comm set
+comm_content=#{commContent}
+where comm_no =#{commNo}
+</update>
 </mapper>

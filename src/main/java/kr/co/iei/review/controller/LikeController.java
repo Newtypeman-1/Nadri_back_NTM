@@ -26,7 +26,7 @@ public class LikeController {
 	
 	@GetMapping(value="/{reviewNo}")
 	public ResponseEntity<Map> reviewLike(@PathVariable int reviewNo){
-		System.out.println(reviewNo);
+		
 		Map map = likeService.reviewLike(reviewNo);
 		return ResponseEntity.ok(map);
 	
