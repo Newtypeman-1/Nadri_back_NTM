@@ -31,10 +31,10 @@ public class SpotDTO {
 	private String parking;
 	
 	//spot_detail
-	private int heritage1;
-	private int heritage2;
-	private int heritage3;
-	private String useSeason;
+//	private int heritage1;
+//	private int heritage2;
+//	private int heritage3;
+//	private String useSeason;
 	
 	//PlaceInfo 테이블에 없음(테이블 조인)
 	private String areaName;
