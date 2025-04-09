@@ -24,4 +24,6 @@ public interface AdminDao {
 	int deleteEvent(int eventNo);
 
 	CompanyDTO selectCompanyInfo();
+
+	int updateCompanyInfo(CompanyDTO company);
 }

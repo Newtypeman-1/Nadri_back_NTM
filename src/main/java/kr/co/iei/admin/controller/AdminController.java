@@ -43,6 +43,11 @@ public class AdminController {
 		CompanyDTO company = adminService.selectCompanyInfo();
 		return ResponseEntity.ok(company); 
 	}
+	@PatchMapping("/company")
+	private ResponseEntity<Integer> updateCompany(@RequestBody CompanyDTO company){
+		int result = adminService.updateCompanyInfo(company);
+		return ResponseEntity.ok(result);
+	}
 	
 	@GetMapping("/event/{month}")
 	public ResponseEntity<List> selectMonthEvent(@PathVariable String month){

@@ -38,4 +38,8 @@
   	<select id="selectCompanyInfo" resultType="company">
   		select * from company_info
   	</select>
+  	<update id="updateCompanyInfo">
+  		update company_info set
+  			addr=#{addr}, tel=#{tel}, fax=#{fax}, email=#{email}
+  	</update>
 </mapper>

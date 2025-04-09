@@ -54,4 +54,9 @@ public class AdminService {
 		CompanyDTO company = adminDao.selectCompanyInfo();
 		return company;
 	}
+	@Transactional
+	public int updateCompanyInfo(CompanyDTO company) {
+		int result = adminDao.updateCompanyInfo(company);
+		return result;
+	}
 }
