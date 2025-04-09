@@ -43,11 +43,11 @@ public class ReviewService {
 	}
 	public List<ReviewStatsDTO> selectReviewStats() {
 		List<ReviewStatsDTO> reviewStats = reviewDao.selectReviewStats();
-		for(ReviewStatsDTO r : reviewStats) {
-			List<ReviewDTO> hotReviews = reviewDao.selectHotReview(r.getPlaceTypeId());
-			r.setHotReview(hotReviews);
-		}
 		return reviewStats;
+	}
+	public List<ReviewDTO> selectHotReview(int type) {
+		List<ReviewDTO> hotReviews = reviewDao.selectHotReview(type);
+		return hotReviews;
 	}
 
 }

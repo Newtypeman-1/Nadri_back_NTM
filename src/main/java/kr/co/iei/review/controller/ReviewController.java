@@ -46,5 +46,10 @@ public class ReviewController {
 		List<ReviewStatsDTO> reviewStats= reviewService.selectReviewStats();
 		return ResponseEntity.ok(reviewStats);
 	}
+	@GetMapping("/hotReview")
+	public ResponseEntity<List> hotReview(@RequestParam int type){
+		List<ReviewDTO> hotReviews= reviewService.selectHotReview(type);
+		return ResponseEntity.ok(hotReviews);
+	}
 		
 }

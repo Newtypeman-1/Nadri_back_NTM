@@ -15,5 +15,4 @@ import lombok.NoArgsConstructor;
 public class ReviewStatsDTO {
 	private int placeTypeId;
 	private int reviewCount;
-	private List<ReviewDTO> hotReview;
 }

@@ -48,7 +48,7 @@ public interface ReviewDao {
 
 	List<ReviewStatsDTO> selectReviewStats();
 
-	List<ReviewDTO> selectHotReview(int placeTypeId);
+	List<ReviewDTO> selectHotReview(int type);
 
 	
 
