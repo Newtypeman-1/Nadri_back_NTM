@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.iei.review.model.dto.CommDTO;
 import kr.co.iei.review.model.dto.LikeDTO;
+import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 
@@ -41,6 +42,8 @@ public interface ReviewDao {
 	int insertLike(int reviewNo, String memberNickname);
 
 	int deleteLike(int reviewNo, String memberNickname);
+
+	int insertReport(ReportDTO reportDTO);
 
 	
 

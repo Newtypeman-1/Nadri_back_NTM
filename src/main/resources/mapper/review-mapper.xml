@@ -93,4 +93,7 @@ delete from likes
 WHERE review_no = #{reviewNo}
       AND member_nickname = #{memberNickname}
 </delete>
+<insert id="insertReport">
+insert into report values(report_seq.nextval,#{reportNickname},#{reportReason},#{reviewNo})
+</insert>
 </mapper>
