@@ -1,5 +1,6 @@
 package kr.co.iei.review.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,4 +41,11 @@ public class ReviewController {
 		return ResponseEntity.ok(result);
 	}
 		
+	@GetMapping(value="/detail/{placeId}")
+	public ResponseEntity<List> oneReviewlist(@PathVariable int placeId){
+	
+	System.out.println(placeId);
+		List list = reviewService.oneReviewList(placeId);
+		return ResponseEntity.ok(list);
+	}
 }

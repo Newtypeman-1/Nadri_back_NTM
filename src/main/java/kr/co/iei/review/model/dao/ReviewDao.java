@@ -47,6 +47,8 @@ public interface ReviewDao {
 
 	int patchComment(CommDTO commDTO);
 
+	List selectOneBoardList(int placeId);
+
 	
 
 

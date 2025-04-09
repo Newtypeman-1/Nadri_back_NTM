@@ -40,5 +40,9 @@ public class ReviewService {
 		int result = reviewDao.deleteReview(reviewNo);
 		return result;
 	}
-
+	public List oneReviewList(int placeId) {
+		List list = reviewDao.selectOneBoardList(placeId);
+		return list;
+	}
+	
 }

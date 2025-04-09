@@ -102,4 +102,21 @@ update comm set
 comm_content=#{commContent}
 where comm_no =#{commNo}
 </update>
+<select id="selectOneBoardList" resultType="review">
+   select * from
+(select rownum as rnum, r.*from
+(select 
+review_no,
+review_title,
+review_content,
+star_rate,
+member_nickname,
+review_date
+from review 
+where
+ place_id = #{placeId}
+  order by review_no desc)r)
+where rnum between 1 and 9
+</select>
+
 </mapper>
