@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,4 +33,11 @@ public class ReviewController {
 		ReviewDTO review =reviewService.selectOneReview(reviewNo);
 		return ResponseEntity.ok(review);
 	}
+	@DeleteMapping(value="/{reviewNo}")
+	public ResponseEntity<Integer>deleteReview(@PathVariable int reviewNo){
+		System.out.println(reviewNo);
+		int result = reviewService.deleteReview(reviewNo);
+		return ResponseEntity.ok(result);
+	}
+		
 }
