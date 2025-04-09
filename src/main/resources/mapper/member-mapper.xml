@@ -21,7 +21,23 @@
 		#{memberGender}, 
 		null, 
 		1,
-		'N')
+		'N',
+		null)
+	</insert>
+	
+	<insert id="socialJoin">
+		insert into member values(
+		member_seq.nextval,
+		#{memberEmail}, 
+		null, 
+		#{memberNickname}, 
+		#{memberPhone}, 
+		#{memberBirth}, 
+		#{memberGender}, 
+		null, 
+		1,
+		'N',
+		'K')
 	</insert>
 	
 	<update id="updatePw">
@@ -29,7 +45,15 @@
 	</update>
 	
 	<select id="selectOneMember" resultType="member">
+		select * from member where member_email = #{memberEmail} and member_social is null
+	</select>
+	
+	<select id="socialLogin" resultType="member">
 		select * from member where member_email = #{memberEmail}
+	</select>
+	
+	<select id="isSocial" resultType="int">
+		select count(*) from member where member_email = #{memberEmail} and member_social is null
 	</select>
 	
 	<select id="selectMemberInfo" resultType="member">

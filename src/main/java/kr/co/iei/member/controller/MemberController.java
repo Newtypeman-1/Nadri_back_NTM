@@ -54,6 +54,14 @@ public class MemberController {
 		return ResponseEntity.ok(result);
 	}
 	
+	//소셜회원가입
+	@PostMapping(value="/socialJoin")
+	private ResponseEntity<Integer> socialJoin(@RequestBody MemberDTO member){
+		System.out.println(member);
+		int result = memberService.socialJoin(member);
+		return ResponseEntity.ok(result);
+	}
+	
 	//비밀번호 재설정
 	@PatchMapping(value="/updatePw")
 	public ResponseEntity<Integer> updatePw(@RequestBody MemberDTO member){
@@ -71,6 +79,26 @@ public class MemberController {
 			return ResponseEntity.status(404).build();
 		}
 	}
+	
+	//소셜로그인
+	@GetMapping(value="/socialLogin")
+	public ResponseEntity<LoginMemberDTO> socialLogin(@RequestParam String userEmail){
+		System.out.println("userEmail : " + userEmail);
+		LoginMemberDTO loginMember = memberService.socialLogin(userEmail);
+		if(loginMember != null) {
+			return ResponseEntity.ok(loginMember);
+		}else {
+			return ResponseEntity.status(404).build();
+		}
+	}
+	
+	//소셜 이메일 확인
+    @GetMapping(value="/isSocial")
+    public ResponseEntity<Integer> isSocial(@RequestParam String email) {
+    	System.out.println(email);
+    	int result = memberService.isSocial(email);
+    	return ResponseEntity.ok(result);
+    }
 	
 	//마이페이지 회원정보
 	@GetMapping(value="/memberInfo")

@@ -12,12 +12,18 @@ public interface MemberDao {
 
 	int insertMember(MemberDTO member);
 
+	int socialJoin(MemberDTO member);
+	
 	int existsEmail(String memberEmail);
 
 	int updatePw(MemberDTO member);
 
 	MemberDTO selectOneMember(String memberEmail);
 
+	MemberDTO socialLogin(String userEmail);
+	
+	int isSocial(String email);
+	
 	MemberDTO selectMemberInfo(String memberNickname);
 
 	int updateMember(MemberDTO member);
@@ -27,5 +33,8 @@ public interface MemberDao {
 	int deleteMember(MemberDTO memberNickname);
 
 	int insertDelMember(MemberDTO member);
+
+
+
 
 }

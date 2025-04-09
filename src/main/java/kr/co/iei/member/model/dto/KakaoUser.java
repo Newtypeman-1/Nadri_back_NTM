@@ -6,16 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class KakaoUser {
-    private String userId;
-    private String email;
-
-    public KakaoUser(String userId, String email) {
-        this.userId = userId;
+    private String email; 
+    
+    public KakaoUser(String email) {
         this.email = email;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 
     public String getEmail() {

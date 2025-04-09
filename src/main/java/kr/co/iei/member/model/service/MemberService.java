@@ -51,6 +51,14 @@ public class MemberService {
 		int result = memberDao.insertMember(member);
 		return result;
 	}
+    
+	//소셜회원가입
+    @Transactional
+    public int socialJoin(MemberDTO member) {
+    	System.out.println(member);
+		int result = memberDao.socialJoin(member);
+    	return result;
+    }
 
     //비밀번호 재설정
 	public int updatePw(MemberDTO member) {
@@ -59,9 +67,9 @@ public class MemberService {
 		int result = memberDao.updatePw(member);
 		return result;
 	}
-
+	
+	//로그인
 	public LoginMemberDTO login(MemberDTO member) {
-
 		MemberDTO m = memberDao.selectOneMember(member.getMemberEmail());
 		if(m != null && encoder.matches(member.getMemberPw(), m.getMemberPw())) {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
@@ -72,6 +80,27 @@ public class MemberService {
 			return loginMember;
 		}
 		return null;
+	}
+	
+	//소셜로그인
+	public LoginMemberDTO socialLogin(String userEmail) {
+		System.out.println(userEmail);
+		MemberDTO m = memberDao.socialLogin(userEmail);
+		if(m != null) {
+			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
+			System.out.println("accessToken : "+accessToken);
+			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel());
+			System.out.println(loginMember);
+			return loginMember;
+		}
+		return null;
+	}
+	
+	//소셜 이메일 확인
+	public int isSocial(String email) {
+		int result = memberDao.isSocial(email);
+		return result;
 	}
 	
 	//마이페이지 회원정보 출력
@@ -96,6 +125,7 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
+
 
 	
 }
