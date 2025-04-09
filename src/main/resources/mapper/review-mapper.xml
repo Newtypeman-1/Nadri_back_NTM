@@ -6,7 +6,7 @@
  <where>
  <choose>
 <when test="value == 'plan'">
-	content_type = #{value}
+	 plan_no IS NOT NULL
 </when>
 <when test="value == 'spot'">
 	place_type_id = 12
@@ -33,12 +33,14 @@ review_title,
 review_content,
 star_rate,
 member_nickname,
-review_date
+review_date,
+place_id,
+plan_no
 from review 
 <where>
  <choose>
 <when test="value == 'plan'">
-	content_type = #{value}
+	 plan_no IS NOT NULL
 </when>
 <when test="value == 'spot'">
 	 place_type_id = 12
@@ -52,7 +54,6 @@ from review
 <when test="value == 'todo'">
 	place_type_id IN (14, 15, 38, 28)
 </when>
-
  </choose>
  </where>
  order by review_no desc)r)
@@ -60,7 +61,7 @@ where rnum between #{pi.start} and #{pi.end}
   </select>
 <select id="selectOneReview" resultType="review">
 select *from review where review_no=#{reviewNo}
-</select>
+</select>	
  <select id="commList" resultType="comm">
  	select comm_no, member_nickname, comm_content from comm where review_no=#{reviewNo}
  </select>
