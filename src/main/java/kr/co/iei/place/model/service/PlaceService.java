@@ -27,14 +27,17 @@ public class PlaceService {
 //	}
 	
 	//placeInfo 조회(필터없는 전체조회)
-	public Map selectPlaceList(int reqPage) {
+	public Map selectPlaceList(int reqPage, int placeCat) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
 		int totalCount = placeDao.totalCount();
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		
+		Map<String, Object> map = new HashMap<>();
+		map.put("placeCat", placeCat);
+		map.put("pi", pi);
 		
-		List<PlaceInfoDTO> list = placeDao.selectPlaceList(pi);
+		List<PlaceInfoDTO> list = placeDao.selectPlaceList(map);
 		  //placeTitle 괄호제거
 		  for (PlaceInfoDTO place : list) {
 	            String title = place.getPlaceTitle();
@@ -44,14 +47,16 @@ public class PlaceService {
 	            }
 	        }
 		  
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map2 = new HashMap<>();
 		map.put("list", list);
 		map.put("pi", pi);
+		map.put("totalCount", totalCount);
 		
 		return map;
 	}
 	public void insertPlace() {
 		// TODO Auto-generated method stub
+		
 		
 	}
 	
@@ -73,7 +78,7 @@ public class PlaceService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
 		map.put("pi", pi);
-		
+		map.put("totalCount", totalCount);
 		return map;
 	}
 

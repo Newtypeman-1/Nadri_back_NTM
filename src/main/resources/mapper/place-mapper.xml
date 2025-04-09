@@ -37,10 +37,30 @@
 	        ON p.sigungu_code = s.sigungu_code 
 	       AND p.area_code = s.area_code
 	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+	      
+	   		<where>
+			  <if test="placeCat != 0">
+			    <choose>
+			      <when test="placeCat == 12">
+			        AND p.place_type_id = 12
+			      </when>
+			      <when test="placeCat == 14">
+			        AND p.place_type_id IN (14, 15, 28, 38)
+			      </when>
+			      <when test="placeCat == 32">
+			        AND p.place_type_id = 32
+			      </when>
+			      <when test="placeCat == 39">
+			        AND p.place_type_id = 39
+			      </when>
+			    </choose>
+			  </if>
+			</where>
+	      
 	      ORDER BY p.place_title ASC
 	    ) c
 	  )
-	  WHERE rnum BETWEEN #{start} AND #{end}
+	  WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
 	</select>
 	
 	<!-- spot 리스트 조회 -->

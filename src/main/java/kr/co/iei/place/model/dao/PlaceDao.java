@@ -1,6 +1,7 @@
 package kr.co.iei.place.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,7 +16,7 @@ public interface PlaceDao {
 
 	int totalCount();
 
-	List selectPlaceList(PageInfo pi);
+	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
 	
 	
 	//SPOT관련 PLACE_DETAIL 및 SPOT_DETATIL추가
@@ -32,5 +33,10 @@ public interface PlaceDao {
 	
 
 	List selectPlaceType();
+
+
+
+
+
 	
 }
