@@ -58,8 +58,12 @@
 	
 	<select id="isPlanOwner" resultType="int">
 		SELECT COUNT(*)
-		FROM plan_group
-		WHERE plan_no = #{planNo} AND member_email = #{memberEmail}
+		FROM plan_group pg
+		JOIN member m On pg.member_nickname = m.member_nickname
+		WHERE
+			pg.plan_no = #{planNo}
+			AND
+			m.member_email = #{memberEmail}
 	</select>
 	
 </mapper>
