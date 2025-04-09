@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -39,6 +40,14 @@ public class ReviewService {
 	public int deleteReview(int reviewNo) {
 		int result = reviewDao.deleteReview(reviewNo);
 		return result;
+	}
+	public List<ReviewStatsDTO> selectReviewStats() {
+		List<ReviewStatsDTO> reviewStats = reviewDao.selectReviewStats();
+		for(ReviewStatsDTO r : reviewStats) {
+			List<ReviewDTO> hotReviews = reviewDao.selectHotReview(r.getPlaceTypeId());
+			r.setHotReview(hotReviews);
+		}
+		return reviewStats;
 	}
 
 }

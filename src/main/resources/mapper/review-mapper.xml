@@ -1,99 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.review.model.dao.ReviewDao">
-<select id="totalCount" resultType="int">
- select count(*) from review 
- <where>
- <choose>
-<when test="value == 'plan'">
-	content_type = #{value}
-</when>
-<when test="value == 'spot'">
-	place_type_id = 12
-</when>
-<when test="value == 'food'">
-	 place_type_id = 39
-</when>
-<when test="value == 'room'">
-	 place_type_id = 32
-</when>
-<when test="value == 'todo'">
-	 place_type_id IN (14, 15, 38, 28)
-</when>
-
- </choose>
- </where>
-</select>
-  <select id="selectBoardList" resultType="review">
-    select * from
-(select rownum as rnum, r.*from
-(select 
-review_no,
-review_title,
-review_content,
-star_rate,
-member_nickname,
-review_date
-from review 
-<where>
- <choose>
-<when test="value == 'plan'">
-	content_type = #{value}
-</when>
-<when test="value == 'spot'">
-	 place_type_id = 12
-</when>
-<when test="value == 'food'">
-	 place_type_id = 39
-</when>
-<when test="value == 'room'">
-	 place_type_id = 32
-</when>
-<when test="value == 'todo'">
-	place_type_id IN (14, 15, 38, 28)
-</when>
-
- </choose>
- </where>
- order by review_no desc)r)
-where rnum between #{pi.start} and #{pi.end}
-  </select>
-<select id="selectOneReview" resultType="review">
-select *from review where review_no=#{reviewNo}
-</select>
- <select id="commList" resultType="comm">
- 	select comm_no, member_nickname, comm_content from comm where review_no=#{reviewNo}
- </select>
- <delete id="deleteComm">
- delete comm where comm_no=#{commNo}
- </delete>
-<insert id="insertComm">
-insert into comm values(#{commNo},#{memberNickname},#{commContent},#{reviewNo})
-<selectKey order="BEFORE" resultType="int" keyProperty="commNo">
-select comm_seq.nextval from dual
-</selectKey>
-</insert>
-<select id="currentComm" resultType="comm">
-select *from comm where comm_no =#{commNo}
-</select>
-<delete id="deleteReview">
-delete review where review_no=#{reviewNo}
-</delete>
-<select id="reviewLike" resultType="likes">
-select member_nickname from likes where review_no=#{reviewNo}
-</select>
-<select id="reviewCount" resultType="int">
-select count(*) from likes where review_no=#{reviewNo}
-</select>
-<insert id="insertLike">
-insert into likes values ( #{memberNickname},#{reviewNo})
-</insert>
-<delete id="deleteLike">
-delete from likes
-WHERE review_no = #{reviewNo}
-      AND member_nickname = #{memberNickname}
-</delete>
-<insert id="insertReport">
-insert into report values(report_seq.nextval,#{reportNickname},#{reportReason},#{reviewNo})
-</insert>
+	<select id="totalCount" resultType="int">
+	 select count(*) from review 
+	 <where>
+	 <choose>
+	<when test="value == 'plan'">
+		content_type = #{value}
+	</when>
+	<when test="value == 'spot'">
+		place_type_id = 12
+	</when>
+	<when test="value == 'food'">
+		 place_type_id = 39
+	</when>
+	<when test="value == 'room'">
+		 place_type_id = 32
+	</when>
+	<when test="value == 'todo'">
+		 place_type_id IN (14, 15, 38, 28)
+	</when>
+	
+	 </choose>
+	 </where>
+	</select>
+	  <select id="selectBoardList" resultType="review">
+	    select * from
+	(select rownum as rnum, r.*from
+	(select 
+	review_no,
+	review_title,
+	review_content,
+	star_rate,
+	member_nickname,
+	review_date
+	from review 
+	<where>
+	 <choose>
+	<when test="value == 'plan'">
+		content_type = #{value}
+	</when>
+	<when test="value == 'spot'">
+		 place_type_id = 12
+	</when>
+	<when test="value == 'food'">
+		 place_type_id = 39
+	</when>
+	<when test="value == 'room'">
+		 place_type_id = 32
+	</when>
+	<when test="value == 'todo'">
+		place_type_id IN (14, 15, 38, 28)
+	</when>
+	
+	 </choose>
+	 </where>
+	 order by review_no desc)r)
+	where rnum between #{pi.start} and #{pi.end}
+	  </select>
+	<select id="selectOneReview" resultType="review">
+	select *from review where review_no=#{reviewNo}
+	</select>
+	 <select id="commList" resultType="comm">
+	 	select comm_no, member_nickname, comm_content from comm where review_no=#{reviewNo}
+	 </select>
+	 <delete id="deleteComm">
+	 delete comm where comm_no=#{commNo}
+	 </delete>
+	<insert id="insertComm">
+	insert into comm values(#{commNo},#{memberNickname},#{commContent},#{reviewNo})
+	<selectKey order="BEFORE" resultType="int" keyProperty="commNo">
+	select comm_seq.nextval from dual
+	</selectKey>
+	</insert>
+	<select id="currentComm" resultType="comm">
+	select *from comm where comm_no =#{commNo}
+	</select>
+	<delete id="deleteReview">
+	delete review where review_no=#{reviewNo}
+	</delete>
+	<select id="reviewLike" resultType="likes">
+	select member_nickname from likes where review_no=#{reviewNo}
+	</select>
+	<select id="reviewCount" resultType="int">
+	select count(*) from likes where review_no=#{reviewNo}
+	</select>
+	<insert id="insertLike">
+	insert into likes values ( #{memberNickname},#{reviewNo})
+	</insert>
+	<delete id="deleteLike">
+	delete from likes
+	WHERE review_no = #{reviewNo}
+	      AND member_nickname = #{memberNickname}
+	</delete>
+	<insert id="insertReport">
+	insert into report values(report_seq.nextval,#{reportNickname},#{reportReason},#{reviewNo})
+	</insert>
+	<select id="selectReviewStats" resultType="stats">
+		select place_type_id, count(review_no) as reviewCount from review where place_type_id is not null group by place_type_id
+	</select>
+	<select id="selectHotReview" resultType="review">
+		select review_no,review_title,member_nickname,review_date, review_no from (select review_no,review_title,member_nickname,review_date, rownum rnum from review where place_type_id=#{i} order by read_count) where rnum &lt; 6
+	</select>
 </mapper>

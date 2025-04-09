@@ -9,6 +9,7 @@ import kr.co.iei.review.model.dto.CommDTO;
 import kr.co.iei.review.model.dto.LikeDTO;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
@@ -44,6 +45,12 @@ public interface ReviewDao {
 	int deleteLike(int reviewNo, String memberNickname);
 
 	int insertReport(ReportDTO reportDTO);
+
+	List<ReviewStatsDTO> selectReviewStats();
+
+	List<ReviewDTO> selectHotReview(int placeTypeId);
+
+	
 
 	
 

@@ -1,5 +1,6 @@
 package kr.co.iei.review.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.review.model.service.ReviewService;
 
 @CrossOrigin("*")
@@ -28,16 +30,21 @@ public class ReviewController {
 		return ResponseEntity.ok(map);
 	}
 	@GetMapping(value="/{reviewNo}")
-	public ResponseEntity<ReviewDTO>selectOneReview(@PathVariable int reviewNo){
+	public ResponseEntity<ReviewDTO> selectOneReview(@PathVariable int reviewNo){
 	
 		ReviewDTO review =reviewService.selectOneReview(reviewNo);
 		return ResponseEntity.ok(review);
 	}
 	@DeleteMapping(value="/{reviewNo}")
-	public ResponseEntity<Integer>deleteReview(@PathVariable int reviewNo){
+	public ResponseEntity<Integer> deleteReview(@PathVariable int reviewNo){
 		System.out.println(reviewNo);
 		int result = reviewService.deleteReview(reviewNo);
 		return ResponseEntity.ok(result);
+	}
+	@GetMapping("/stats")
+	public ResponseEntity<List> reviewStats(){
+		List<ReviewStatsDTO> reviewStats= reviewService.selectReviewStats();
+		return ResponseEntity.ok(reviewStats);
 	}
 		
 }
