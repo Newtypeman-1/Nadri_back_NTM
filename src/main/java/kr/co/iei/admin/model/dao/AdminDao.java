@@ -7,8 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.admin.model.dto.EventDTO;
 
 @Mapper
-public interface EventDao {
-
+public interface AdminDao {
 	int insertEvent(EventDTO event);
 
 	List selectOnGoingEvent(String date);
@@ -22,5 +21,4 @@ public interface EventDao {
 	List selectEndEvent(String date);
 
 	int deleteEvent(int eventNo);
-	
 }

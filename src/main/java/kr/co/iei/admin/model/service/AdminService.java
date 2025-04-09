@@ -6,44 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.iei.admin.model.dao.EventDao;
+import kr.co.iei.admin.model.dao.AdminDao;
 import kr.co.iei.admin.model.dto.EventDTO;
 
 @Service
-public class EventService {
+public class AdminService {
 	@Autowired
-	private EventDao eventDao;
+	private AdminDao adminDao;
 	
 	public List selectOnGoingEvent(String date) {
-		List eventList = eventDao.selectOnGoingEvent(date);
+		List eventList = adminDao.selectOnGoingEvent(date);
 		return eventList;
 	}
 	public List selectMonthEvent(String month) {
-		List eventList = eventDao.selectMonthEvent(month);
+		List eventList = adminDao.selectMonthEvent(month);
 		return eventList;
 	}
 	@Transactional
 	public int insertEvent(EventDTO event) {
-		int result= eventDao.insertEvent(event);
+		int result= adminDao.insertEvent(event);
 		return result;
 	}
 	@Transactional
 	public String updateEvent(EventDTO event) {
 		String filepath = null;
 		if(event.getEventImg()!=null) {
-			filepath = eventDao.selectDelFile(event.getEventNo());
+			filepath = adminDao.selectDelFile(event.getEventNo());
 		}
-		int result= eventDao.updateEvent(event);
+		int result= adminDao.updateEvent(event);
 		return filepath;
 	}
 	public List selectEndEvent(String date) {
-		List eventList = eventDao.selectEndEvent(date);
+		List eventList = adminDao.selectEndEvent(date);
 		return eventList;
 	}
 	@Transactional
 	public String deleteEvent(int eventNo) {
-		String filepath= eventDao.selectDelFile(eventNo);
-		int result = eventDao.deleteEvent(eventNo);
+		String filepath= adminDao.selectDelFile(eventNo);
+		int result = adminDao.deleteEvent(eventNo);
 		if(result>0) {
 			return filepath;
 		}

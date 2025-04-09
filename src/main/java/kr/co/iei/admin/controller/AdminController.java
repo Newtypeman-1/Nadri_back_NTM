@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
+import kr.co.iei.admin.model.service.AdminService;
 import kr.co.iei.admin.model.service.EventService;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
@@ -32,25 +34,31 @@ public class AdminController {
 	@Autowired
 	private FileUtils fileUtils;
 	@Autowired
-	private EventService eventService;
-	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private AdminService adminService;
 	@Value("${file.root}")
 	private String root;
+	@GetMapping("/company")
+	private ResponseEntity<CompanyDTO> selectCompanyInfo(){
+		CompanyDTO company = adminService.selectCompanyInfo();
+		return ResponseEntity.ok(company); 
+	}
+	
 	@GetMapping("/event/{month}")
 	public ResponseEntity<List> selectMonthEvent(@PathVariable String month){
-		List eventList = eventService.selectMonthEvent(month);
+		List eventList = adminService.selectMonthEvent(month);
 		return ResponseEntity.ok(eventList);
 	}
 	@GetMapping("/event/onGoing")
 	public ResponseEntity<List> selectOnGoingEvent(@RequestParam String date){
-		List eventList = eventService.selectOnGoingEvent(date);
+		List eventList = adminService.selectOnGoingEvent(date);
 		return ResponseEntity.ok(eventList);
 	}
 	@GetMapping("/event/end")
 	public ResponseEntity<List> selectEndEvent(@RequestParam String date){
 		System.out.println(date);
-		List eventList = eventService.selectEndEvent(date);
+		List eventList = adminService.selectEndEvent(date);
 		return ResponseEntity.ok(eventList);
 	}
 	
@@ -59,7 +67,7 @@ public class AdminController {
 		String savepath = root +"/event/thumb/";
 		String filepath = fileUtils.upload(savepath, img);
 		event.setEventImg(filepath);
-		int result = eventService.insertEvent(event);
+		int result = adminService.insertEvent(event);
 		return ResponseEntity.ok(result);
 	}
 	@PatchMapping("/event/{eventNo}")
@@ -69,7 +77,7 @@ public class AdminController {
 			String filepath = fileUtils.upload(savepath, img);
 			event.setEventImg(filepath);
 		}
-		String filepath = eventService.updateEvent(event);
+		String filepath = adminService.updateEvent(event);
 		if(filepath!=null){
 			File file = new File(root+"/event/thumb/"+filepath);
 			if(file.exists()) {
@@ -80,7 +88,7 @@ public class AdminController {
 	}
 	@DeleteMapping("/event/{eventNo}")
 	public ResponseEntity<Integer> deleteEvent(@PathVariable int eventNo){
-		String filepath = eventService.deleteEvent(eventNo);
+		String filepath = adminService.deleteEvent(eventNo);
 		File file = new File(root+"/event/thumb/"+filepath);
 		if(file.exists()) {
 			file.delete();
