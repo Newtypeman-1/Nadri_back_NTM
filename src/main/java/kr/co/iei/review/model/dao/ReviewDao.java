@@ -50,6 +50,8 @@ public interface ReviewDao {
 
 	List<ReviewDTO> selectHotReview(int type);
 
+	List<ReviewDTO> selectReportedReview();
+
 	
 
 	
