@@ -15,9 +15,43 @@
 			)
 		</if>
 	</select>
-	<select id="searchResult">
-		select placeTypeId,	 placeTitle,	 placeAddr,	 area,	 sigungu,	 placeThumb
-		from place_info where placeTitle = 
+	<select id="selectPlaceByKeyword" resultType="search">
+	 SELECT 
+	    p.PLACE_TYPE_ID AS placeTypeId,
+	    p.PLACE_TITLE AS placeTitle,
+	    p.PLACE_ADDR AS placeAddr,
+	    p.PLACE_THUMB AS placeThumb,
+	    (SELECT a.AREA_NAME 
+	     FROM AREA_CODE a 
+	     WHERE a.AREA_CODE = p.AREA_CODE) AS area,
+	    (SELECT s.SIGUNGU_NAME 
+	     FROM SIGUNGU_CODE s 
+	     WHERE s.AREA_CODE = p.AREA_CODE 
+	       AND s.SIGUNGU_CODE = p.SIGUNGU_CODE) AS sigungu
+	  FROM PLACE_INFO p
+	
+	  WHERE p.PLACE_TYPE_ID = #{type[0]}
+	  AND (
+	    EXISTS (
+	      SELECT 1
+	      FROM SEARCH_KEYWORD k
+	      WHERE k.PLACE_TYPE = #{type[0]}
+	        AND (
+	             k.KEYWORD LIKE '%' || #{query} || '%'
+	          OR k.CAT1 = p.PLACE_CAT1
+	          OR k.CAT2 = p.PLACE_CAT2
+	          OR k.CAT3 = p.PLACE_CAT3
+	          OR k.AREA_CODE = p.AREA_CODE
+	        )
+	    )
+	    OR EXISTS (
+	      SELECT 1
+	      FROM SEARCH_KEYWORD k
+	      WHERE k.PLACE_TYPE = #{type[0]}
+	        AND k.KEYWORD LIKE '%' || #{query} || '%'
+	        AND k.PLACE_ID = p.PLACE_ID
+	    )
+	  )
 	</select>
 
 </mapper>

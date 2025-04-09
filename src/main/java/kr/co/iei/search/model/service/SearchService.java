@@ -19,7 +19,7 @@ public class SearchService {
 	}
 
 	public List searchResult(SearchDTO search) {
-		List searchList = searchDao.searchResult(search);
+		List searchList = searchDao.selectPlaceByKeyword(search);
 		return searchList;
 	}
 
