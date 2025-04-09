@@ -1,10 +1,10 @@
-package kr.co.iei.event.model.dao;
+package kr.co.iei.admin.model.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.iei.event.model.dto.EventDTO;
+import kr.co.iei.admin.model.dto.EventDTO;
 
 @Mapper
 public interface EventDao {

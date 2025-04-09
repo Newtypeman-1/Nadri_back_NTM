@@ -100,6 +100,12 @@
 		select place_type_id, count(review_no) as reviewCount from review where place_type_id is not null group by place_type_id
 	</select>
 	<select id="selectHotReview" resultType="review">
-		select review_no,review_title,member_nickname,review_date, star_rate from (select review_no,review_title,member_nickname,review_date, star_rate rownum rnum from review where place_type_id=#{type} order by read_count) where rnum &lt; 6
+		select review_no,review_title,member_nickname,review_date, star_rate from (select review_no,review_title,member_nickname,review_date, star_rate, rownum rnum from review where place_type_id=#{type} order by read_count) where rnum &lt; 6
+	</select>
+	<select id="selectReportedReview" resultType="review"> 
+		select 
+			rv.review_no,rv.review_title,rv.member_nickname,rv.review_date,rp.report_nickname, rp.report_reason
+			from report rp 
+			left join review rv on(rv.review_no=rp.review_no) 
 	</select>
 </mapper>

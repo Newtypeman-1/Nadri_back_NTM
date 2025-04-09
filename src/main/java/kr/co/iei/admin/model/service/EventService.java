@@ -1,4 +1,4 @@
-package kr.co.iei.event.model.service;
+package kr.co.iei.admin.model.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.iei.event.model.dao.EventDao;
-import kr.co.iei.event.model.dto.EventDTO;
+import kr.co.iei.admin.model.dao.EventDao;
+import kr.co.iei.admin.model.dto.EventDTO;
 
 @Service
 public class EventService {
