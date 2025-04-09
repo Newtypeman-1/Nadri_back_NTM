@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.admin.model.dao.AdminDao;
+import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
 
 @Service
@@ -48,5 +49,9 @@ public class AdminService {
 			return filepath;
 		}
 		return null;
+	}
+	public CompanyDTO selectCompanyInfo() {
+		CompanyDTO company = adminDao.selectCompanyInfo();
+		return company;
 	}
 }

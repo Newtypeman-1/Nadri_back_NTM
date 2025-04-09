@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
 import kr.co.iei.admin.model.service.AdminService;
-import kr.co.iei.admin.model.service.EventService;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
 import kr.co.iei.util.FileUtils;
