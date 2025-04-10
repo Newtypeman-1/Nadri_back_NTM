@@ -27,14 +27,14 @@ public class PlaceService {
 //	}
 	
 	//placeInfo 조회(필터없는 전체조회)
-	public Map selectPlaceList(int reqPage, int placeCat) {
+	public Map selectPlaceList(int reqPage, int placeTypeId) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
-		int totalCount = placeDao.totalCount();
+		int totalCount = placeDao.totalCount(placeTypeId);
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("placeCat", placeCat);
+		map.put("placeTypeId", placeTypeId);
 		map.put("pi", pi);
 		
 		List<PlaceInfoDTO> list = placeDao.selectPlaceList(map);
@@ -54,37 +54,24 @@ public class PlaceService {
 		
 		return map;
 	}
-	public void insertPlace() {
-		// TODO Auto-generated method stub
-		
-		
-	}
 	
-	//SpotList조회
-	public Map selectSpotList(int reqPage) {
-		int numPerPage = 12;
-		int pageNaviSize = 5;
-		int totalCount = placeDao.totalCount();
-		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
-		
-		List<SpotDTO> list = placeDao.selectSpotList(pi);
-		  for (SpotDTO place : list) {
-	            String title = place.getPlaceTitle();
-	            if (title != null) {
-	                String cleanedTitle = title.replaceAll("\\(.*?\\)", "").trim();
-	                place.setPlaceTitle(cleanedTitle);
-	            }
-	        }
-		Map<String, Object> map = new HashMap<>();
-		map.put("list", list);
-		map.put("pi", pi);
-		map.put("totalCount", totalCount);
-		return map;
-	}
+
 
 	public List selectPlaceType() {
 		List placeTypeList = placeDao.selectPlaceType();
 		return placeTypeList;
+	}
+
+
+
+	public PlaceInfoDTO selectOnePlace(int placeId) {
+		PlaceInfoDTO place = placeDao.selectOnePlace(placeId);
+		String title = place.getPlaceTitle();
+        if (title != null) {
+            String cleanedTitle = title.replaceAll("\\(.*?\\)", "").trim();
+            place.setPlaceTitle(cleanedTitle);
+        }
+		return place;
 	}
 	
 	
