@@ -85,4 +85,10 @@ public class ReviewController {
 		int result= reviewService.insertReview(review,placeImgList);
 		return ResponseEntity.ok(result);
 	}
+	@GetMapping("/reviewImage")
+    public ResponseEntity<List<PlaceImgDTO>> getReviewImages(@RequestParam int reviewNo) {
+    
+       List<PlaceImgDTO> list = reviewService.searchImg(reviewNo);
+   	return ResponseEntity.ok(list);
+    }
 }
