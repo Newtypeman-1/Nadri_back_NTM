@@ -60,7 +60,7 @@ public class PlanController {
 		return ResponseEntity.ok(planStats);
 	}
 	@GetMapping("/mostPlace")
-	public ResponseEntity<AdminStatsDTO> selectmostPlace(){
+	public ResponseEntity<AdminStatsDTO> selectmostPlace(@RequestParam (required = false) String area){
 		AdminStatsDTO mostPlace = planService.selectMostPlace();
 		return ResponseEntity.ok(mostPlace);
 	}
