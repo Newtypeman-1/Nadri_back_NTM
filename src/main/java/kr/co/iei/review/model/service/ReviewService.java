@@ -22,6 +22,7 @@ public class ReviewService {
 	private ReviewDao reviewDao;
 	@Autowired
 	private PageInfoUtil pageInfoUtil;
+	
 	public Map reviewList(int reqPage, String value) {
 		int numPerPage =9;
 		 int  pageNaviSize=5;

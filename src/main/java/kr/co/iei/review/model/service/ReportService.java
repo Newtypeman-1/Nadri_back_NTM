@@ -11,7 +11,7 @@ import kr.co.iei.review.model.dto.ReportDTO;
 public class ReportService {
 	@Autowired
 	private ReviewDao reviewDao;
- @Transactional
+	@Transactional
 	public int insertReport(ReportDTO reportDTO) {
 		int result = reviewDao.insertReport(reportDTO);
 		return result;
