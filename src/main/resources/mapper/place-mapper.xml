@@ -37,7 +37,9 @@
 	        s.sigungu_name,
 	        p.place_title,
 	        p.place_cat3,
-	        cat.cat3_name
+	        cat.cat3_name,
+	        nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
+            nvl((select count(*) from review where place_id=945221),0) as place_review
 	      FROM place_info p
 	      LEFT JOIN area_code a ON p.area_code = a.area_code
 	      LEFT JOIN sigungu_code s 
@@ -89,7 +91,10 @@
 		    p.place_overview,
 		    p.place_addr,
 		    p.place_tel,
-		    place_thumb
+		    place_thumb,
+		    place_type_id,
+		    nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
+            nvl((select count(*) from review where place_id=945221),0) as place_review
 		FROM place_info p
 			LEFT JOIN place_cat2 c2 ON p.place_cat2 = c2.cat2
 			LEFT JOIN place_cat3 c3 ON p.place_cat3 = c3.cat3
