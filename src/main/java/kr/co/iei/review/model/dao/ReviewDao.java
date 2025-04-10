@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.review.model.dto.CommDTO;
 import kr.co.iei.review.model.dto.LikeDTO;
@@ -26,7 +26,6 @@ public interface ReviewDao {
 
 	ReviewDTO selectOneReview(int reviewNo);
 
-
 	List commList(int reviewNo);
 
 	int deleteComm(int commNo);
@@ -47,11 +46,16 @@ public interface ReviewDao {
 
 	int insertReport(ReportDTO reportDTO);
 
+	List<AdminStatsDTO> selectReviewStats();
+
+	List<ReviewDTO> selectHotReview(int type);
+
+	List<ReviewDTO> selectReportedReview();
+
+	
 	int patchComment(CommDTO commDTO);
 
 	List selectOneBoardList(int placeId);
-
-	
 
 	int insertReview(ReviewDTO review);
 

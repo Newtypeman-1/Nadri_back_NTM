@@ -53,5 +53,7 @@
 	    )
 	  )
 	</select>
-
+	<insert id="insertSearchLog">
+		insert into search_log values(search_log_seq.nextval, #{query}, to_char(sysdate,'yyyy-mm-dd'))
+	</insert>
 </mapper>

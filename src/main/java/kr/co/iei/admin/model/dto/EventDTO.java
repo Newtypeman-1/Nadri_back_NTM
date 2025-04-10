@@ -1,4 +1,4 @@
-package kr.co.iei.event.model.dto;
+package kr.co.iei.admin.model.dto;
 
 import org.apache.ibatis.type.Alias;
 

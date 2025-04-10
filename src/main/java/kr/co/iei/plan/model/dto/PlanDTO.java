@@ -17,4 +17,5 @@ public class PlanDTO {
 	private String endDate;
 	private String planThumb;
 	private int planStatus;
+	private String memberNickname;
 }

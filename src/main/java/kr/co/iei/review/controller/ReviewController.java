@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
@@ -41,16 +41,24 @@ public class ReviewController {
 		return ResponseEntity.ok(map);
 	}
 	@GetMapping(value="/{reviewNo}")
-	public ResponseEntity<ReviewDTO>selectOneReview(@PathVariable int reviewNo){
-	
+	public ResponseEntity<ReviewDTO> selectOneReview(@PathVariable int reviewNo){
 		ReviewDTO review =reviewService.selectOneReview(reviewNo);
 		return ResponseEntity.ok(review);
 	}
 	@DeleteMapping(value="/{reviewNo}")
 	public ResponseEntity<Integer>deleteReview(@PathVariable int reviewNo){
-		
 		int result = reviewService.deleteReview(reviewNo);
 		return ResponseEntity.ok(result);
+	}
+	@GetMapping("/stats")
+	public ResponseEntity<List> reviewStats(){
+		List<AdminStatsDTO> reviewStats= reviewService.selectReviewStats();
+		return ResponseEntity.ok(reviewStats);
+	}
+	@GetMapping("/hotReview")
+	public ResponseEntity<List> hotReview(@RequestParam int type){
+		List<ReviewDTO> hotReviews= reviewService.selectHotReview(type);
+		return ResponseEntity.ok(hotReviews);
 	}
 		
 	@GetMapping(value="/detail/{placeId}")
