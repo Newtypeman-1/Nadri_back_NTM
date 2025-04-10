@@ -36,7 +36,7 @@ public class PlaceInfoDTO {
 	private String cat2Name;
 	
 	//PlaceInfo 테이블에 없음
-	private int placeRating; //장소에 대한 평점
+	private float placeRating; //장소에 대한 평점
 	private int placeReview; //장소에 대한 리뷰 수
 	private double distance; //마커로부터 장소까지의 거리(m)
 }
