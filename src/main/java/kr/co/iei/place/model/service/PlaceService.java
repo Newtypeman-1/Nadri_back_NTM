@@ -61,6 +61,18 @@ public class PlaceService {
 		List placeTypeList = placeDao.selectPlaceType();
 		return placeTypeList;
 	}
+
+
+
+	public PlaceInfoDTO selectOnePlace(int placeId) {
+		PlaceInfoDTO place = placeDao.selectOnePlace(placeId);
+		String title = place.getPlaceTitle();
+        if (title != null) {
+            String cleanedTitle = title.replaceAll("\\(.*?\\)", "").trim();
+            place.setPlaceTitle(cleanedTitle);
+        }
+		return place;
+	}
 	
 	
 	

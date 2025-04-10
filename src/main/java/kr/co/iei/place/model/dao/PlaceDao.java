@@ -29,6 +29,8 @@ public interface PlaceDao {
 
 	List selectPlaceType();
 
+	PlaceInfoDTO selectOnePlace(int placeId);
+
 
 
 
