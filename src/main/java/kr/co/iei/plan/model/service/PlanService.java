@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
+import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.util.JwtUtils;
 
@@ -38,6 +40,16 @@ public class PlanService {
 		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
 		int count = planDao.isPlanOwner(loginMember.getMemberEmail(), planNo);
 		return count > 0;
+	}
+
+	@Transactional
+	public boolean insertPlan(PlanDTO plan, List<ItineraryDTO> list) {
+		if(planDao.insertTripPlan(plan) != 1) return false;
+		for(ItineraryDTO i : list) {
+			i.setPlanNo(plan.getPlanNo());
+			if(planDao.insertTripItinerary(i) != 1) return false;
+		}
+		return true;
 	}
 
 }
