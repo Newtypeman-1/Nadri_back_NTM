@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
@@ -50,6 +51,15 @@ public class PlanService {
 			if(planDao.insertTripItinerary(i) != 1) return false;
 		}
 		return true;
+	}
+	public AdminStatsDTO selectPlanStats() {
+		AdminStatsDTO planStats = planDao.selectPlanStats();
+		return planStats;
+	}
+
+	public AdminStatsDTO selectMostPlace() {
+		AdminStatsDTO mostPlace = planDao.selectMostPlace();
+		return mostPlace;
 	}
 
 }

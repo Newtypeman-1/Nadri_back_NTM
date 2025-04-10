@@ -1,10 +1,9 @@
 package kr.co.iei.plan.model.dao;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
-
 import kr.co.iei.plan.model.dto.ItineraryDTO;
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 
 @Mapper
@@ -21,5 +20,9 @@ public interface PlanDao {
 	int insertTripPlan(PlanDTO plan);
 
 	int insertTripItinerary(ItineraryDTO i);
+	
+	AdminStatsDTO selectPlanStats();
+
+	AdminStatsDTO selectMostPlace();
 
 }

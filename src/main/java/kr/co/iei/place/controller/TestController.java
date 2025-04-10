@@ -22,10 +22,6 @@ public class TestController {
 		placeDataApi.insertPlaceInfoFromApi();
 	}
 	
-	@GetMapping(value="/spot")
-	private void insertSpot() {
-		placeDataApi.spotPlaceData();
-	}
 
 	
 }

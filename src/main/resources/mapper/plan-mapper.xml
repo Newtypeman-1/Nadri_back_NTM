@@ -105,4 +105,15 @@
 		)
 	</insert>
 	
+	<select id="selectPlanStats" resultType="stats">
+		select count(*) planCount
+		from trip_plan	
+	</select>
+	<select id="selectMostPlace" resultType="stats">
+		select * from 
+    		(select p.*, rownum rnum from 
+        		(select plan_no, count(plan_no) count from trip_itinerary group by plan_no)p 
+    		order by count desc)
+		where rnum>5 ;
+	</select>
 </mapper>
