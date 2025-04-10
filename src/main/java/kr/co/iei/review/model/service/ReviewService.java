@@ -62,6 +62,10 @@ public class ReviewService {
 		}
 		return result;
 	}
+	public List searchImg(int reviewNo) {
+		  List list = reviewDao.searchImg(reviewNo);
+		return list;
+	}
 
 
 	
