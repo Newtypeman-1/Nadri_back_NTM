@@ -45,11 +45,11 @@
 	</update>
 	
 	<select id="selectOneMember" resultType="member">
-		select * from member where member_email = #{memberEmail} and member_social is null
+		select * from member where member_email = #{memberEmail} and member_social is null and member_del = 'N'
 	</select>
 	
 	<select id="socialLogin" resultType="member">
-		select * from member where member_email = #{memberEmail}
+		select * from member where member_email = #{memberEmail} and member_del = 'N'
 	</select>
 	
 	<select id="isSocial" resultType="int">
