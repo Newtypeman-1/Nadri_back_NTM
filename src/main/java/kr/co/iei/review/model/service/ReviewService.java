@@ -6,8 +6,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.review.model.dao.ReviewDao;
+import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
@@ -40,5 +45,24 @@ public class ReviewService {
 		int result = reviewDao.deleteReview(reviewNo);
 		return result;
 	}
+	public List oneReviewList(int placeId) {
+		List list = reviewDao.selectOneBoardList(placeId);
+		return list;
+	}
 
+	@Transactional
+	public int insertReview(ReviewDTO review, List<PlaceImgDTO> placeImgList) {
+		// TODO Auto-generated method stub
+		int result= reviewDao.insertReview(review);
+		for(PlaceImgDTO placeImg :placeImgList) {
+			placeImg.setPlaceId(review.getPlaceId());
+			placeImg.setReviewNo(review.getReviewNo());
+			System.out.println(placeImg);
+			result += reviewDao.insertPlaceImg(placeImg);
+		}
+		return result;
+	}
+
+
+	
 }

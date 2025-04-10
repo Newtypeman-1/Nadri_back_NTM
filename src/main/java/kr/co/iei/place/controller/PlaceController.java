@@ -42,6 +42,7 @@ public class PlaceController {
 		return ResponseEntity.ok(placeTypeList);
 	}
 	
+
 	@GetMapping("/detail")
 	public ResponseEntity<PlaceInfoDTO> placeDetail(@RequestParam int placeId){
 		PlaceInfoDTO place = placeService.selectOnePlace(placeId);
@@ -50,8 +51,6 @@ public class PlaceController {
 	
 	
 	
-	
-	
-	
+
 
 }
