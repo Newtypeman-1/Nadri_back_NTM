@@ -36,5 +36,11 @@ System.out.println(commNo);
 CommDTO comment = reviewDao.currentComm(commNo);
 		return comment;
 	}
+	@Transactional
+	public int patchComment(CommDTO commDTO) {
+		int result = reviewDao.patchComment(commDTO);
+		
+		return result;
+	}
 
 }
