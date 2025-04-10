@@ -20,9 +20,9 @@ public class MypageService {
 	//내가 쓴 리뷰 불러오기
 	public Map reviewsList(String nickname, String value) {
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("value",value);
 		map.put("nickname",nickname);
-		List list = mypageDao.selectReviews(map);
+		map.put("value",value);
+		List list = mypageDao.reviewsList(map);
 		map.put("list",list);
 		return map;
 	}
@@ -42,6 +42,15 @@ public class MypageService {
 	        }
 		map.put("list", list);
 		
+		return map;
+	}
+
+	public Map plannerList(String nickname, String value) {
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("nickname",nickname);
+		map.put("value",value);
+		List list = mypageDao.plannerList(map);
+		map.put("list",list);
 		return map;
 	}
 }

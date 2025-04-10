@@ -11,8 +11,10 @@ import kr.co.iei.place.model.dto.PlaceInfoDTO;
 @Mapper
 public interface MypageDao {
 
-	List selectReviews(HashMap<String, Object> map);
+	List reviewsList(HashMap<String, Object> map);
 
 	List<PlaceInfoDTO> BookmarkList(Map<String, Object> map);
+
+	List plannerList(HashMap<String, Object> map);
 
 }

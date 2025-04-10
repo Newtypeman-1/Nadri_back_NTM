@@ -36,4 +36,13 @@ public class MypageController {
 		Map map = mypageService.BookmarkList(value);
 		return ResponseEntity.ok(map);
 	}
+	
+	//플래너 불러오기
+	@GetMapping("/planner")
+	public ResponseEntity<Map> plannerList(@RequestParam String nickname, @RequestParam String value){
+		System.out.println(nickname);
+		System.out.println(value);
+		Map map = mypageService.plannerList(nickname, value);
+		return ResponseEntity.ok(map);
+	}
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.member.model.dao.MypageDao">
 
-	<select id="selectReviews" resultType="review">
+	<select id="reviewsList" resultType="review">
     select * from
 		(select rownum as rnum, r.*from
 		(select 
@@ -81,4 +81,7 @@
 		  WHERE rnum BETWEEN 1 AND 10
 	</select>
 
+	<select id="plannerList" resultType="plan">
+		select * from trip_plan
+	</select>
 </mapper>
