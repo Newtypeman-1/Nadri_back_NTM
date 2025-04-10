@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.review.model.dto.CommDTO;
 import kr.co.iei.review.model.dto.LikeDTO;
+import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.util.PageInfo;
@@ -46,6 +48,14 @@ public interface ReviewDao {
 	int insertReport(ReportDTO reportDTO);
 
 	int patchComment(CommDTO commDTO);
+
+	List selectOneBoardList(int placeId);
+
+	
+
+	int insertReview(ReviewDTO review);
+
+	int insertPlaceImg(PlaceImgDTO placeImg);
 
 	
 
