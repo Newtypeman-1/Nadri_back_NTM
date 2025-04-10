@@ -83,5 +83,15 @@
 
 	<select id="plannerList" resultType="plan">
 		select * from trip_plan
+		<where>
+			<choose>
+				<when test="value == 1">
+					 end_date >= TRUNC(CURRENT_DATE)
+				</when>
+				<when test="value == 2">
+					 end_date &lt; TRUNC(CURRENT_DATE)
+				</when>
+			 </choose>
+	 	</where>
 	</select>
 </mapper>
