@@ -60,12 +60,7 @@ public class ReviewController {
 		List list = reviewService.oneReviewList(placeId);
 		return ResponseEntity.ok(list);
 	}
-	@GetMapping(value="/placeinfo/{placeId}")
-	public ResponseEntity<PlaceInfoDTO> placeinfo(@PathVariable int placeId){
-	
-		PlaceInfoDTO place = reviewService.placeinfo(placeId);
-		return ResponseEntity.ok(place);
-	}
+
 	@PostMapping
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review,  @ModelAttribute  MultipartFile[] files){
 		List<PlaceImgDTO> placeImgList = new ArrayList<>();

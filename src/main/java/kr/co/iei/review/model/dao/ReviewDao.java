@@ -51,7 +51,7 @@ public interface ReviewDao {
 
 	List selectOneBoardList(int placeId);
 
-	PlaceInfoDTO placeinfo(int placeId);
+	
 
 	int insertReview(ReviewDTO review);
 

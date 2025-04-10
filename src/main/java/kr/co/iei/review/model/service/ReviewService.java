@@ -49,11 +49,7 @@ public class ReviewService {
 		List list = reviewDao.selectOneBoardList(placeId);
 		return list;
 	}
-	public PlaceInfoDTO placeinfo(int placeId) {
-		PlaceInfoDTO place = reviewDao.placeinfo(placeId);
-	
-		return place;
-	}
+
 	@Transactional
 	public int insertReview(ReviewDTO review, List<PlaceImgDTO> placeImgList) {
 		// TODO Auto-generated method stub
