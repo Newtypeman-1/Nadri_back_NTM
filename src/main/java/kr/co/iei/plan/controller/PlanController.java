@@ -1,6 +1,8 @@
 package kr.co.iei.plan.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.iei.plan.model.dto.ItineraryDTO;
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.plan.model.service.PlanService;
 
@@ -52,6 +61,40 @@ public class PlanController {
 	public ResponseEntity<List> selectNearby(@RequestParam double lat, @RequestParam double lng, @RequestParam int radius){
 		List list = planService.selectNearby(lat, lng, radius);
 		return ResponseEntity.ok(list);
+	}
+	@GetMapping("/stats")
+	public ResponseEntity<AdminStatsDTO> selectPlanStats(){
+		AdminStatsDTO planStats = planService.selectPlanStats();
+		return ResponseEntity.ok(planStats);
+	}
+	@GetMapping("/mostPlace")
+	public ResponseEntity<AdminStatsDTO> selectmostPlace(@RequestParam (required = false) String area){
+		AdminStatsDTO mostPlace = planService.selectMostPlace();
+		return ResponseEntity.ok(mostPlace);
+	}
+	
+	//플래너 저장
+	@PostMapping(value="/save")
+	public ResponseEntity<Boolean> savePlanner(@RequestBody Map<String, Object> planData) throws JsonMappingException, JsonProcessingException{
+		ObjectMapper om = new ObjectMapper();
+		PlanDTO plan = om.convertValue(planData.get("tripPlanData"), PlanDTO.class);
+		
+		List raw = (List) planData.get("itineraryList");
+		List<ItineraryDTO> list = new ArrayList<>();
+		for(Object obj : raw) {
+			Map<String, Object> map = (Map<String, Object>) obj;
+			ItineraryDTO i = new ItineraryDTO();
+			i.setItineraryDate((String) map.get("itineraryDate"));
+			i.setStartLocation(map.get("startLocation") == null ? 0 : (Integer) map.get("startLocation"));
+			i.setTransport((String) map.get("transport"));
+			i.setEndLocation((Integer) map.get("endLocation"));
+			i.setItineraryOrder((Integer) map.get("itineraryOrder"));
+			list.add(i);
+		}
+		System.out.println(list);
+		boolean result = planService.insertPlan(plan, list);
+		
+		return ResponseEntity.ok(result);
 	}
 	
 }

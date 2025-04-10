@@ -13,4 +13,6 @@ public interface SearchDao {
 
 	List selectPlaceByKeyword(SearchDTO search);
 
+	int insertSearchLog(String query);
+
 }

@@ -15,10 +15,12 @@ public class ReviewDTO {
  private String memberNickname;
  private String reviewTitle;
  private String reviewContent;
- private int starRate;
+ private float starRate;
  private String reviewDate;
- private String contnetType;
  private int planNo;
  private int placeId;
  private int placeTypeId;
+ private String placeThumb;
+private String placeTitle;
+private String placeAddr;
 }
