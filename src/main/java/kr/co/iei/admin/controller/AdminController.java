@@ -1,4 +1,4 @@
-package kr.co.iei.event.cotroller;
+package kr.co.iei.admin.controller;
 
 import java.io.File;
 import java.util.List;
@@ -19,53 +19,69 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.iei.event.model.dto.EventDTO;
-import kr.co.iei.event.model.service.EventService;
+import kr.co.iei.admin.model.dto.CompanyDTO;
+import kr.co.iei.admin.model.dto.EventDTO;
+import kr.co.iei.admin.model.service.AdminService;
+import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.review.model.service.ReviewService;
 import kr.co.iei.util.FileUtils;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value="/event")
-public class EventController {
+@RequestMapping(value="/admin")
+public class AdminController {
 	@Autowired
 	private FileUtils fileUtils;
 	@Autowired
-	private EventService eventService;
+	private ReviewService reviewService;
+	@Autowired
+	private AdminService adminService;
 	@Value("${file.root}")
 	private String root;
-	@GetMapping("/{month}")
+	@GetMapping("/company")
+	private ResponseEntity<CompanyDTO> selectCompanyInfo(){
+		CompanyDTO company = adminService.selectCompanyInfo();
+		return ResponseEntity.ok(company); 
+	}
+	@PatchMapping("/company")
+	private ResponseEntity<Integer> updateCompany(@RequestBody CompanyDTO company){
+		int result = adminService.updateCompanyInfo(company);
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/event/{month}")
 	public ResponseEntity<List> selectMonthEvent(@PathVariable String month){
-		List eventList = eventService.selectMonthEvent(month);
+		List eventList = adminService.selectMonthEvent(month);
 		return ResponseEntity.ok(eventList);
 	}
-	@GetMapping("/onGoing")
+	@GetMapping("/event/onGoing")
 	public ResponseEntity<List> selectOnGoingEvent(@RequestParam String date){
-		List eventList = eventService.selectOnGoingEvent(date);
+		List eventList = adminService.selectOnGoingEvent(date);
 		return ResponseEntity.ok(eventList);
 	}
-	@GetMapping("/end")
+	@GetMapping("/event/end")
 	public ResponseEntity<List> selectEndEvent(@RequestParam String date){
 		System.out.println(date);
-		List eventList = eventService.selectEndEvent(date);
+		List eventList = adminService.selectEndEvent(date);
 		return ResponseEntity.ok(eventList);
 	}
 	
-	@PostMapping
+	@PostMapping("/event")
 	public ResponseEntity<Integer> insertEvent(@ModelAttribute EventDTO event,@ModelAttribute MultipartFile img){
 		String savepath = root +"/event/thumb/";
 		String filepath = fileUtils.upload(savepath, img);
 		event.setEventImg(filepath);
-		int result = eventService.insertEvent(event);
+		int result = adminService.insertEvent(event);
 		return ResponseEntity.ok(result);
 	}
-	@PatchMapping("/{eventNo}")
+	@PatchMapping("/event/{eventNo}")
 	public ResponseEntity<Integer> updateEvent(@ModelAttribute EventDTO event,@ModelAttribute MultipartFile img,@PathVariable int eventNo){
 		if(img!=null) {
 			String savepath = root +"/event/thumb/";
 			String filepath = fileUtils.upload(savepath, img);
 			event.setEventImg(filepath);
 		}
-		String filepath = eventService.updateEvent(event);
+		String filepath = adminService.updateEvent(event);
 		if(filepath!=null){
 			File file = new File(root+"/event/thumb/"+filepath);
 			if(file.exists()) {
@@ -74,13 +90,18 @@ public class EventController {
 		}
 		return ResponseEntity.ok(1);
 	}
-	@DeleteMapping("/{eventNo}")
+	@DeleteMapping("/event/{eventNo}")
 	public ResponseEntity<Integer> deleteEvent(@PathVariable int eventNo){
-		String filepath = eventService.deleteEvent(eventNo);
+		String filepath = adminService.deleteEvent(eventNo);
 		File file = new File(root+"/event/thumb/"+filepath);
 		if(file.exists()) {
 			file.delete();
 		}
 		return ResponseEntity.ok(1);
+	}
+	@GetMapping("/report")
+	public ResponseEntity<List> reportedReview(){
+		List reportedReviews = reviewService.selectReportedReview();
+		return ResponseEntity.ok(reportedReviews);
 	}
 }

@@ -41,8 +41,7 @@
 	<select id="verifyPlan" resultType="plan">
 		SELECT tp.*
 		FROM trip_plan tp
-		LEFT JOIN plan_group pg ON tp.plan_no = pg.plan_no
-		LEFT JOIN member m ON pg.member_nickname = m.member_nickname
+		JOIN member m ON tp.member_nickname = m.member_nickname
 		WHERE tp.plan_no = #{planNo}
 			AND (
 				tp.plan_status = 1
@@ -58,12 +57,63 @@
 	
 	<select id="isPlanOwner" resultType="int">
 		SELECT COUNT(*)
-		FROM plan_group pg
-		JOIN member m On pg.member_nickname = m.member_nickname
+		FROM trip_plan tp
+		JOIN member m On tp.member_nickname = m.member_nickname
 		WHERE
-			pg.plan_no = #{planNo}
+			tp.plan_no = #{planNo}
 			AND
 			m.member_email = #{memberEmail}
 	</select>
 	
+	<insert id="insertTripPlan">
+		INSERT INTO trip_plan
+		VALUES (
+			#{planNo},
+			#{planName},
+			#{startDate},
+			#{endDate},
+			#{planThumb},
+			#{planStatus},
+			#{memberNickname}
+		)
+		<selectKey order="BEFORE" resultType="int" keyProperty="planNo">
+			select trip_plan_seq.nextval from dual
+		</selectKey>
+	</insert>
+	
+	<select id="currentPlanNo" resultType="int">
+		SELECT trip_plan_seq.currval FROM dual
+	</select>
+	
+	<insert id="insertTripItinerary">
+		INSERT INTO trip_itinerary
+		VALUES (
+			trip_itinerary_seq.nextval,
+			#{planNo},
+			#{itineraryDate},
+			<choose>
+				<when test="startLocation != 0">
+					#{startLocation},
+				</when>
+				<when test="startLocation == 0">
+					null,
+				</when>
+			</choose>
+			#{transport},
+			#{endLocation},
+			#{itineraryOrder}
+		)
+	</insert>
+	
+	<select id="selectPlanStats" resultType="stats">
+		select count(*) planCount
+		from trip_plan	
+	</select>
+	<select id="selectMostPlace" resultType="stats">
+		select * from 
+    		(select p.*, rownum rnum from 
+        		(select plan_no, count(plan_no) count from trip_itinerary group by plan_no)p 
+    		order by count desc)
+		where rnum>5 ;
+	</select>
 </mapper>

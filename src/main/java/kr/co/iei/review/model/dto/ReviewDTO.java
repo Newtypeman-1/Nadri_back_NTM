@@ -20,4 +20,7 @@ public class ReviewDTO {
  private int planNo;
  private int placeId;
  private int placeTypeId;
+ private String placeThumb;
+private String placeTitle;
+private String placeAddr;
 }

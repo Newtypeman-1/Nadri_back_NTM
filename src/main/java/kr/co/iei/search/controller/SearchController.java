@@ -29,8 +29,6 @@ public class SearchController {
 	}
 	@GetMapping
 	public ResponseEntity<List> searchResult(@RequestParam String query,@RequestParam String[] type){
-		System.out.println(query);
-		System.out.println(type[0]);
 		SearchDTO search = new SearchDTO(query, type);
 		List searchList = searchService.searchResult(search);
 		return ResponseEntity.ok(searchList);
