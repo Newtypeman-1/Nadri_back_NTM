@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.PlanDTO;
@@ -38,6 +39,16 @@ public class PlanService {
 		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
 		int count = planDao.isPlanOwner(loginMember.getMemberEmail(), planNo);
 		return count > 0;
+	}
+
+	public AdminStatsDTO selectPlanStats() {
+		AdminStatsDTO planStats = planDao.selectPlanStats();
+		return planStats;
+	}
+
+	public AdminStatsDTO selectMostPlace() {
+		AdminStatsDTO mostPlace = planDao.selectMostPlace();
+		return mostPlace;
 	}
 
 }

@@ -7,9 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.ReviewDTO;
-import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -41,8 +41,8 @@ public class ReviewService {
 		int result = reviewDao.deleteReview(reviewNo);
 		return result;
 	}
-	public List<ReviewStatsDTO> selectReviewStats() {
-		List<ReviewStatsDTO> reviewStats = reviewDao.selectReviewStats();
+	public List<AdminStatsDTO> selectReviewStats() {
+		List<AdminStatsDTO> reviewStats = reviewDao.selectReviewStats();
 		return reviewStats;
 	}
 	public List<ReviewDTO> selectHotReview(int type) {

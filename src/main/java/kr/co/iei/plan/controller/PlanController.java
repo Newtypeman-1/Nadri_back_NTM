@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.plan.model.service.PlanService;
 
@@ -52,6 +53,16 @@ public class PlanController {
 	public ResponseEntity<List> selectNearby(@RequestParam double lat, @RequestParam double lng, @RequestParam int radius){
 		List list = planService.selectNearby(lat, lng, radius);
 		return ResponseEntity.ok(list);
+	}
+	@GetMapping("/stats")
+	public ResponseEntity<AdminStatsDTO> selectPlanStats(){
+		AdminStatsDTO planStats = planService.selectPlanStats();
+		return ResponseEntity.ok(planStats);
+	}
+	@GetMapping("/mostPlace")
+	public ResponseEntity<AdminStatsDTO> selectmostPlace(){
+		AdminStatsDTO mostPlace = planService.selectMostPlace();
+		return ResponseEntity.ok(mostPlace);
 	}
 	
 }

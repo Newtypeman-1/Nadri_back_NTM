@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.review.model.dto.CommDTO;
 import kr.co.iei.review.model.dto.LikeDTO;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
-import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
@@ -46,7 +46,7 @@ public interface ReviewDao {
 
 	int insertReport(ReportDTO reportDTO);
 
-	List<ReviewStatsDTO> selectReviewStats();
+	List<AdminStatsDTO> selectReviewStats();
 
 	List<ReviewDTO> selectHotReview(int type);
 

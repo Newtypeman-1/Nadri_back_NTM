@@ -1,4 +1,4 @@
-package kr.co.iei.review.model.dto;
+package kr.co.iei.admin.model.dto;
 
 import java.util.List;
 
@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Alias("stats")
-public class ReviewStatsDTO {
+public class AdminStatsDTO {
 	private int placeTypeId;
 	private int reviewCount;
-}
+	private int planCount;
+	private int[] mostPlace;
+ }

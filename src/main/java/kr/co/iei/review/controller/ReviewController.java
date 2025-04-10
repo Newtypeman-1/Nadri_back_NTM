@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
-import kr.co.iei.review.model.dto.ReviewStatsDTO;
 import kr.co.iei.review.model.service.ReviewService;
 
 @CrossOrigin("*")
@@ -43,7 +43,7 @@ public class ReviewController {
 	}
 	@GetMapping("/stats")
 	public ResponseEntity<List> reviewStats(){
-		List<ReviewStatsDTO> reviewStats= reviewService.selectReviewStats();
+		List<AdminStatsDTO> reviewStats= reviewService.selectReviewStats();
 		return ResponseEntity.ok(reviewStats);
 	}
 	@GetMapping("/hotReview")
