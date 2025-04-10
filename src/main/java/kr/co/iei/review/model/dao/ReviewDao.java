@@ -57,6 +57,8 @@ public interface ReviewDao {
 
 	int insertPlaceImg(PlaceImgDTO placeImg);
 
+	List searchImg(int reviewNo);
+
 	
 
 

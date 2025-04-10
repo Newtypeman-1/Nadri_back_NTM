@@ -78,9 +78,9 @@
 	</select>
 	
 	
-	<!-- place 조회 -->
+<!-- place 조회 -->
 	<select id="selectOnePlace" resultType="place">
-		SELECT 
+		SELECT
 		    c2.cat2_name,
 		    c3.cat3_name,
 		    p.place_title,
@@ -89,7 +89,8 @@
 		    p.place_overview,
 		    p.place_addr,
 		    p.place_tel,
-		    place_thumb
+		    place_thumb,
+		    place_type_id
 		FROM place_info p
 			LEFT JOIN place_cat2 c2 ON p.place_cat2 = c2.cat2
 			LEFT JOIN place_cat3 c3 ON p.place_cat3 = c3.cat3
@@ -97,7 +98,6 @@
 			LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
 		WHERE p.place_id = #{placeId}
 	</select>
-	
 
 	 
 	 <!--  초기 데이터: place데이터 -->

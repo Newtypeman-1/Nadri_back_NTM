@@ -128,4 +128,7 @@ where rnum between 1 and 9
   <insert id="insertPlaceImg">
   	insert into place_img values(place_img_seq.nextval,#{placeId},#{filepath},#{reviewNo})
   	</insert>
+  	<select id="searchImg" resultType="img">
+  	select * from place_img where review_no=#{reviewNo}
+  	</select>
 </mapper>
