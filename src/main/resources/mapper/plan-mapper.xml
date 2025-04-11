@@ -113,6 +113,7 @@
 		select count(*) planCount
 		from trip_plan	
 	</select>
+	
 	<select id="selectMostPlace" resultType="stats">
 		select * from 
     		(select p.*, rownum rnum from 
@@ -120,4 +121,5 @@
     		order by count desc)
 		where rnum>5 ;
 	</select>
+	
 </mapper>
