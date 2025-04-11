@@ -1,4 +1,4 @@
-package kr.co.iei.place.model.dto;
+	package kr.co.iei.place.model.dto;
 
 import org.apache.ibatis.type.Alias;
 
