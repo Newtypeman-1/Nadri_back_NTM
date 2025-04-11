@@ -57,7 +57,7 @@
 	        ON p.sigungu_code = s.sigungu_code 
 	       AND p.area_code = s.area_code
 	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
-	      		    JOIN bookmark b ON p.place_id = b.place_id
+	      JOIN bookmark b ON p.place_id = b.place_id
 	        WHERE b.member_nickname = #{nickname}
 	      
 	          <choose>
@@ -75,27 +75,26 @@
 	            </when>
 	          </choose>
 	      
-	      ORDER BY p.place_title ASC
+	      ORDER BY b.bookmark_no desc
 	    ) c
 	  )
-	  WHERE rnum BETWEEN 1 AND 10
 	</select>
 
 	<select id="plannerList" resultType="plan">
 		<choose>
 			<when test="value == 1">
 				select * from trip_plan
-				where end_date >= TRUNC(CURRENT_DATE)
+				where end_date >= TRUNC(CURRENT_DATE) and member_nickname = #{nickname} order by plan_no desc
 			</when>
 			<when test="value == 2">
 				select * from trip_plan
-				where end_date &lt; TRUNC(CURRENT_DATE)
+				where end_date &lt; TRUNC(CURRENT_DATE) and member_nickname = #{nickname} order by plan_no desc
 			</when>
 			<when test="value == 3">
 				SELECT tp.*
 				FROM trip_plan tp
 				JOIN plan_favorite pf ON tp.plan_no = pf.plan_no
-				WHERE pf.member_nickname = #{nickname}
+				WHERE pf.member_nickname = #{nickname} order by plan_favorite_no desc
 			</when>
 		 </choose>
 	</select>
