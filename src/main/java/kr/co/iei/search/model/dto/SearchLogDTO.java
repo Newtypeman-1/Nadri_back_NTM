@@ -1,5 +1,7 @@
 package kr.co.iei.search.model.dto;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class SearchDTO {
+@Alias("log")
+public class SearchLogDTO {
 	private String query;
-	private String[] type;
+	private int count;
 }

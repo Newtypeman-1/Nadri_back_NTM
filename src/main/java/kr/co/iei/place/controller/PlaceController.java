@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.place.model.service.PlaceService;
 
@@ -44,8 +45,8 @@ public class PlaceController {
 //	
 	@GetMapping("/type")
 	public ResponseEntity<List> placeType(){
-		List placeTypeList = placeService.selectPlaceType();
-		return ResponseEntity.ok(placeTypeList);
+		List<CategoryDTO> placeType = placeService.selectPlaceType();
+		return ResponseEntity.ok(placeType);
 	}
 	
 
@@ -55,8 +56,16 @@ public class PlaceController {
 		return ResponseEntity.ok(place);
 	}
 	
-	
-	
+	@GetMapping("/category")
+	public ResponseEntity<Map> placeCategory(){
+		Map<String, List<CategoryDTO>> category = placeService.selectPlaceCategory();
+		return ResponseEntity.ok(category);
+	}
+	@GetMapping("/area")
+	public ResponseEntity<List> placeArea(){
+		List<CategoryDTO> area = placeService.selectPlaceArea();
+		return ResponseEntity.ok(area);
+	}
 
 
 }

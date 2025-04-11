@@ -1,4 +1,4 @@
-package kr.co.iei.place.model.dto;
+	package kr.co.iei.place.model.dto;
 
 import org.apache.ibatis.type.Alias;
 
@@ -39,4 +39,7 @@ public class PlaceInfoDTO {
 	private float placeRating; //장소에 대한 평점
 	private int placeReview; //장소에 대한 리뷰 수
 	private double distance; //마커로부터 장소까지의 거리(m)
+	
+	//즐겨찾기 할 닉네임
+	private String memberNickname;
 }

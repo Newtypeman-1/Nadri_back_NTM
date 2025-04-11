@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.search.model.dao.SearchDao">
-	<select id="selectKeyword" resultType="String">
-		select keyword from search_keyword where keyword like '%'||
+	<select id="selectKeyword" resultType="category">
+		select keyword_no as id, keyword as name from search_keyword where keyword like '%'||
 		<if test="query != null">
 			#{query}
 		</if>
@@ -57,4 +57,62 @@
 	<insert id="insertSearchLog">
 		insert into search_log values(search_log_seq.nextval, #{query}, to_char(sysdate,'yyyy-mm-dd'))
 	</insert>
+	<select id="selectPopularByDate" resultType="log">
+	  SELECT *
+	  FROM (
+	    SELECT
+	      query,
+	      COUNT(*) AS count
+	    FROM search_log
+	    WHERE searched_at = #{date}
+	    GROUP BY query
+	    ORDER BY count DESC
+	  )
+	  WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<select id="selectPopularByWeek" resultType="log">
+	  SELECT *
+	  FROM (
+	    SELECT
+	      query,
+	      COUNT(*) AS count
+	    FROM search_log
+	    WHERE searched_at BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY query
+	    ORDER BY count DESC
+	  )
+	  WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<select id="selectPopularByMonth" resultType="log">
+	  SELECT *
+	  FROM (
+	    SELECT
+	      query,
+	      COUNT(*) AS count
+	    FROM search_log
+	    WHERE searched_at BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY query
+	    ORDER BY count DESC
+	  )
+	  WHERE ROWNUM &lt;= 10
+	</select>
+	
+	<select id="selectPopularByYear" resultType="log">
+	  SELECT *
+	  FROM (
+	    SELECT
+	      query,
+	      COUNT(*) AS count
+	    FROM search_log
+	    WHERE searched_at BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY query
+	    ORDER BY count DESC
+	  )
+	  WHERE ROWNUM &lt;= 10
+	</select>
+	<select id="searchPlaceTitle" resultType="category">
+		select place_id as id, place_title as name from place_info where place_title like '%'||#{query}||'%'
+	</select>
 </mapper>
