@@ -4,15 +4,28 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.iei.search.model.dto.SearchDTO;
+import kr.co.iei.search.model.dto.QueryDTO;
+import kr.co.iei.search.model.dto.SearchLogDTO;
 
 @Mapper
 public interface SearchDao {
 
-	List selectKeyword(SearchDTO search);
+	List selectKeyword(QueryDTO search);
 
-	List selectPlaceByKeyword(SearchDTO search);
+	List selectPlaceByKeyword(QueryDTO search);
 
 	int insertSearchLog(String query);
+
+	List<SearchLogDTO> selectPopularByDate(String date);
+
+	List<SearchLogDTO> selectPopularByWeek(String startDate, String endDate);
+
+	List<SearchLogDTO> selectPopularByMonth(String startDate, String endDate);
+
+	List<SearchLogDTO> selectPopularByYear(String startDate, String endDate);
+
+
+
+	
 
 }

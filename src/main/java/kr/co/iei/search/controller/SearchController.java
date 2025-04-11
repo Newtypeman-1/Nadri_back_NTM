@@ -2,6 +2,7 @@ package kr.co.iei.search.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.iei.search.model.dto.SearchDTO;
+import kr.co.iei.search.model.dto.QueryDTO;
+import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.search.model.service.SearchService;
 @CrossOrigin("*")
 @RestController
@@ -23,16 +25,19 @@ public class SearchController {
 	
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
-		SearchDTO search = new SearchDTO(query, type);
+		QueryDTO search = new QueryDTO(query, type);
 		List keywordList = searchService.selectKeyword(search);
 		return ResponseEntity.ok(keywordList);
 	}
 	@GetMapping
 	public ResponseEntity<List> searchResult(@RequestParam String query,@RequestParam String[] type){
-		System.out.println(query);
-		System.out.println(type[0]);
-		SearchDTO search = new SearchDTO(query, type);
+		QueryDTO search = new QueryDTO(query, type);
 		List searchList = searchService.searchResult(search);
 		return ResponseEntity.ok(searchList);
+	}
+	@GetMapping("/popular")
+	public ResponseEntity<Map> mostSearch(@RequestParam String date){
+		Map<String,List<SearchLogDTO>> popular = searchService.selectMostSearch(date);
+		return ResponseEntity.ok(popular);
 	}
 }
