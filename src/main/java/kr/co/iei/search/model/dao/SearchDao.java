@@ -24,6 +24,8 @@ public interface SearchDao {
 
 	List<SearchLogDTO> selectPopularByYear(String startDate, String endDate);
 
+	List searchPlaceTitle(String query);
+
 
 
 	

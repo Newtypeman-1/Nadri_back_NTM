@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.place.model.dto.SpotDTO;
 import kr.co.iei.util.PageInfo;
@@ -21,8 +22,11 @@ public interface PlaceDao {
 	//DB초기 세팅
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
 
-	List selectPlaceType();
+	List<CategoryDTO> selectPlaceType();
 
 	PlaceInfoDTO selectOnePlace(int placeId);
 	
+	List<CategoryDTO> selectAllPlaceCategories();
+	
+	List<CategoryDTO> selectArea();
 }

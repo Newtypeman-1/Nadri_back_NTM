@@ -73,8 +73,8 @@
 	
 	
 	<!-- place 타입 테이블 조회 -->
-	<select id="selectPlaceType" resultType="map">
-	    select place_type_id as "id", place_type_name as "name"
+	<select id="selectPlaceType" resultType="category">
+	    select place_type_id as id, place_type_name as name
     	from place_type
 	</select>
 	
@@ -141,5 +141,14 @@
     	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})
 	</insert>
 	 -->
-	  
+	<select id="selectAllPlaceCategories" resultType="category">
+	    SELECT 1 AS cat_index, cat1 AS id, cat1_name AS name FROM place_cat1
+	    UNION ALL
+	    SELECT 2 AS cat_index, cat2 AS id, cat2_name AS name FROM place_cat2
+	    UNION ALL
+	    SELECT 3 AS cat_index, cat3 AS id, cat3_name AS name FROM place_cat3
+	</select>
+	<select id="selectArea" resultType="category">
+		select area_code as id, area_name as name from area_code
+	</select>
 </mapper>

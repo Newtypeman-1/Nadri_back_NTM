@@ -60,4 +60,10 @@ public class SearchService {
 	    return popular;
 	}
 
+
+	public List searchPlaceTitle(String query) {
+		List titleList = searchDao.searchPlaceTitle(query);
+		return titleList;
+	}
+
 }

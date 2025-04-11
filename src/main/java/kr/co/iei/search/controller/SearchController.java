@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.search.model.dto.QueryDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.search.model.service.SearchService;
@@ -25,8 +26,9 @@ public class SearchController {
 	
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
+		System.out.println(query);
 		QueryDTO search = new QueryDTO(query, type);
-		List keywordList = searchService.selectKeyword(search);
+		List<CategoryDTO> keywordList = searchService.selectKeyword(search);
 		return ResponseEntity.ok(keywordList);
 	}
 	@GetMapping
@@ -34,6 +36,11 @@ public class SearchController {
 		QueryDTO search = new QueryDTO(query, type);
 		List searchList = searchService.searchResult(search);
 		return ResponseEntity.ok(searchList);
+	}
+	@GetMapping("/place")
+	public ResponseEntity<List> placeTitle(@RequestParam String query){
+		List titleList = searchService.searchPlaceTitle(query);
+		return ResponseEntity.ok(titleList);
 	}
 	@GetMapping("/popular")
 	public ResponseEntity<Map> mostSearch(@RequestParam String date){
