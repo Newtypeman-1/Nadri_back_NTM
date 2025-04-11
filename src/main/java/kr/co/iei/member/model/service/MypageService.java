@@ -27,11 +27,15 @@ public class MypageService {
 		return map;
 	}
 
-	public Map BookmarkList(String value) {
+	public Map bookmarkList(String nickname, String value) {
 		Map<String, Object> map = new HashMap<>();
+		System.out.println(nickname);
+		System.out.println(value);
+		map.put("nickname",nickname);
 		map.put("value", value);
 		
-		List<PlaceInfoDTO> list = mypageDao.BookmarkList(map);
+		List<PlaceInfoDTO> list = mypageDao.bookmarkList(map);
+		System.out.println(list);
 		  //placeTitle 괄호제거
 		  for (PlaceInfoDTO place : list) {
 	            String title = place.getPlaceTitle();
@@ -41,6 +45,7 @@ public class MypageService {
 	            }
 	        }
 		map.put("list", list);
+		System.out.println(list);
 		
 		return map;
 	}

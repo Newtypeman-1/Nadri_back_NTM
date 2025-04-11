@@ -76,6 +76,11 @@ public class ReviewService {
 		  List list = reviewDao.searchImg(reviewNo);
 		return list;
 	}
+	@Transactional
+	public int updateReview(ReviewDTO reviewDTO) {
+		int result = reviewDao.updateReview(reviewDTO);
+		return result;
+	}
 
 
 	
