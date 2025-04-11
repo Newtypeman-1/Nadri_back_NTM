@@ -33,7 +33,8 @@ public class MypageController {
 	public ResponseEntity<Map> bookmarkList(@RequestParam String nickname, @RequestParam String value){
 		System.out.println(nickname);
 		System.out.println(value);
-		Map map = mypageService.BookmarkList(value);
+		Map map = mypageService.bookmarkList(nickname, value);
+		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}
 	
