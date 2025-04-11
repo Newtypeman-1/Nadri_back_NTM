@@ -6,7 +6,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import io.jsonwebtoken.security.Jwks.HASH;
 import kr.co.iei.place.model.dao.PlaceDao;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
@@ -66,7 +68,6 @@ public class PlaceService {
 	}
 
 
-
 	public PlaceInfoDTO selectOnePlace(int placeId) {
 		PlaceInfoDTO place = placeDao.selectOnePlace(placeId);
 		String title = place.getPlaceTitle();
@@ -77,6 +78,29 @@ public class PlaceService {
 		return place;
 	}
 	
+	@Transactional
+	public List<Map<String, Object>> getBookmarkStatusList(String memberNickname, List<Integer> placeIds) {
+		 Map<String, Object> paramMap = new HashMap<>();
+		    paramMap.put("memberNickname", memberNickname);
+		    paramMap.put("placeId", placeIds);
+		return placeDao.selectBookmarkStatusList(paramMap);
+	}
+	@Transactional
+	public boolean toggleBookmark(String memberNickname, int placeId) {
+	    Map<String, Object> paramMap = new HashMap<>();
+	    paramMap.put("memberNickname", memberNickname);
+	    paramMap.put("placeId", placeId);
+
+	    // 리스트 조회 방식 기준: row 존재 여부로 판단
+	    int count = placeDao.checkBookmark(paramMap);
+	    if (count > 0) {
+	        placeDao.deleteBookmark(paramMap);
+	        return false; // 해제됨
+	    } else {
+	        placeDao.insertBookmark(paramMap);
+	        return true; // 등록됨
+	    }
+	}
 	
-	
+		
 }

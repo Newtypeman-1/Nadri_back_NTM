@@ -75,7 +75,7 @@ public class MemberService {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
 			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
-			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
 			System.out.println(loginMember);
 			return loginMember;
 		}
@@ -90,7 +90,7 @@ public class MemberService {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
 			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
-			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel());
+			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
 			System.out.println(loginMember);
 			return loginMember;
 		}
