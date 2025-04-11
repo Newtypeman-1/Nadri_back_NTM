@@ -122,20 +122,18 @@
 	</insert>
 		 
 	 
-	<!--  spot detail 추가 쿼리! 추후 수정 필요
-	<select id="selectSpotDetail" resultType="place">
-    	SELECT * FROM place_info WHERE place_type_id = 12
+	<!-- 초기 데이터: 오버뷰 인서트쿼리 -->
+	<select id="selectPlaces" resultType="place">
+    	SELECT * FROM place_info
 	</select>
-	
-	
-	<update id="updateDetailInfo" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
+	<update id="updateOverview" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
 	    UPDATE place_info
-	    SET use_time = #{useTime},
-	        rest_date = #{restDate},
-	        parking = #{parking}
+	    SET place_overview = #{placeOverview}
 	    WHERE place_id = #{placeId}
 	</update>
 
+
+	<!--  spot detail 추가 쿼리! 추후 수정 필요
 	<insert id="insertSpotInfo" parameterType="kr.co.iei.place.model.dto.SpotDTO">
     	INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season)
     	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})

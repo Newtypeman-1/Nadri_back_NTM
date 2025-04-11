@@ -17,12 +17,17 @@ public interface PlaceDao {
 
 	//플레이스리스트조회
 	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
-	
-	//DB초기 세팅
-	void insertPlaceInfoList(List<PlaceInfoDTO> list);
 
 	List selectPlaceType();
 
 	PlaceInfoDTO selectOnePlace(int placeId);
+	
+	
+	//DB초기 세팅
+	void insertPlaceInfoList(List<PlaceInfoDTO> list);
+	//오버뷰 인서트
+	List<PlaceInfoDTO> selectPlaces();
+	void updateOverview(PlaceInfoDTO place);
+
 	
 }
