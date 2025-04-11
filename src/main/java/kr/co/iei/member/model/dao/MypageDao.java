@@ -13,7 +13,7 @@ public interface MypageDao {
 
 	List reviewsList(HashMap<String, Object> map);
 
-	List<PlaceInfoDTO> BookmarkList(Map<String, Object> map);
+	List<PlaceInfoDTO> bookmarkList(Map<String, Object> map);
 
 	List plannerList(HashMap<String, Object> map);
 
