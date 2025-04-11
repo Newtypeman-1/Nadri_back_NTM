@@ -15,7 +15,7 @@
 				<when test="value == 'food'">
 					place_type_id = 39
 				</when>
-				<when test="value == 'room'">
+				<when test="value == 'stay'">
 					place_type_id = 32
 				</when>
 				<when test="value == 'todo'">
@@ -134,7 +134,7 @@
 				<when test="value == 'food'">
 					rv.place_type_id = 39
 				</when>
-				<when test="value == 'room'">
+				<when test="value == 'stay'">
 					rv.place_type_id = 32
 				</when>
 				<when test="value == 'todo'">
