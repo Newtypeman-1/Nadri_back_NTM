@@ -32,7 +32,6 @@ public class CommService {
 int result = reviewDao.insertComm(comm);
 
 int commNo= comm.getCommNo();
-System.out.println(commNo);
 CommDTO comment = reviewDao.currentComm(commNo);
 		return comment;
 	}

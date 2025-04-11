@@ -62,4 +62,6 @@ public interface ReviewDao {
 
 	List searchImg(int reviewNo);
 
+	int updateReview(ReviewDTO reviewDTO);
+
 }
