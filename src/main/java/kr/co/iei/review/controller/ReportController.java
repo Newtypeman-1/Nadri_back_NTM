@@ -23,7 +23,6 @@ public class ReportController {
 	private ReportService reportService;
 	@PostMapping(value = "/")
 	public ResponseEntity<Integer> insertreport(@RequestBody ReportDTO reportDTO){
-	System.out.println(reportDTO);
 	int result = reportService.insertReport(reportDTO);
 		 return ResponseEntity.ok(result);
 	}

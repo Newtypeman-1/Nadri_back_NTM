@@ -48,7 +48,6 @@ public class ReviewController {
 	}
 	@DeleteMapping(value="/{reviewNo}")
 	public ResponseEntity<Integer>deleteReview(@PathVariable int reviewNo){
-		System.out.println(reviewNo);
 		int result = reviewService.deleteReview(reviewNo);
 		return ResponseEntity.ok(result);
 	}
@@ -95,7 +94,6 @@ public class ReviewController {
     }
 	@PatchMapping
 	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO reviewDTO){
-		System.out.println(reviewDTO);
 		int result = reviewService.updateReview(reviewDTO);
 		return ResponseEntity.ok(result);
 	}
