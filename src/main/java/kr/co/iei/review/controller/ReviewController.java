@@ -66,7 +66,6 @@ public class ReviewController {
 	@GetMapping(value="/detail/{placeId}")
 	public ResponseEntity<List> oneReviewlist(@PathVariable int placeId){
 	
-	System.out.println(placeId);
 		List list = reviewService.oneReviewList(placeId);
 		return ResponseEntity.ok(list);
 	}
