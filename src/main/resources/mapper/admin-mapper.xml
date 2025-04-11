@@ -42,4 +42,43 @@
   		update company_info set
   			addr=#{addr}, tel=#{tel}, fax=#{fax}, email=#{email}
   	</update>
+  	<select id="selectKeywordInfo" resultType="keyword">
+  		select * from search_keyword where keyword=#{keyword}
+  	</select>
+  	<update id="upsertKeywordInfo">
+		MERGE INTO search_keyword k
+		  USING (SELECT #{keyword} AS keyword FROM dual) src
+		  ON (k.keyword = src.keyword)
+		  WHEN MATCHED THEN
+		    UPDATE SET
+		      place_type = #{type},
+		      cat1 = #{cat1},
+		      cat2 = #{cat2},
+		      cat3 = #{cat3},
+		      place_id = #{placeId},
+		      area_code = #{area}
+		  WHEN NOT MATCHED THEN
+		    INSERT (
+		      keyword_no,
+		      keyword,
+		      place_type,
+		      cat1,
+		      cat2,
+		      cat3,
+		      hit_count,
+		      place_id,
+		      area_code
+		    )
+		    VALUES (
+		      keyword_seq.nextval,
+		      #{keyword},
+		      #{type},
+		      #{cat1},
+		      #{cat2},
+		      #{cat3},
+		      0,
+		      #{placeId},
+		      #{area}
+		    )
+	</update>
 </mapper>

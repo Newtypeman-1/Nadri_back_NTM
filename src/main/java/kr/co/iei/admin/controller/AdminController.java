@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
+import kr.co.iei.admin.model.dto.KeywordDTO;
 import kr.co.iei.admin.model.service.AdminService;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
@@ -61,7 +62,6 @@ public class AdminController {
 	}
 	@GetMapping("/event/end")
 	public ResponseEntity<List> selectEndEvent(@RequestParam String date){
-		System.out.println(date);
 		List eventList = adminService.selectEndEvent(date);
 		return ResponseEntity.ok(eventList);
 	}
@@ -103,5 +103,17 @@ public class AdminController {
 	public ResponseEntity<List> reportedReview(){
 		List reportedReviews = reviewService.selectReportedReview();
 		return ResponseEntity.ok(reportedReviews);
+	}
+	@GetMapping("/keyword/{keyword}")
+	public ResponseEntity<KeywordDTO> selectKeywordInfo(@PathVariable String keyword){
+		System.out.println(keyword);
+		KeywordDTO keywordInfo = adminService.selectKeywordInfo(keyword);
+		System.out.println(keywordInfo);
+		return ResponseEntity.ok(keywordInfo);
+	}
+	@PatchMapping("/keyword")
+	public ResponseEntity<Integer> upsertKeywordInfo(@RequestBody KeywordDTO keyword){
+		int result = adminService.upsertKeywordInfo(keyword);
+		return ResponseEntity.ok(result);
 	}
 }

@@ -26,7 +26,6 @@ public class SearchController {
 	
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
-		System.out.println(query);
 		QueryDTO search = new QueryDTO(query, type);
 		List<CategoryDTO> keywordList = searchService.selectKeyword(search);
 		return ResponseEntity.ok(keywordList);
