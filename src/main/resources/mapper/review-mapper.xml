@@ -86,23 +86,26 @@
 	</select>
 
 	<select id="selectHotReview" resultType="review">
-		select review_no, review_title, member_nickname, review_date, star_rate
-		from (
-		select review_no, review_title, member_nickname, review_date, star_rate,
-		rownum rnum
-		from review
-		where place_type_id=#{type}
-		order by read_count
-		)
-		where rnum &lt; 6
+	select hr.*,p.place_title 
+	    from
+			(select review_no, review_title, member_nickname, review_date, place_id
+			from 
+	            (select review_no, review_title, member_nickname, review_date, place_id,
+	            rownum rnum
+	            from review
+	            where place_type_id=#{type}
+	            order by read_count)r
+	        where rnum &lt;= 5) hr
+	    left join place_info p on(hr.place_id=p.place_id)
 	</select>
 
-	<select id="selectReportedReview" resultType="review">
+	<select id="selectReportedReview" resultType="report">
 		select
 		rv.review_no, rv.review_title, rv.member_nickname, rv.review_date,
 		rp.report_nickname, rp.report_reason
 		from report rp
 		left join review rv on (rv.review_no = rp.review_no)
+        where rp.report_status =1
 	</select>
 
 	<select id="selectBoardList" resultType="review">
