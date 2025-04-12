@@ -44,4 +44,5 @@ public class PlaceInfoDTO {
 	
 	//즐겨찾기 할 닉네임
 	private String memberNickname;
+	private int bookmarked;
 }

@@ -5,181 +5,171 @@
 	<select id="totalCount">
 		select count(*) from place_info
 		<where>
-			  <if test="placeTypeId != 0">
-			    <choose>
-			      <when test="placeTypeId == 12">
-			        place_type_id =12
-			      </when>
-			      <when test="placeTypeId == 14">
-			        place_type_id IN (14, 15, 28, 38)
-			      </when>
-			      <when test="placeTypeId == 32">
-			        place_type_id =32
-			      </when>
-			      <when test="placeTypeId == 39">
-			        place_type_id =39
-			      </when>
-			    </choose>
-			  </if>
-			</where>
-	</select> 
-	
-	<select id="selectPlaceList" resultType="Place">
-	  SELECT * FROM (
-	    SELECT rownum AS rnum, c.* FROM (
-	      SELECT 
-	      	p.place_id,
-	        p.place_thumb,
-	        p.area_code,
-	        a.area_name,
-	        p.sigungu_code,
-	        s.sigungu_name,
-	        p.place_title,
-	        p.place_cat3,
-	        cat.cat3_name,
-	        nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
-            nvl((select count(*) from review where place_id=945221),0) as place_review
-	      FROM place_info p
-	      LEFT JOIN area_code a ON p.area_code = a.area_code
-	      LEFT JOIN sigungu_code s 
-	        ON p.sigungu_code = s.sigungu_code 
-	       AND p.area_code = s.area_code
-	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
-	      
-	   		<where>
-			  <if test="placeTypeId != 0">
-			    <choose>
-			      <when test="placeTypeId == 12">
-			        AND p.place_type_id = 12
-			      </when>
-			      <when test="placeTypeId == 14">
-			        AND p.place_type_id IN (14, 15, 28, 38)
-			      </when>
-			      <when test="placeTypeId == 32">
-			        AND p.place_type_id = 32
-			      </when>
-			      <when test="placeTypeId == 39">
-			        AND p.place_type_id = 39
-			      </when>
-			    </choose>
-			  </if>
-			</where>
-	      
-	      ORDER BY p.place_title ASC
-	    ) c
-	  )
-	  WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
+			<if test="placeTypeId != 0">
+				<choose>
+					<when test="placeTypeId == 12">
+						place_type_id =12
+					</when>
+					<when test="placeTypeId == 14">
+						place_type_id IN (14, 15, 28, 38)
+					</when>
+					<when test="placeTypeId == 32">
+						place_type_id =32
+					</when>
+					<when test="placeTypeId == 39">
+						place_type_id =39
+					</when>
+				</choose>
+			</if>
+		</where>
 	</select>
-	
-	
+
+	<select id="selectPlaceList" resultType="Place">
+		select * FROM (
+		select rownum AS rnum, c.* from (
+		select
+			p.place_id,
+			p.place_thumb,
+			p.area_code,
+			a.area_name,
+			p.sigungu_code,
+			s.sigungu_name,
+			p.place_title,
+			p.place_cat3,
+			cat.cat3_name,
+			nvl((select round(avg(star_rate), 1) from review where place_id = p.place_id), 0) as place_rating,
+			nvl((select count(*) from review where place_id = p.place_id), 0) as place_review,
+			(select count(*) from bookmark b where b.place_id = p.place_id and b.member_nickname = #{memberNickname}) as bookmarked
+		from place_info p
+		left join area_code a on p.area_code = a.area_code
+		left join sigungu_code s on p.sigungu_code = s.sigungu_code and p.area_code = s.area_code
+		left join place_cat3 cat on p.place_cat3 = cat.cat3
+		<where>
+			<if test="placeTypeId != 0">
+				<choose>
+					<when test="placeTypeId == 12">
+						AND p.place_type_id = 12
+					</when>
+					<when test="placeTypeId == 14">
+						AND p.place_type_id IN (14, 15, 28, 38)
+					</when>
+					<when test="placeTypeId == 32">
+						AND p.place_type_id = 32
+					</when>
+					<when test="placeTypeId == 39">
+						AND p.place_type_id = 39
+					</when>
+				</choose>
+			</if>
+		</where>
+		order by p.place_title asc
+		) c)
+		where rnum BETWEEN #{pi.start} AND #{pi.end}
+	</select>
+
+
 	<!-- place 타입 테이블 조회 -->
 	<select id="selectPlaceType" resultType="category">
-	    select place_type_id as id, place_type_name as name
-    	from place_type
+		select place_type_id as
+		id, place_type_name as name
+		from place_type
 	</select>
-	
-	
-<!-- place 조회 -->
-	<select id="selectOnePlace" resultType="place">
-		SELECT
-		    c2.cat2_name,
-		    c3.cat3_name,
-		    p.place_title,
-		    a.area_name,
-		    s.sigungu_name,
-		    p.place_overview,
-		    p.place_addr,
-		    p.place_tel,
-		    place_thumb,
-		    place_type_id,
-		    nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
-            nvl((select count(*) from review where place_id=945221),0) as place_review
+
+
+	<!-- place 상세페이지 조회 -->
+	<select id="selectPlaceWithBookmarked" resultType="place">
+		select
+			c2.cat2_name,
+			c3.cat3_name,
+			p.place_title,
+			a.area_name,
+			s.sigungu_name,
+			p.place_overview,
+			p.place_addr,
+			p.place_tel,
+			place_thumb,
+			place_type_id,
+			nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
+			nvl((select count(*) from review where place_id=p.place_id),0) as place_review,
+			(select count(*) from bookmark b where b.place_id = p.place_id and b.member_nickname = #{memberNickname}) as bookmarked
 		FROM place_info p
-			LEFT JOIN place_cat2 c2 ON p.place_cat2 = c2.cat2
-			LEFT JOIN place_cat3 c3 ON p.place_cat3 = c3.cat3
-			LEFT JOIN area_code a ON p.area_code = a.area_code
-			LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
-		WHERE p.place_id = #{placeId}
+		left join place_cat2 c2 on p.place_cat2 = c2.cat2
+		left join place_cat3 c3 on p.place_cat3 = c3.cat3
+		left join area_code a on p.area_code = a.area_code
+		left join sigungu_code s ON p.sigungu_code = s.sigungu_code and p.area_code = s.area_code
+		where p.place_id = #{placeId}
 	</select>
 
-	 
-	 <!--  초기 데이터: place데이터 -->
-	<insert id="insertPlaceInfoList" parameterType="java.util.List">
-	    INSERT INTO place_info (
-	        place_id, place_type_id, place_title, place_addr, place_tel,
-	        area_code, sigungu_code,
-	        place_cat1, place_cat2, place_cat3,
-	        map_lat, map_lng, place_thumb
-	    )
-	    <foreach collection="list" item="place" separator="union all">
-	        SELECT
-	        #{place.placeId}, #{place.placeTypeId}, #{place.placeTitle}, #{place.placeAddr}, #{place.placeTel},
-	        #{place.areaCode}, #{place.sigunguCode},
-	        #{place.placeCat1}, #{place.placeCat2}, #{place.placeCat3},
-	        #{place.mapLat}, #{place.mapLng}, #{place.placeThumb}
-	        FROM DUAL
-	    </foreach>
-	</insert>
-		
-	<!-- 즐겨찾기 기능 -->	
-	<select id="selectBookmarkStatusList" resultType="map">
-		  SELECT
-		    p.place_id AS placeId,
-		    CASE WHEN b.place_id IS NOT NULL THEN 1 ELSE 0 END AS bookmarked
-		  FROM (
-			    <foreach collection="placeIds" item="id" separator="UNION ALL">
-			      SELECT #{id} AS place_id FROM dual
-			    </foreach>
-		  ) p
-		  LEFT JOIN bookmark b
-		    ON p.place_id = b.place_id
-		   AND b.member_nickname = #{memberNickname}
-	</select>
+
+	<!-- 즐겨찾기 토글 기능 -->
 	<select id="checkBookmark" resultType="int">
-  		SELECT COUNT(*) FROM bookmark
-  		WHERE member_nickname = #{memberNickname}
-    	AND place_id = #{placeId}
+		select count(*) from bookmark
+		where member_nickname = #{memberNickname}
+		and place_id = #{placeId}
 	</select>
- 	<insert id="insertBookmark">
-	    INSERT INTO bookmark (bookmark_no,member_nickname, place_id)
-	    VALUES (bookmark_seq.nextval,#{memberNickname}, #{placeId})
-  	</insert>
+	<insert id="insertBookmark">
+		insert into bookmark (bookmark_no, member_nickname, place_id) values (bookmark_seq.nextval, #{memberNickname}, #{placeId})
+	</insert>
+	<delete id="deleteBookmark">
+		delete from bookmark where member_nickname = #{memberNickname} and place_id = #{placeId}
+	</delete>
+	
+	
+	
 
-  	<delete id="deleteBookmark">
-	    DELETE FROM bookmark
-	    WHERE member_nickname = #{memberNickname}
-	    AND place_id = #{placeId}
-  	</delete>
-		 
-	
-	
-	
-	 
+
+	<!-- 초기 데이터: place데이터 -->
+	<insert id="insertPlaceInfoList" parameterType="java.util.List">
+		INSERT INTO place_info (
+		place_id, place_type_id, place_title,
+		place_addr, place_tel,
+		area_code, sigungu_code,
+		place_cat1, place_cat2,
+		place_cat3,
+		map_lat, map_lng, place_thumb
+		)
+		<foreach collection="list" item="place" separator="union all">
+			SELECT
+			#{place.placeId}, #{place.placeTypeId}, #{place.placeTitle},
+			#{place.placeAddr},
+			#{place.placeTel},
+			#{place.areaCode},
+			#{place.sigunguCode},
+			#{place.placeCat1}, #{place.placeCat2},
+			#{place.placeCat3},
+			#{place.mapLat}, #{place.mapLng},
+			#{place.placeThumb}
+			FROM DUAL
+		</foreach>
+	</insert>
+
 	<!-- 초기 데이터: 오버뷰 인서트쿼리 -->
 	<select id="selectPlaces" resultType="place">
-    	SELECT * FROM place_info
+		SELECT * FROM place_info
 	</select>
-	<update id="updateOverview" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
-	    UPDATE place_info
-	    SET place_overview = #{placeOverview}
-	    WHERE place_id = #{placeId}
+	<update id="updateOverview"
+		parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
+		UPDATE place_info
+		SET place_overview = #{placeOverview}
+		WHERE place_id = #{placeId}
 	</update>
 
 
-	<!--  spot detail 추가 쿼리! 추후 수정 필요
-	<insert id="insertSpotInfo" parameterType="kr.co.iei.place.model.dto.SpotDTO">
-    	INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season)
-    	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})
-	</insert>
-	 -->
+	<!-- spot detail 추가 쿼리! 추후 수정 필요 <insert id="insertSpotInfo" parameterType="kr.co.iei.place.model.dto.SpotDTO"> 
+		INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season) 
+		VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason}) 
+		</insert> -->
 	<select id="selectAllPlaceCategories" resultType="category">
-	    SELECT 1 AS cat_index, cat1 AS id, cat1_name AS name FROM place_cat1
-	    UNION ALL
-	    SELECT 2 AS cat_index, cat2 AS id, cat2_name AS name FROM place_cat2
-	    UNION ALL
-	    SELECT 3 AS cat_index, cat3 AS id, cat3_name AS name FROM place_cat3
+		SELECT 1 AS
+		cat_index, cat1 AS id, cat1_name AS name FROM place_cat1
+		UNION ALL
+		SELECT 2 AS cat_index, cat2 AS id, cat2_name AS name FROM place_cat2
+		UNION ALL
+		SELECT 3 AS cat_index, cat3 AS id, cat3_name AS name FROM
+		place_cat3
 	</select>
 	<select id="selectArea" resultType="category">
-		select area_code as id, area_name as name from area_code
+		select area_code as id,
+		area_name as name from area_code
 	</select>
 </mapper>

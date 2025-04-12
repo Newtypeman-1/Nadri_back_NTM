@@ -19,21 +19,25 @@ public interface PlaceDao {
 
 	int totalCount();
 
-	// 플레이스리스트조회
+	//플레이스 리스트 조회
 	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
 
+	//플레이스 타입 아이디 조회
 	List<CategoryDTO> selectPlaceType();
 
-	PlaceInfoDTO selectOnePlace(int placeId);
+	//플레이스 하나 조회(상세보기)
+	PlaceInfoDTO selectPlaceWithBookmarked(int placeId, String memberNickname);
+	
+	List<CategoryDTO> selectAllPlaceCategories();
 
-	// 즐겨찾기 기능
-	List<Map<String, Object>> selectBookmarkStatusList(Map<String, Object> paramMap);
+	List<CategoryDTO> selectArea();
 
-	int checkBookmark(Map<String, Object> paramMap);
+	//즐겨찾기 상태 조회
+	int checkBookmark(String memberNickname, int placeId);
+	
+	void deleteBookmark(String memberNickname, int placeId);
 
-	void deleteBookmark(Map<String, Object> paramMap);
-
-	void insertBookmark(Map<String, Object> paramMap);
+	void insertBookmark(String memberNickname, int placeId);
 
 	// DB초기 세팅
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
@@ -43,7 +47,5 @@ public interface PlaceDao {
 
 	void updateOverview(PlaceInfoDTO place);
 
-	List<CategoryDTO> selectAllPlaceCategories();
 
-	List<CategoryDTO> selectArea();
 }

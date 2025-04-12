@@ -31,38 +31,19 @@ public class PlaceController {
 	@Autowired
 	private PlaceService placeService;
 
+	// 플레이스 리스트 조회(플레이스 타입 아이디별 / 북마크 상태 포함)
 	@GetMapping
 	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int placeTypeId,
 			@RequestParam(required = false) String memberNickname) {
-		Map map = placeService.selectPlaceList(reqPage, placeTypeId);
+		Map map = placeService.selectPlaceList(reqPage, placeTypeId, memberNickname);
 		return ResponseEntity.ok(map);
 	}
 
+	// 플레이스 타입 아이디 조회
 	@GetMapping("/type")
 	public ResponseEntity<List> placeType() {
 		List<CategoryDTO> placeType = placeService.selectPlaceType();
 		return ResponseEntity.ok(placeType);
-	}
-
-	@GetMapping("/detail")
-	public ResponseEntity<PlaceInfoDTO> placeDetail(@RequestParam int placeId) {
-		PlaceInfoDTO place = placeService.selectOnePlace(placeId);
-		return ResponseEntity.ok(place);
-	}
-
-	// 즐겨찾기 상태 조회
-	@GetMapping("/bookmark/status/list")
-	public ResponseEntity<List<Map<String, Object>>> getBookmarkStatusList(@RequestParam String memberNickname,
-			@RequestParam List<Integer> placeIds) {
-		List<Map<String, Object>> result = placeService.getBookmarkStatusList(memberNickname, placeIds);
-		return ResponseEntity.ok(result);
-	}
-
-	// 즐겨찾기 토글
-	@PostMapping("/bookmark/toggle")
-	public ResponseEntity<Boolean> toggleBookmark(@RequestParam String memberNickname, @RequestParam int placeId) {
-		boolean result = placeService.toggleBookmark(memberNickname, placeId);
-		return ResponseEntity.ok(result); // true: 등록, false: 해제
 	}
 
 	@GetMapping("/category")
@@ -72,9 +53,24 @@ public class PlaceController {
 	}
 
 	@GetMapping("/area")
-	public ResponseEntity<List> placeArea(){
+	public ResponseEntity<List> placeArea() {
 		List<CategoryDTO> area = placeService.selectPlaceArea();
 		return ResponseEntity.ok(area);
+	}
+
+	// 상세페이지 조회(좋아요 상태 추가)
+	@GetMapping("/detail")
+	public ResponseEntity<PlaceInfoDTO> placeDetail(@RequestParam int placeId, @RequestParam(required = false) String memberNickname) {
+		PlaceInfoDTO place = placeService.selectOnePlace(placeId, memberNickname);
+		return ResponseEntity.ok(place);
+	}
+
+	// 즐겨찾기 토글
+	@PostMapping("/bookmark/toggle")
+	public ResponseEntity<Integer> toggleBookmark(@RequestParam String memberNickname, @RequestParam int placeId) {
+		System.out.println("추가하려는 플레이스 아이디 :"+placeId);
+		int result = placeService.toggleBookmark(memberNickname, placeId);
+		return ResponseEntity.ok(result); // 1: 등록, 0: 해제
 	}
 
 }
