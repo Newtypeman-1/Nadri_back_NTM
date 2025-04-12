@@ -15,12 +15,10 @@ import kr.co.iei.util.PageInfo;
 @Mapper
 public interface PlaceDao {
 
-	int totalCount(int placeTypeId);
-
-	int totalCount();
+	int totalCount(int selectedMenu);
 
 	//플레이스 리스트 조회
-	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
+	List<PlaceInfoDTO> selectALLPlaceList(Map<String, Object> map);
 
 	//플레이스 타입 아이디 조회
 	List<CategoryDTO> selectPlaceType();

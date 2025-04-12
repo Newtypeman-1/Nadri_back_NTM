@@ -26,18 +26,19 @@ public class PlaceService {
 	private PageInfoUtil pageInfoUtil;
 
 	// placeInfo 조회(페이지인포 포함 / 기본 데이터 / 좋아요 상태)
-	public Map selectPlaceList(int reqPage, int placeTypeId, String memberNickname) {
+	public Map selectALLPlaceList(int reqPage, int selectedMenu, String memberNickname, int order) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
-		int totalCount = placeDao.totalCount(placeTypeId);
+		int totalCount = placeDao.totalCount(selectedMenu);
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("placeTypeId", placeTypeId);
+		map.put("selectedMenu", selectedMenu);
 		map.put("pi", pi);
 		map.put("memberNickname", memberNickname);
+		map.put("order", order);
 
-		List<PlaceInfoDTO> list = placeDao.selectPlaceList(map);
+		List<PlaceInfoDTO> list = placeDao.selectALLPlaceList(map);
 		// placeTitle 괄호제거
 		for (PlaceInfoDTO place : list) {
 			String title = place.getPlaceTitle();

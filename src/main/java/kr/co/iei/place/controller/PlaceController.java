@@ -33,9 +33,10 @@ public class PlaceController {
 
 	// 플레이스 리스트 조회(플레이스 타입 아이디별 / 북마크 상태 포함)
 	@GetMapping
-	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int placeTypeId,
-			@RequestParam(required = false) String memberNickname) {
-		Map map = placeService.selectPlaceList(reqPage, placeTypeId, memberNickname);
+	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int selectedMenu,
+			@RequestParam(required = false) String memberNickname, @RequestParam int order) {
+		Map map = placeService.selectALLPlaceList(reqPage, selectedMenu, memberNickname, order);
+		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}
 
