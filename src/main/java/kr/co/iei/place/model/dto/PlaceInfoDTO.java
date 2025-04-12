@@ -44,4 +44,6 @@ public class PlaceInfoDTO {
 	
 	//즐겨찾기 할 닉네임
 	private String memberNickname;
+	//방문 횟수
+	private int visitCount;
 }

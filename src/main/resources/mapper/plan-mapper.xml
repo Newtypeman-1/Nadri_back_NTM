@@ -114,12 +114,16 @@
 		from trip_plan	
 	</select>
 	
-	<select id="selectMostPlace" resultType="stats">
-		select * from 
-    		(select p.*, rownum rnum from 
-        		(select plan_no, count(plan_no) count from trip_itinerary group by plan_no)p 
-    		order by count desc)
-		where rnum>5 ;
+	<select id="selectMostPlace" resultType="place">
+		select top.place_id, top.visit_count, p.place_type_id, p.place_title, p.place_addr   from
+		    (select r.* from 
+		        (select t.*, rownum rnum from
+		        (select end_location place_id, count(end_location) as visit_count
+		            from TRIP_ITINERARY 
+		            group by end_location 
+		            order by visit_count desc) t)r 
+		    where r.rnum &lt;= 10) top
+		left join place_info p on(top.place_id=p.place_id)
 	</select>
 	
 </mapper>

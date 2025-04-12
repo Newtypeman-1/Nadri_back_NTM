@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.util.FileUtils;
@@ -81,8 +82,8 @@ public class PlanController {
 	}
 
 	@GetMapping("/mostPlace")
-	public ResponseEntity<AdminStatsDTO> selectmostPlace(@RequestParam(required = false) String area) {
-		AdminStatsDTO mostPlace = planService.selectMostPlace();
+	public ResponseEntity<List> selectmostPlace(@RequestParam(required = false) String area) {
+		List<PlaceInfoDTO> mostPlace = planService.selectMostPlace();
 		return ResponseEntity.ok(mostPlace);
 	}
 

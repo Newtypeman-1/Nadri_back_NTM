@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.member.model.dto.LoginMemberDTO;
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
@@ -57,11 +58,12 @@ public class PlanService {
 
 	public AdminStatsDTO selectPlanStats() {
 		AdminStatsDTO planStats = planDao.selectPlanStats();
+		planStats.setMostPlace(planDao.selectMostPlace());
 		return planStats;
 	}
 
-	public AdminStatsDTO selectMostPlace() {
-		AdminStatsDTO mostPlace = planDao.selectMostPlace();
+	public List<PlaceInfoDTO> selectMostPlace() {
+		List<PlaceInfoDTO> mostPlace = planDao.selectMostPlace();
 		return mostPlace;
 	}
 

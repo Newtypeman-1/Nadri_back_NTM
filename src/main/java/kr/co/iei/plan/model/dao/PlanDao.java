@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 
 @Mapper
@@ -23,6 +24,6 @@ public interface PlanDao {
 	
 	AdminStatsDTO selectPlanStats();
 
-	AdminStatsDTO selectMostPlace();
+	List<PlaceInfoDTO> selectMostPlace();
 
 }
