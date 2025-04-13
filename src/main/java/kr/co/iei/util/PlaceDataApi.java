@@ -95,6 +95,51 @@ public class PlaceDataApi {
 	        e.printStackTrace();
 	    }
 	}
+    
+    
+    //overview 인서트 코드
+    @Transactional
+    public void insertOverview() {
+        List<PlaceInfoDTO> places = placeDao.selectPlaces(); // 전체 place_id 리스트 조회
+
+        for (PlaceInfoDTO place : places) {
+            try {
+                String result = Jsoup.connect("https://apis.data.go.kr/B551011/KorService1/detailCommon1")
+                        .data("serviceKey", "p6OE41A6Y/J5UyvOHeyDbZAiqvEt6lw710QuQJKC4qtMKfx3kAHA00zv0/0OS9bD8KcOvnP2GtRdNlYFkPfO/w==") // ← @Value로 주입해도 됨
+                        .data("MobileOS", "ETC")
+                        .data("MobileApp", "nadri")
+                        .data("_type", "json")
+                        .data("contentId", String.valueOf(place.getPlaceId()))
+                        .data("overviewYN", "Y")
+                        .ignoreContentType(true)
+                        .get()
+                        .text();
+
+                JsonArray items = JsonParser.parseString(result)
+                        .getAsJsonObject()
+                        .getAsJsonObject("response")
+                        .getAsJsonObject("body")
+                        .getAsJsonObject("items")
+                        .getAsJsonArray("item");
+
+                for (JsonElement element : items) {
+                    JsonObject item = element.getAsJsonObject();
+                    String placeOverview = item.has("overview") ? item.get("overview").getAsString() : null;
+
+                    // DTO에 overview 값 설정
+                    place.setPlaceOverview(placeOverview);
+                    placeDao.updateOverview(place); // ✅ DB 업데이트
+                    System.out.println("✅ place_id " + place.getPlaceId() + " - 개요 업데이트 완료");
+                }
+
+            } catch (Exception e) {
+                System.out.println("❌ 개요 업데이트 실패 - place_id: " + place.getPlaceId());
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("✅ 전체 overview 데이터 보충 완료");
+    }
 	
 }
 	

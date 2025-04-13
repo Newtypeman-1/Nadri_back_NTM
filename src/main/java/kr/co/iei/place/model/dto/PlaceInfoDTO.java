@@ -25,6 +25,8 @@ public class PlaceInfoDTO {
 	private int placeId;
 	private int placeTypeId;
 	
+	private String placeOverview;
+	
 	private String useTime;
 	private String restDate;
 	private String parking;

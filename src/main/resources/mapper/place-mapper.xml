@@ -120,22 +120,53 @@
 	        FROM DUAL
 	    </foreach>
 	</insert>
-		 
-	 
-	<!--  spot detail 추가 쿼리! 추후 수정 필요
-	<select id="selectSpotDetail" resultType="place">
-    	SELECT * FROM place_info WHERE place_type_id = 12
+		
+	<!-- 즐겨찾기 기능 -->	
+	<select id="selectBookmarkStatusList" resultType="map">
+		  SELECT
+		    p.place_id AS placeId,
+		    CASE WHEN b.place_id IS NOT NULL THEN 1 ELSE 0 END AS bookmarked
+		  FROM (
+			    <foreach collection="placeIds" item="id" separator="UNION ALL">
+			      SELECT #{id} AS place_id FROM dual
+			    </foreach>
+		  ) p
+		  LEFT JOIN bookmark b
+		    ON p.place_id = b.place_id
+		   AND b.member_nickname = #{memberNickname}
 	</select>
+	<select id="checkBookmark" resultType="int">
+  		SELECT COUNT(*) FROM bookmark
+  		WHERE member_nickname = #{memberNickname}
+    	AND place_id = #{placeId}
+	</select>
+ 	<insert id="insertBookmark">
+	    INSERT INTO bookmark (bookmark_no,member_nickname, place_id)
+	    VALUES (bookmark_seq.nextval,#{memberNickname}, #{placeId})
+  	</insert>
+
+  	<delete id="deleteBookmark">
+	    DELETE FROM bookmark
+	    WHERE member_nickname = #{memberNickname}
+	    AND place_id = #{placeId}
+  	</delete>
+		 
 	
 	
-	<update id="updateDetailInfo" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
+	
+	 
+	<!-- 초기 데이터: 오버뷰 인서트쿼리 -->
+	<select id="selectPlaces" resultType="place">
+    	SELECT * FROM place_info
+	</select>
+	<update id="updateOverview" parameterType="kr.co.iei.place.model.dto.PlaceInfoDTO">
 	    UPDATE place_info
-	    SET use_time = #{useTime},
-	        rest_date = #{restDate},
-	        parking = #{parking}
+	    SET place_overview = #{placeOverview}
 	    WHERE place_id = #{placeId}
 	</update>
 
+
+	<!--  spot detail 추가 쿼리! 추후 수정 필요
 	<insert id="insertSpotInfo" parameterType="kr.co.iei.place.model.dto.SpotDTO">
     	INSERT INTO spot (place_id, heritage1, heritage2, heritage3, use_season)
     	VALUES (#{placeId}, #{heritage1}, #{heritage2}, #{heritage3}, #{useSeason})

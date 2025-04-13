@@ -17,12 +17,12 @@ import kr.co.iei.util.JwtUtils;
 public class PlanService {
 	@Autowired
 	private PlanDao planDao;
-	
+
 	@Autowired
 	private JwtUtils jwtUtils;
-	
+
 	public PlanDTO verifyPlan(String refreshToken, int planNo) {
-		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken); 
+		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
 		PlanDTO plan = planDao.verifyPlan(loginMember.getMemberEmail(), planNo);
 		return plan;
 	}
@@ -45,13 +45,16 @@ public class PlanService {
 
 	@Transactional
 	public boolean insertPlan(PlanDTO plan, List<ItineraryDTO> list) {
-		if(planDao.insertTripPlan(plan) != 1) return false;
-		for(ItineraryDTO i : list) {
+		if (planDao.insertTripPlan(plan) != 1)
+			return false;
+		for (ItineraryDTO i : list) {
 			i.setPlanNo(plan.getPlanNo());
-			if(planDao.insertTripItinerary(i) != 1) return false;
+			if (planDao.insertTripItinerary(i) != 1)
+				return false;
 		}
 		return true;
 	}
+
 	public AdminStatsDTO selectPlanStats() {
 		AdminStatsDTO planStats = planDao.selectPlanStats();
 		return planStats;
