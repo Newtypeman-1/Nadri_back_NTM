@@ -22,7 +22,6 @@ import com.google.gson.JsonParser;
 import jakarta.annotation.PostConstruct;
 import kr.co.iei.place.model.dao.PlaceDao;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
-import kr.co.iei.place.model.dto.SpotDTO;
 import kr.co.iei.place.model.service.PlaceService;
 
 @CrossOrigin("*")

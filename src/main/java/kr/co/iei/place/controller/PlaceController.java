@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import kr.co.iei.place.model.dto.CategoryDTO;
+import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.place.model.service.PlaceService;
 
@@ -33,10 +35,16 @@ public class PlaceController {
 
 	// 플레이스 리스트 조회(플레이스 타입 아이디별 / 북마크 상태 포함)
 	@GetMapping
-	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int selectedMenu,
-			@RequestParam(required = false) String memberNickname, @RequestParam int order) {
-		Map map = placeService.selectALLPlaceList(reqPage, selectedMenu, memberNickname, order);
+	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam(required = false) String memberNickname, @RequestParam int order) {
+		Map map = placeService.selectALLPlaceList(reqPage, memberNickname, order);
 		System.out.println(map);
+		return ResponseEntity.ok(map);
+	}
+	
+	// 플레이스 리스트 필터적용 조회
+	@PostMapping("/filter")
+	public ResponseEntity<Map> placeListByFilter(@RequestBody PlaceFilterRequest req){
+		Map map = placeService.selectFilteredPlaceList(req);
 		return ResponseEntity.ok(map);
 	}
 

@@ -13,8 +13,9 @@ import io.jsonwebtoken.security.Jwks.HASH;
 import kr.co.iei.place.model.dao.PlaceDao;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.place.model.dto.CategoryDTO;
+import kr.co.iei.place.model.dto.FilterMapRow;
+import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
-import kr.co.iei.place.model.dto.SpotDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -26,14 +27,13 @@ public class PlaceService {
 	private PageInfoUtil pageInfoUtil;
 
 	// placeInfo 조회(페이지인포 포함 / 기본 데이터 / 좋아요 상태)
-	public Map selectALLPlaceList(int reqPage, int selectedMenu, String memberNickname, int order) {
+	public Map selectALLPlaceList(int reqPage, String memberNickname, int order) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
-		int totalCount = placeDao.totalCount(selectedMenu);
+		int totalCount = placeDao.totalCount();
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("selectedMenu", selectedMenu);
 		map.put("pi", pi);
 		map.put("memberNickname", memberNickname);
 		map.put("order", order);
@@ -54,6 +54,44 @@ public class PlaceService {
 		map2.put("totalCount", totalCount);
 
 		return map2;
+	}
+
+	// 상세 필터 적용 플레이스 리스트 조회
+	public Map selectFilteredPlaceList(PlaceFilterRequest req) {
+		// 필터맵 정보 전체 조회
+		List<FilterMapRow> rows = placeDao.findFilterMapRows(req.getFilters(), req.getSelectedMenu());
+
+		List<Integer> placeTypeIds = new ArrayList<>();
+		List<String> cat2Codes = new ArrayList<>();
+		List<String> cat3Codes = new ArrayList<>();
+
+		for (FilterMapRow row : rows) {
+			if (!placeTypeIds.contains(row.getPlaceTypeId())) {
+				placeTypeIds.add(row.getPlaceTypeId());
+			}
+
+			if ("cat2".equals(row.getCodeType())) {
+				cat2Codes.add(row.getCode());
+			} else if ("cat3".equals(row.getCodeType())) {
+				cat3Codes.add(row.getCode());
+			}
+		}
+		System.out.println();
+		int numPerPage = 12;
+		int pageNaviSize = 5;
+		int totalCount = placeDao.getFilteredPlaceCount(placeTypeIds, cat2Codes, cat3Codes);
+		PageInfo pi = pageInfoUtil.getPageInfo(req.getReqPage(), numPerPage, pageNaviSize, totalCount);
+
+		List<PlaceInfoDTO> list = placeDao.selectPlaceListByFilterPaged(placeTypeIds, cat2Codes, cat3Codes,
+				req.getOrder(), pi.getStart(), pi.getEnd(), req.getMemberNickname());
+		
+		System.out.println(list);
+		Map<String, Object> map = new HashMap<>();
+		map.put("totalCount", totalCount);
+		map.put("pi", pi);
+		map.put("list", list);
+
+		return map;
 	}
 
 	// 플레이스 타입 아이디 조회

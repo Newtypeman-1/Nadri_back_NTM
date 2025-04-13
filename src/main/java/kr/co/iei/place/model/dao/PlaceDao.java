@@ -8,13 +8,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.iei.place.model.dto.CategoryDTO;
+import kr.co.iei.place.model.dto.FilterMapRow;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
-import kr.co.iei.place.model.dto.SpotDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
 public interface PlaceDao {
 
+	int totalCount();
+	
 	int totalCount(int selectedMenu);
 
 	//플레이스 리스트 조회
@@ -44,6 +46,16 @@ public interface PlaceDao {
 	List<PlaceInfoDTO> selectPlaces();
 
 	void updateOverview(PlaceInfoDTO place);
+
+	//코드조회 쿼리
+	List<FilterMapRow> findFilterMapRows(List<String> filters, int selectedMenu);
+
+	int getFilteredPlaceCount(List<Integer> placeTypeIds, List<String> cat2Codes, List<String> cat3Codes);
+
+	List<PlaceInfoDTO> selectPlaceListByFilterPaged(List<Integer> placeTypeIds, List<String> cat2Codes,
+			List<String> cat3Codes, int order, int start, int end, String memberNickname);
+
+
 
 
 }
