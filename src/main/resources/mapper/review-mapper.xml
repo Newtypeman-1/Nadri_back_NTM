@@ -12,10 +12,7 @@
 				<when test="value == '39'">
 					place_type_id = 39
 				</when>
-
 				<when test="value == '32'">
-
-				<when test="value == 'stay'">
 
 					place_type_id = 32
 				</when>
@@ -133,10 +130,7 @@
 				<when test="value == '39'">
 					rv.place_type_id = 39
 				</when>
-
-
-				<when test="value == 'stay'">
-
+				<when test="value == '32'">
 					rv.place_type_id = 32
 				</when>
 				<when test="value == '14'">
