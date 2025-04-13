@@ -45,9 +45,9 @@ public class PlaceController {
 	
 	// 플레이스 리스트 필터적용 조회
 	@PostMapping("/filter")
-	public ResponseEntity<Map> placeListByFilter(@RequestBody PlaceFilterRequest req){
-		Map map = placeService.selectFilteredPlaceList(req);
-		return ResponseEntity.ok(map);
+	public ResponseEntity<Map<String, Object>> getFilteredPlaceList(@RequestBody PlaceFilterRequest request) {
+        Map<String, Object> result = placeService.selectFilteredPlaceList(request);
+        return ResponseEntity.ok(result);
 	}
 
 	// 플레이스 타입 아이디 조회

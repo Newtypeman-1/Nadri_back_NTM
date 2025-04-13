@@ -7,16 +7,16 @@
 		<where>
 			<if test="selectedMenu != 0">
 				<choose>
-					<when test="selectedMenu == 1">
+					<when test="selectedMenu == 12">
 						place_type_id =12
 					</when>
-					<when test="selectedMenu == 2">
+					<when test="selectedMenu == 14">
 						place_type_id IN (14, 15, 28, 38)
 					</when>
-					<when test="selectedMenu == 3">
+					<when test="selectedMenu == 32">
 						place_type_id =32
 					</when>
-					<when test="selectedMenu == 4">
+					<when test="selectedMenu == 39">
 						place_type_id =39
 					</when>
 				</choose>
@@ -47,16 +47,16 @@
 		      <where>
 		        <if test="selectedMenu != 0">
 		          <choose>
-		            <when test="selectedMenu == 1">
+		            <when test="selectedMenu == 12">
 		              and p.place_type_id = 12
 		            </when>
-		            <when test="selectedMenu == 2">
+		            <when test="selectedMenu == 14">
 		              and p.place_type_id in (14, 15, 28, 38)
 		            </when>
-		            <when test="selectedMenu == 3">
+		            <when test="selectedMenu == 32">
 		              and p.place_type_id = 32
 		            </when>
-		            <when test="selectedMenu == 4">
+		            <when test="selectedMenu == 39">
 		              and p.place_type_id = 39
 		            </when>
 		          </choose>
@@ -126,101 +126,80 @@
 		delete from bookmark where member_nickname = #{memberNickname} and place_id = #{placeId}
 	</delete>
 	
-	<!-- 메뉴/필터에 해당하는 코드 및 타입아이디 조회 -->
-	<select id="findFilterMapRows" resultType="row">
-	  SELECT code, code_type, place_type_id
-	  FROM filter_map
-	  WHERE menu_id = #{selectedMenu}
-	    <if test="filters != null and filters.size() > 0">
-	      AND filter_name IN
-	      <foreach item="name" collection="filters" open="(" separator="," close=")">
-	        #{name}
-	      </foreach>
-	    </if>
-	</select>
-	
 	<!-- 메뉴/필터에 해당하는 플레이스 개수 조회 -->
-	<select id="getFilteredPlaceCount" resultType="int">
-	  SELECT COUNT(*)
-	  FROM place_info
-	  WHERE place_type_id IN
-	  <foreach item="id" collection="placeTypeIds" open="(" separator="," close=")">
-	    #{id}
-	  </foreach>
-	
-	  <if test="cat2Codes != null and cat2Codes.size() > 0">
-	    AND place_cat2 IN
-	    <foreach item="code" collection="cat2Codes" open="(" separator="," close=")">
-	      #{code}
-	    </foreach>
-	  </if>
-	
-	  <if test="cat3Codes != null and cat3Codes.size() > 0">
-	    AND place_cat3 IN
-	    <foreach item="code" collection="cat3Codes" open="(" separator="," close=")">
-	      #{code}
-	    </foreach>
-	  </if>
-	</select>
+	 <select id="getFilteredPlaceCount" resultType="int">
+        SELECT COUNT(*)
+        FROM place_info
+        WHERE place_type_id = #{placeTypeId}
+
+        <if test="filterCodes != null and filterCodes.size() > 0">
+            AND (
+                place_cat2 IN
+                <foreach item="code" collection="filterCodes" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+                OR
+                place_cat3 IN
+                <foreach item="code" collection="filterCodes" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            )
+        </if>
+    </select>
 	
 	<select id="selectPlaceListByFilterPaged" resultType="place">
-	  SELECT * FROM (
-	    SELECT ROWNUM AS rnum, data.*
-	    FROM (
-	      SELECT 
-	        p.place_id,
-	        p.place_thumb,
-	        p.area_code,
-	        a.area_name,
-	        p.sigungu_code,
-	        s.sigungu_name,
-	        p.place_title,
-	        p.place_cat3,
-	        cat.cat3_name,
-	        NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
-	        NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
-	        (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = #{memberNickname}) AS bookmarked
-	      FROM place_info p
-	      LEFT JOIN area_code a ON p.area_code = a.area_code
-	      LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
-	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
-	      <where>
-	        <if test="placeTypeIds != null and placeTypeIds.size() > 0">
-	          AND p.place_type_id IN
-	          <foreach item="id" collection="placeTypeIds" open="(" separator="," close=")">
-	            #{id}
-	          </foreach>
-	        </if>
-	        <if test="cat2Codes != null and cat2Codes.size() > 0">
-	          AND p.place_cat2 IN
-	          <foreach item="code" collection="cat2Codes" open="(" separator="," close=")">
-	            #{code}
-	          </foreach>
-	        </if>
-	        <if test="cat3Codes != null and cat3Codes.size() > 0">
-	          AND p.place_cat3 IN
-	          <foreach item="code" collection="cat3Codes" open="(" separator="," close=")">
-	            #{code}
-	          </foreach>
-	        </if>
-	      </where>
-	
-	      <choose>
-	        <when test="order == 1">
-	          ORDER BY place_review DESC
-	        </when>
-	        <when test="order == 2">
-	          ORDER BY place_rating DESC
-	        </when>
-	        <when test="order == 3">
-	          ORDER BY bookmarked DESC
-	        </when>
-	      </choose>
-	
-	    ) data
-	  )
-	  WHERE rnum BETWEEN #{start} AND #{end}
-	</select>
+        SELECT *
+        FROM (
+            SELECT ROWNUM AS rnum, data.*
+            FROM (
+                SELECT
+                    p.place_id,
+                    p.place_thumb,
+                    p.area_code,
+                    a.area_name,
+                    p.sigungu_code,
+                    s.sigungu_name,
+                    p.place_title,
+                    p.place_cat3,
+                    cat.cat3_name,
+                    NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
+                    NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
+                    (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = #{request.memberNickname}) AS bookmarked
+                FROM place_info p
+                LEFT JOIN area_code a ON p.area_code = a.area_code
+                LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
+                LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+                WHERE p.place_type_id = #{request.placeTypeId}
+
+                <if test="request.filterCodes != null and request.filterCodes.size() > 0">
+                    AND (
+                        p.place_cat2 IN
+                        <foreach item="code" collection="request.filterCodes" open="(" separator="," close=")">
+                            #{code}
+                        </foreach>
+                        OR
+                        p.place_cat3 IN
+                        <foreach item="code" collection="request.filterCodes" open="(" separator="," close=")">
+                            #{code}
+                        </foreach>
+                    )
+                </if>
+
+                <choose>
+                    <when test="request.order == 1">
+                        ORDER BY place_review DESC
+                    </when>
+                    <when test="request.order == 2">
+                        ORDER BY place_rating DESC
+                    </when>
+                    <when test="request.order == 3">
+                        ORDER BY bookmarked DESC
+                    </when>
+                </choose>
+            ) data
+        )
+        WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
+    </select>
 	
 	<!-- 조회수 저장 -->
 	<update id="updatePlaceViewCount" parameterType="int">

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.iei.place.model.dto.CategoryDTO;
-import kr.co.iei.place.model.dto.FilterMapRow;
+import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.util.PageInfo;
 
@@ -47,17 +47,19 @@ public interface PlaceDao {
 
 	void updateOverview(PlaceInfoDTO place);
 
-	//코드조회 쿼리
-	List<FilterMapRow> findFilterMapRows(List<String> filters, int selectedMenu);
+	//필터적용된 토탈카운트 조회
+	int getFilteredPlaceCount(PlaceFilterRequest request);
 
-	int getFilteredPlaceCount(List<Integer> placeTypeIds, List<String> cat2Codes, List<String> cat3Codes);
-
-	List<PlaceInfoDTO> selectPlaceListByFilterPaged(List<Integer> placeTypeIds, List<String> cat2Codes,
-			List<String> cat3Codes, int order, int start, int end, String memberNickname);
+	//필터적용 리스트 조회
+	List<PlaceInfoDTO> selectPlaceListByFilterPaged(PlaceFilterRequest request, PageInfo pi);
 
 	//조회수 저장 및 가져오기
 	int updatePlaceViewCount(int placeId);
 	int selectViewCount(int placeId);
+
+	
+
+	
 
 
 
