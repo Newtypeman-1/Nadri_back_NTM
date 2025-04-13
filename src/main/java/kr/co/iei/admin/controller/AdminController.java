@@ -100,8 +100,8 @@ public class AdminController {
 		return ResponseEntity.ok(1);
 	}
 	@GetMapping("/report")
-	public ResponseEntity<List> reportedReview(){
-		List reportedReviews = reviewService.selectReportedReview();
+	public ResponseEntity<List> reportedReview(@RequestParam int status){
+		List reportedReviews = reviewService.selectReportedReview(status);
 		return ResponseEntity.ok(reportedReviews);
 	}
 	@GetMapping("/keyword/{keyword}")

@@ -101,11 +101,11 @@
 
 	<select id="selectReportedReview" resultType="report">
 		select
-		rv.review_no, rv.review_title, rv.member_nickname, rv.review_date,
+		rv.review_no, rv.review_title, rv.member_nickname, rv.review_date,report_status,
 		rp.report_nickname, rp.report_reason
 		from report rp
 		left join review rv on (rv.review_no = rp.review_no)
-        where rp.report_status =1
+        where rp.report_status = #{status}
 	</select>
 
 	<select id="selectBoardList" resultType="review">
