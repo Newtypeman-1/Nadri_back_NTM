@@ -113,7 +113,6 @@
 		where p.place_id = #{placeId}
 	</select>
 
-
 	<!-- 즐겨찾기 토글 기능 -->
 	<select id="checkBookmark" resultType="int">
 		select count(*) from bookmark
@@ -223,7 +222,19 @@
 	  WHERE rnum BETWEEN #{start} AND #{end}
 	</select>
 	
+	<!-- 조회수 저장 -->
+	<update id="updatePlaceViewCount" parameterType="int">
+	  UPDATE place_info
+	  SET view_count = view_count + 1
+	  WHERE place_id = #{placeId}
+	</update>
 
+	<!-- 조회수 조회 -->
+	<select id="selectViewCount" parameterType="int" resultType="int">
+	  SELECT view_count
+	  FROM place_info
+	  WHERE place_id = #{placeId}
+	</select>
 
 	<!-- 초기 데이터: place데이터 -->
 	<insert id="insertPlaceInfoList" parameterType="java.util.List">

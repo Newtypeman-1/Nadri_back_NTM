@@ -146,4 +146,11 @@ public class PlaceService {
 		}
 	}
 
+	// 조회수 저장
+	@Transactional
+	public int increaseViewCount(int placeId) {
+		int result = placeDao.updatePlaceViewCount(placeId);
+		return result;
+	}
+
 }

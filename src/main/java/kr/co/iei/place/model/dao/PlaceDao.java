@@ -55,6 +55,10 @@ public interface PlaceDao {
 	List<PlaceInfoDTO> selectPlaceListByFilterPaged(List<Integer> placeTypeIds, List<String> cat2Codes,
 			List<String> cat3Codes, int order, int start, int end, String memberNickname);
 
+	//조회수 저장 및 가져오기
+	int updatePlaceViewCount(int placeId);
+	int selectViewCount(int placeId);
+
 
 
 
