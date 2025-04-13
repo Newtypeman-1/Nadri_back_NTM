@@ -6,19 +6,17 @@
 		select count(*) from review
 		<where>
 			<choose>
-				<when test="value == 'plan'">
-					plan_no IS NOT NULL
-				</when>
-				<when test="value == 'spot'">
+				<when test="value == '12'">
 					place_type_id = 12
 				</when>
-				<when test="value == 'food'">
+				<when test="value == '39'">
 					place_type_id = 39
 				</when>
-				<when test="value == 'stay'">
+				<when test="value == '32'">
+
 					place_type_id = 32
 				</when>
-				<when test="value == 'todo'">
+				<when test="value == '14'">
 					place_type_id IN (14, 15, 38, 28)
 				</when>
 			</choose>
@@ -125,19 +123,17 @@
 		LEFT JOIN place_info p ON rv.place_id = p.place_id
 		<where>
 			<choose>
-				<when test="value == 'plan'">
-					rv.plan_no IS NOT NULL
-				</when>
-				<when test="value == 'spot'">
+				
+				<when test="value == '12'">
 					rv.place_type_id = 12
 				</when>
-				<when test="value == 'food'">
+				<when test="value == '39'">
 					rv.place_type_id = 39
 				</when>
-				<when test="value == 'stay'">
+				<when test="value == '32'">
 					rv.place_type_id = 32
 				</when>
-				<when test="value == 'todo'">
+				<when test="value == '14'">
 					rv.place_type_id IN (14, 15, 38, 28)
 				</when>
 			</choose>
@@ -197,4 +193,7 @@
 		review_content = #{reviewContent}
 		WHERE review_no = #{reviewNo}
 	</update>
+	<select id="reportList" resultType="report">
+	select report_nickname  from report where review_no=#{reviewNo}
+	</select>
 </mapper>
