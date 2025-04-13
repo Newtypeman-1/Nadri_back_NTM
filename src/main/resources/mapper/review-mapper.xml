@@ -197,4 +197,7 @@
 		review_content = #{reviewContent}
 		WHERE review_no = #{reviewNo}
 	</update>
+	<select id="reportList" resultType="report">
+	select report_nickname  from report where review_no=#{reviewNo}
+	</select>
 </mapper>

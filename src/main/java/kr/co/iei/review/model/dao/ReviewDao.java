@@ -64,4 +64,6 @@ public interface ReviewDao {
 
 	int updateReview(ReviewDTO reviewDTO);
 
+	List reportList(int reviewNo);
+
 }
