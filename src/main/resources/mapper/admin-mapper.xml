@@ -81,4 +81,11 @@
 		      #{area}
 		    )
 	</update>
+	<update id="updateReport">
+		update report set report_status=#{reportStatus} 
+		where review_no=#{reviewNo} and report_nickname=#{reportNickname}
+	</update>
+	<update id="updateWarning">
+		update member set warning_stack = WARNING_STACK+1 where member_nickname=#{memberNickname}
+	</update>
 </mapper>

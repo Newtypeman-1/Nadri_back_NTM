@@ -23,6 +23,7 @@ import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
 import kr.co.iei.admin.model.dto.KeywordDTO;
 import kr.co.iei.admin.model.service.AdminService;
+import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
 import kr.co.iei.util.FileUtils;
@@ -114,6 +115,12 @@ public class AdminController {
 	@PatchMapping("/keyword")
 	public ResponseEntity<Integer> upsertKeywordInfo(@RequestBody KeywordDTO keyword){
 		int result = adminService.upsertKeywordInfo(keyword);
+		return ResponseEntity.ok(result);
+	}
+	@PatchMapping("/report")
+	public ResponseEntity<Integer> updateReport(@RequestBody ReportDTO report){
+		System.out.println(report);
+		int result = adminService.updateReport(report);
 		return ResponseEntity.ok(result);
 	}
 }
