@@ -1,5 +1,7 @@
 package kr.co.iei.member.controller;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -111,17 +113,30 @@ public class MemberController {
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
 		int result = 0;
-		//프로필사진을 첨부한 경우에만
+		System.out.println("문자 : " + member.getProfileImg());
+		System.out.println("파일 : " + uploadProfile);
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
-			result = memberService.updateMember(member);
-		}else {			
-			//프로필사진을 첨부하지 않은 경우에만
-			result = memberService.updateMember2(member);
 		}
-		
+			String filepath = memberService.updateMemberNewFile(member);
+			if(filepath != null) {
+				System.out.println(filepath);
+				File file = new File(root+"/profile/"+filepath);
+				if(file.exists()) {
+					file.delete();
+				}
+			}
+		if(uploadProfile == null) {
+			if(member.getProfileImg() != null) {
+				//1. 기존에 프로필 이미지 유지
+				result = memberService.updateMemberPresFile(member);
+			}else{	
+				//2. 프로필 이미지가 있었는데 기본으로 변경  -> 기존 파일 삭제
+				result = memberService.updateMemberDelFile(member);
+			}
+		}					
 		return ResponseEntity.ok(result);
 	}
 	
