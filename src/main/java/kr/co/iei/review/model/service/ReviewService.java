@@ -98,7 +98,6 @@ public class ReviewService {
 
 	public Map reviewLike(int reviewNo) {
 		List likeMember = reviewDao.reviewLike(reviewNo);
-		System.out.println(likeMember);
 		int likes = reviewDao.reviewCount(reviewNo);
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("likes", likes);
