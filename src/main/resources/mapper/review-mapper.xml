@@ -73,7 +73,7 @@
 
 	<insert id="insertReport">
 		insert into report
-		values(report_seq.nextval,#{reportNickname},#{reportReason},#{reviewNo},1)
+		values(#{reportNickname},#{reportReason},#{reviewNo},1)
 	</insert>
 
 	<select id="selectReviewStats" resultType="stats">
