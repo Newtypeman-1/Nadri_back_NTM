@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
+import kr.co.iei.admin.model.dto.KeywordDTO;
+import kr.co.iei.review.model.dto.ReportDTO;
 
 @Mapper
 public interface AdminDao {
@@ -26,4 +28,12 @@ public interface AdminDao {
 	CompanyDTO selectCompanyInfo();
 
 	int updateCompanyInfo(CompanyDTO company);
+
+	KeywordDTO selectKeywordInfo(String keyword);
+
+	int upsertKeywordInfo(KeywordDTO keyword);
+
+	int updateReport(ReportDTO report);
+
+	int updateWarning(String memberNickname);
 }

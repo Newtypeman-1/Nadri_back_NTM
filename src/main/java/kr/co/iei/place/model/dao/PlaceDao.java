@@ -8,32 +8,36 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.iei.place.model.dto.CategoryDTO;
+import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
-import kr.co.iei.place.model.dto.SpotDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
 public interface PlaceDao {
 
-	int totalCount(int placeTypeId);
-
 	int totalCount();
+	
+	int totalCount(int selectedMenu);
 
-	// 플레이스리스트조회
-	List<PlaceInfoDTO> selectPlaceList(Map<String, Object> map);
+	//플레이스 리스트 조회
+	List<PlaceInfoDTO> selectALLPlaceList(Map<String, Object> map);
 
+	//플레이스 타입 아이디 조회
 	List<CategoryDTO> selectPlaceType();
 
-	PlaceInfoDTO selectOnePlace(int placeId);
+	//플레이스 하나 조회(상세보기)
+	PlaceInfoDTO selectPlaceWithBookmarked(int placeId, String memberNickname);
+	
+	List<CategoryDTO> selectAllPlaceCategories();
 
-	// 즐겨찾기 기능
-	List<Map<String, Object>> selectBookmarkStatusList(Map<String, Object> paramMap);
+	List<CategoryDTO> selectArea();
 
-	int checkBookmark(Map<String, Object> paramMap);
+	//즐겨찾기 상태 조회
+	int checkBookmark(String memberNickname, int placeId);
+	
+	void deleteBookmark(String memberNickname, int placeId);
 
-	void deleteBookmark(Map<String, Object> paramMap);
-
-	void insertBookmark(Map<String, Object> paramMap);
+	void insertBookmark(String memberNickname, int placeId);
 
 	// DB초기 세팅
 	void insertPlaceInfoList(List<PlaceInfoDTO> list);
@@ -43,7 +47,21 @@ public interface PlaceDao {
 
 	void updateOverview(PlaceInfoDTO place);
 
-	List<CategoryDTO> selectAllPlaceCategories();
+	//필터적용된 토탈카운트 조회
+	int getFilteredPlaceCount(PlaceFilterRequest request);
 
-	List<CategoryDTO> selectArea();
+	//필터적용 리스트 조회
+	List<PlaceInfoDTO> selectPlaceListByFilterPaged(PlaceFilterRequest request, PageInfo pi);
+
+	//조회수 저장 및 가져오기
+	int updatePlaceViewCount(int placeId);
+	int selectViewCount(int placeId);
+
+	
+
+	
+
+
+
+
 }

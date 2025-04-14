@@ -53,7 +53,7 @@ public class ApiController {
 				sb.append(randomCode);
 			}
 		}
-		String emailContent = "<h2>안녕하세요, NADRI 입니다.</h2>"
+		String emailContent = "<h2>안녕하세요, <span style='color:green; font-size:36px; font-weight:bold;'>NADRI</span> 입니다.</h2>"
 								+"<h4>회원가입을 위한 인증 코드가 필요합니다. 아래의 코드를 입력하여 인증을 완료해 주세요. </h3>"
 								+"<h3>인증 코드 : "
 								+"[<span style='color:red;'>"

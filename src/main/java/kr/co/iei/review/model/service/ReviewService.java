@@ -59,8 +59,8 @@ public class ReviewService {
 		return hotReviews;
 	}
 
-	public List selectReportedReview() {
-		List<ReviewDTO> reportedReviews = reviewDao.selectReportedReview();
+	public List selectReportedReview(int status) {
+		List<ReviewDTO> reportedReviews = reviewDao.selectReportedReview(status);
 		return reportedReviews;
 	}
 

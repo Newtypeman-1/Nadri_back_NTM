@@ -26,16 +26,15 @@ public class SearchController {
 	
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
-		System.out.println(query);
 		QueryDTO search = new QueryDTO(query, type);
 		List<CategoryDTO> keywordList = searchService.selectKeyword(search);
 		return ResponseEntity.ok(keywordList);
 	}
 	@GetMapping
-	public ResponseEntity<List> searchResult(@RequestParam String query,@RequestParam String[] type){
+	public ResponseEntity<Map> searchResult(@RequestParam String query,@RequestParam String[] type){
 		QueryDTO search = new QueryDTO(query, type);
-		List searchList = searchService.searchResult(search);
-		return ResponseEntity.ok(searchList);
+		Map searchResult = searchService.searchResult(search);
+		return ResponseEntity.ok(searchResult);
 	}
 	@GetMapping("/place")
 	public ResponseEntity<List> placeTitle(@RequestParam String query){

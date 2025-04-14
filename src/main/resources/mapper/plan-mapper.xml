@@ -50,17 +50,40 @@
 			)
 	</select>
 	
-	<select id="selectPlanItineraries" resultType="itinerary">
-		SELECT * FROM trip_itinerary WHERE plan_no = #{planNo}
-		ORDER BY itinerary_order
+	<select id="selectPlanItinerariesWithPlace" resultType="itineraryWithPlace">
+		SELECT 
+			i.itinerary_date,
+			i.transport,
+			i.itinerary_order,
+	
+			p.place_id,
+			p.place_title,
+			p.place_addr,
+			p.place_type_id,
+			p.map_lat,
+			p.map_lng,
+			p.place_thumb,
+	
+			NVL(r.avg_rate, 0) AS place_rating,
+			NVL(r.review_count, 0) AS place_review
+	
+		FROM trip_itinerary i
+		JOIN place_info p ON i.end_location = p.place_id
+		LEFT JOIN (
+			SELECT 
+				place_id, 
+				AVG(star_rate) AS avg_rate, 
+				COUNT(review_no) AS review_count
+			FROM review
+			GROUP BY place_id
+		) r ON p.place_id = r.place_id
+	
+		WHERE i.plan_no = #{planNo}
+		ORDER BY i.itinerary_order
 	</select>
 	
 	<select id="isPlanOwner" resultType="int">
 		SELECT COUNT(*)
-		FROM plan_group pg
-		JOIN member m On pg.member_nickname = m.member_nickname
-		WHERE
-			pg.plan_no = #{planNo}
 		FROM trip_plan tp
 		JOIN member m On tp.member_nickname = m.member_nickname
 		WHERE
@@ -114,12 +137,94 @@
 		from trip_plan	
 	</select>
 	
-	<select id="selectMostPlace" resultType="stats">
-		select * from 
-    		(select p.*, rownum rnum from 
-        		(select plan_no, count(plan_no) count from trip_itinerary group by plan_no)p 
-    		order by count desc)
-		where rnum>5 ;
+	<select id="selectMostPlace" resultType="place">
+		select top.place_id, top.visit_count, p.place_type_id, p.place_title, p.place_addr   from
+		    (select r.* from 
+		        (select t.*, rownum rnum from
+		        (select end_location place_id, count(end_location) as visit_count
+		            from TRIP_ITINERARY 
+		            group by end_location 
+		            order by visit_count desc) t)r 
+		    where r.rnum &lt;= 10) top
+		left join place_info p on(top.place_id=p.place_id)
+	</select>
+	
+	<select id="selectOnePlan" resultType="plan">
+		SELECT * FROM trip_plan WHERE plan_no = #{planNo}
+	</select>
+	
+	<update id="updatePlan">
+		UPDATE trip_plan
+	    SET plan_name = #{planName},
+	        start_date = #{startDate},
+	        end_date = #{endDate},
+	        plan_thumb = #{planThumb},
+	        plan_status = #{planStatus}
+	    WHERE plan_no = #{planNo}
+	</update>
+	
+	<delete id="deleteItineraries">
+		DELETE FROM trip_itinerary
+		WHERE plan_no = #{planNo}
+	</delete>
+	
+	<select id="selectPagedNearby" resultType="place">
+		SELECT * FROM (
+			SELECT ROWNUM AS rnum, inner.* FROM (
+				SELECT
+					p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr,
+					p.map_lat, p.map_lng,
+					NVL(r.avg_rate, 0) AS place_rating,
+					NVL(r.review_count, 0) AS place_review
+				FROM place_info p
+				LEFT JOIN (
+					SELECT place_id, AVG(star_rate) AS avg_rate, COUNT(*) AS review_count
+					FROM review
+					GROUP BY place_id
+				) r ON p.place_id = r.place_id
+				WHERE
+					p.map_lat BETWEEN #{lat} - #{height} / 2.0 AND #{lat} + #{height} / 2.0
+					AND
+					p.map_lng BETWEEN #{lng} - #{width} / 2.0 AND #{lng} + #{width} / 2.0
+					<choose>
+						<when test="filterOption == 32 or filterOption == 39 or filterOption == 12">
+							AND p.place_type_id = #{filterOption}
+						</when>
+						<when test="filterOption == 0">
+							AND p.place_type_id NOT IN (32, 39, 12)
+						</when>
+					</choose>
+				<choose>
+					<when test="sortOption == 1">
+						ORDER BY 6371000 * ACOS(
+							COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
+							COS((p.map_lng - #{lng}) * 3.141592 / 180) +
+							SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
+						)
+					</when>
+					<when test="sortOption == 2">
+						ORDER BY place_review DESC
+					</when>
+					<when test="sortOption == 3">
+						ORDER BY p.place_title ASC
+					</when>
+				</choose>
+			) inner
+			WHERE ROWNUM &lt;= #{start} + #{size}
+		)
+		WHERE rnum &gt; #{start}
+	</select>
+	
+	<select id="countNearby" resultType="int">
+		SELECT COUNT(*)
+		FROM place_info p
+		WHERE
+			p.map_lat BETWEEN #{lat} - #{height} / 2.0 AND #{lat} + #{height} / 2.0
+			AND
+			p.map_lng BETWEEN #{lng} - #{width} / 2.0 AND #{lng} + #{width} / 2.0
+			<if test="filterOption != null">
+				AND p.place_type_id = #{filterOption}
+			</if>
 	</select>
 	
 </mapper>

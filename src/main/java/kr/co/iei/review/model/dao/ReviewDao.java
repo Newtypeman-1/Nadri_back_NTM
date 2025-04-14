@@ -50,7 +50,7 @@ public interface ReviewDao {
 
 	List<ReviewDTO> selectHotReview(int type);
 
-	List<ReviewDTO> selectReportedReview();
+	List<ReviewDTO> selectReportedReview(int status);
 
 	int patchComment(CommDTO commDTO);
 
