@@ -37,8 +37,8 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	registry.addResourceHandler("/event/thumb/**")
 	.addResourceLocations("file:///"+root+"/event/thumb/");
 	registry
-	.addResourceHandler("/place/**")
-	.addResourceLocations("file:///"+root+"/place/");
+	.addResourceHandler("/place/image/**")
+	.addResourceLocations("file:///"+root+"/place/image/");
 	}
 }
 
