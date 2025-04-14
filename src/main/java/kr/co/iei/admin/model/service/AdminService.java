@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.iei.admin.model.dao.AdminDao;
 import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
+import kr.co.iei.admin.model.dto.KeywordDTO;
+import kr.co.iei.review.model.dto.ReportDTO;
 
 @Service
 public class AdminService {
@@ -59,4 +61,29 @@ public class AdminService {
 		int result = adminDao.updateCompanyInfo(company);
 		return result;
 	}
+	public KeywordDTO selectKeywordInfo(String keyword) {
+		KeywordDTO keywordInfo = adminDao.selectKeywordInfo(keyword);
+		return keywordInfo;
+	}
+	@Transactional
+	public int upsertKeywordInfo(KeywordDTO keyword) {
+		int result = adminDao.upsertKeywordInfo(keyword);
+		return result;
+	}
+	@Transactional
+	public int updateReport(ReportDTO report) {
+		int result = adminDao.updateReport(report);
+		switch(report.getReportStatus()) {
+		case 2:
+			//접수
+			result += adminDao.updateWarning(report.getMemberNickname());
+			break;
+		case 3:
+			//반려
+			result += adminDao.updateWarning(report.getReportNickname());
+			break;
+		}
+		return result;
+	}
+
 }
