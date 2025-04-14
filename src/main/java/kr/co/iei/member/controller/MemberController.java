@@ -117,8 +117,8 @@ public class MemberController {
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
 			result = memberService.updateMember(member);
-			//프로필사진을 첨부하지 않은 경우에만
 		}else {			
+			//프로필사진을 첨부하지 않은 경우에만
 			result = memberService.updateMember2(member);
 		}
 		
