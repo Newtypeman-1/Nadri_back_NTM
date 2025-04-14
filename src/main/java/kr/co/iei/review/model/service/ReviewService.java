@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import kr.co.iei.review.model.dto.LikeDTO;
 import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.util.FileUtils;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -25,7 +27,11 @@ public class ReviewService {
 	private ReviewDao reviewDao;
 	@Autowired
 	private PageInfoUtil pageInfoUtil;
-
+	@Autowired
+	private FileUtils fileUtils;
+	@Value("${file.root}")
+	private String root;
+	
 	public Map reviewList(int reqPage, String type, int[] id) {
 		int numPerPage = 9;
 		int pageNaviSize = 5;
@@ -47,10 +53,24 @@ public class ReviewService {
 		return review;
 	}
 
+	@Transactional
 	public int deleteReview(int reviewNo) {
+		List<PlaceImgDTO> filepaths= reviewDao.deleteImg(reviewNo);
+		if (filepaths != null) {
+	        for (PlaceImgDTO image : filepaths) {
+	        	String savepath = root+"/place/image/";
+	            String filepath = image.getFilepath();
+	            boolean deleted = fileUtils.delete(savepath, filepath);
+	            if (!deleted) {
+	                System.out.println("파일 삭제 실패: " + savepath + filepath);
+	            }
+	        }
+		}
 		int result = reviewDao.deleteReview(reviewNo);
+		
 		return result;
 	}
+		
 
 	public List<AdminStatsDTO> selectReviewStats() {
 		List<AdminStatsDTO> reviewStats = reviewDao.selectReviewStats();

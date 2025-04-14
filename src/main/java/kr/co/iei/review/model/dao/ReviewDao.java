@@ -66,4 +66,6 @@ public interface ReviewDao {
 
 	List reportList(int reviewNo);
 
+	List<PlaceImgDTO> deleteImg(int reviewNo);
+
 }
