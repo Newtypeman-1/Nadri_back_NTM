@@ -31,10 +31,10 @@ public class SearchController {
 		return ResponseEntity.ok(keywordList);
 	}
 	@GetMapping
-	public ResponseEntity<List> searchResult(@RequestParam String query,@RequestParam String[] type){
+	public ResponseEntity<Map> searchResult(@RequestParam String query,@RequestParam String[] type){
 		QueryDTO search = new QueryDTO(query, type);
-		List searchList = searchService.searchResult(search);
-		return ResponseEntity.ok(searchList);
+		Map searchResult = searchService.searchResult(search);
+		return ResponseEntity.ok(searchResult);
 	}
 	@GetMapping("/place")
 	public ResponseEntity<List> placeTitle(@RequestParam String query){
