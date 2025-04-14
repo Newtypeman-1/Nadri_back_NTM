@@ -22,7 +22,8 @@
 		null, 
 		1,
 		'N',
-		null)
+		null,
+		0)
 	</insert>
 	
 	<insert id="socialJoin">
@@ -37,7 +38,8 @@
 		null, 
 		1,
 		'N',
-		'K')
+		'K',
+		0)
 	</insert>
 	
 	<update id="updatePw">
