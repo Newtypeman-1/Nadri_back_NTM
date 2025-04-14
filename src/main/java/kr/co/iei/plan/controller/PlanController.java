@@ -69,10 +69,11 @@ public class PlanController {
 
 	// 유저 마커 반경 내 장소 데이터 수집
 	@GetMapping(value = "/nearby")
-	public ResponseEntity<List> selectNearby(@RequestParam double lat, @RequestParam double lng,
-			@RequestParam int radius) {
-		List list = planService.selectNearby(lat, lng, radius);
-		return ResponseEntity.ok(list);
+	public ResponseEntity<Map<String, Object>> selectPagedNearby(@RequestParam double lat, @RequestParam double lng,
+			@RequestParam double width, @RequestParam double height, @RequestParam int page, @RequestParam int size, @RequestParam int sortOption, @RequestParam(required = false) Integer filterOption) {
+		Map<String, Object> map = planService.selectPagedNearby(lat, lng, width, height, page, size, sortOption, filterOption);
+		
+		return ResponseEntity.ok(map);
 	}
 
 	@GetMapping("/stats")

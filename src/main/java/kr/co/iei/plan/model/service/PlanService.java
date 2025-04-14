@@ -90,4 +90,36 @@ public class PlanService {
 		return true;
 	}
 
+	public Map<String, Object> selectPagedNearby(double lat, double lng, double width, double height, int page, int size, int sortOption,
+			Integer filterOption) {
+		// 시작 인덱스 계산
+		int start = (page - 1) * size;
+
+		// 쿼리용 파라미터 구성
+		Map<String, Object> map = new HashMap<>();
+		map.put("lat", lat);
+		map.put("lng", lng);
+		map.put("width", width);
+		map.put("height", height);
+		map.put("start", start);
+		map.put("size", size);
+		map.put("sortOption", sortOption);
+		map.put("filterOption", filterOption);
+
+		// 데이터 조회
+		List list = planDao.selectPagedNearby(map);
+		int totalCount = planDao.countNearby(map);
+
+		// PageInfo 계산
+		PageInfo pi = pageInfoUtil.getPageInfo(page, size, 5, totalCount); // 5는 네비게이션 버튼 개수
+
+		// 결과 구성
+		Map<String, Object> result = new HashMap<>();
+		result.put("list", list);
+		result.put("totalCount", totalCount);
+		result.put("pageInfo", pi); // 전체 페이징 정보 제공
+
+		return result;
+	}
+
 }

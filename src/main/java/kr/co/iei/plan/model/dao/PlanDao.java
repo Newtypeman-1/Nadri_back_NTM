@@ -36,4 +36,8 @@ public interface PlanDao {
 
 	int deleteItineraries(int planNo);
 
+	List selectPagedNearby(Map<String, Object> map);
+
+	int countNearby(Map<String, Object> map);
+
 }

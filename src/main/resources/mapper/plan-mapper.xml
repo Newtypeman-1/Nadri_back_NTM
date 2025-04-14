@@ -164,4 +164,63 @@
 		WHERE plan_no = #{planNo}
 	</delete>
 	
+	<select id="selectPagedNearby" resultType="place">
+		SELECT * FROM (
+			SELECT ROWNUM AS rnum, inner.* FROM (
+				SELECT
+					p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr,
+					p.map_lat, p.map_lng,
+					NVL(r.avg_rate, 0) AS place_rating,
+					NVL(r.review_count, 0) AS place_review
+				FROM place_info p
+				LEFT JOIN (
+					SELECT place_id, AVG(star_rate) AS avg_rate, COUNT(*) AS review_count
+					FROM review
+					GROUP BY place_id
+				) r ON p.place_id = r.place_id
+				WHERE
+					p.map_lat BETWEEN #{lat} - #{height} / 2.0 AND #{lat} + #{height} / 2.0
+					AND
+					p.map_lng BETWEEN #{lng} - #{width} / 2.0 AND #{lng} + #{width} / 2.0
+					<choose>
+						<when test="filterOption == 32 or filterOption == 39 or filterOption == 12">
+							AND p.place_type_id = #{filterOption}
+						</when>
+						<when test="filterOption == 0">
+							AND p.place_type_id NOT IN (32, 39, 12)
+						</when>
+					</choose>
+				<choose>
+					<when test="sortOption == 1">
+						ORDER BY 6371000 * ACOS(
+							COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
+							COS((p.map_lng - #{lng}) * 3.141592 / 180) +
+							SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
+						)
+					</when>
+					<when test="sortOption == 2">
+						ORDER BY place_review DESC
+					</when>
+					<when test="sortOption == 3">
+						ORDER BY p.place_title ASC
+					</when>
+				</choose>
+			) inner
+			WHERE ROWNUM &lt;= #{start} + #{size}
+		)
+		WHERE rnum &gt; #{start}
+	</select>
+	
+	<select id="countNearby" resultType="int">
+		SELECT COUNT(*)
+		FROM place_info p
+		WHERE
+			p.map_lat BETWEEN #{lat} - #{height} / 2.0 AND #{lat} + #{height} / 2.0
+			AND
+			p.map_lng BETWEEN #{lng} - #{width} / 2.0 AND #{lng} + #{width} / 2.0
+			<if test="filterOption != null">
+				AND p.place_type_id = #{filterOption}
+			</if>
+	</select>
+	
 </mapper>
