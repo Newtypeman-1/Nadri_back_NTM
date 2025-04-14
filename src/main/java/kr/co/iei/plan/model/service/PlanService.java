@@ -1,6 +1,8 @@
 package kr.co.iei.plan.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,8 +12,11 @@ import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
+import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.util.JwtUtils;
+import kr.co.iei.util.PageInfo;
+import kr.co.iei.util.PageInfoUtil;
 
 @Service
 public class PlanService {
@@ -20,6 +25,9 @@ public class PlanService {
 
 	@Autowired
 	private JwtUtils jwtUtils;
+	
+	@Autowired
+	private PageInfoUtil pageInfoUtil;
 
 	public PlanDTO verifyPlan(String refreshToken, int planNo) {
 		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
@@ -33,7 +41,7 @@ public class PlanService {
 	}
 
 	public List selectPlanItineraries(int planNo) {
-		List list = planDao.selectPlanItineraries(planNo);
+		List<ItineraryWithPlaceDTO> list = planDao.selectPlanItinerariesWithPlace(planNo);
 		return list;
 	}
 
@@ -63,6 +71,23 @@ public class PlanService {
 	public AdminStatsDTO selectMostPlace() {
 		AdminStatsDTO mostPlace = planDao.selectMostPlace();
 		return mostPlace;
+	}
+
+	public PlanDTO selectOnePlan(Integer planNo) {
+		PlanDTO plan = planDao.selectOnePlan(planNo);
+		return plan;
+	}
+
+	@Transactional
+	public boolean updatePlan(PlanDTO plan, List<ItineraryDTO> list) {
+		if(planDao.updatePlan(plan) != 1) return false;
+		if(planDao.deleteItineraries(plan.getPlanNo()) < 1) return false;
+		for (ItineraryDTO i : list) {
+			i.setPlanNo(plan.getPlanNo());
+			if (planDao.insertTripItinerary(i) != 1)
+				return false;
+		}
+		return true;
 	}
 
 }

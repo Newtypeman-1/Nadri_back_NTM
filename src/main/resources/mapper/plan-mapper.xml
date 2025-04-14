@@ -50,9 +50,36 @@
 			)
 	</select>
 	
-	<select id="selectPlanItineraries" resultType="itinerary">
-		SELECT * FROM trip_itinerary WHERE plan_no = #{planNo}
-		ORDER BY itinerary_order
+	<select id="selectPlanItinerariesWithPlace" resultType="itineraryWithPlace">
+		SELECT 
+			i.itinerary_date,
+			i.transport,
+			i.itinerary_order,
+	
+			p.place_id,
+			p.place_title,
+			p.place_addr,
+			p.place_type_id,
+			p.map_lat,
+			p.map_lng,
+			p.place_thumb,
+	
+			NVL(r.avg_rate, 0) AS place_rating,
+			NVL(r.review_count, 0) AS place_review
+	
+		FROM trip_itinerary i
+		JOIN place_info p ON i.end_location = p.place_id
+		LEFT JOIN (
+			SELECT 
+				place_id, 
+				AVG(star_rate) AS avg_rate, 
+				COUNT(review_no) AS review_count
+			FROM review
+			GROUP BY place_id
+		) r ON p.place_id = r.place_id
+	
+		WHERE i.plan_no = #{planNo}
+		ORDER BY i.itinerary_order
 	</select>
 	
 	<select id="isPlanOwner" resultType="int">
@@ -121,5 +148,24 @@
     		order by count desc)
 		where rnum>5 ;
 	</select>
+	
+	<select id="selectOnePlan" resultType="plan">
+		SELECT * FROM trip_plan WHERE plan_no = #{planNo}
+	</select>
+	
+	<update id="updatePlan">
+		UPDATE trip_plan
+	    SET plan_name = #{planName},
+	        start_date = #{startDate},
+	        end_date = #{endDate},
+	        plan_thumb = #{planThumb},
+	        plan_status = #{planStatus}
+	    WHERE plan_no = #{planNo}
+	</update>
+	
+	<delete id="deleteItineraries">
+		DELETE FROM trip_itinerary
+		WHERE plan_no = #{planNo}
+	</delete>
 	
 </mapper>
