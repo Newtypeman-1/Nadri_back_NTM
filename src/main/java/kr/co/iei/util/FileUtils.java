@@ -98,4 +98,14 @@ public class FileUtils {
 		
 	}
 	
+	public boolean delete(String savepath, String filename) {
+		File file = new File(savepath + filename);
+		if(file.exists() && file.isFile()) {
+			return file.delete();
+		}else {
+			System.out.println("fileUtils.delete() 오류");
+			return false;
+		}
+	}
+	
 }
