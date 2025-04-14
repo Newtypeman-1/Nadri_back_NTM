@@ -226,5 +226,25 @@
 				AND p.place_type_id = #{filterOption}
 			</if>
 	</select>
-	
+	<select id="selectPlanList" resultType="plan">
+	 SELECT *
+	  FROM (
+	    SELECT * FROM trip_plan
+	    <where>
+	      <if test="memberNickname != null">
+	        member_nickname = #{memberNickname}
+	      </if>
+	      <if test="id != null and id.length > 0">
+	        <if test="memberNickname != null">AND</if>
+	        plan_no IN
+	        <foreach item="item" collection="id" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	      </if>
+	    </where>
+	    <if test="numPerPage != null">
+	      AND ROWNUM &lt;= #{numPerPage}
+	    </if>
+	  )
+	  </select>
 </mapper>

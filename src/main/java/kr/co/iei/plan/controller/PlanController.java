@@ -30,6 +30,7 @@ import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.util.FileUtils;
 
@@ -148,5 +149,12 @@ public class PlanController {
 
 		return ResponseEntity.ok(result);
 	}
-
+	
+	@GetMapping
+	public ResponseEntity<List> selectPlanList(@RequestParam int reqPage, @RequestParam(required = false) String memberNickname
+			,@RequestParam(required =  false) Integer numPerPage,@RequestParam(required =  false) int[] id){
+		PlanRequestDTO request = new PlanRequestDTO(reqPage,numPerPage, memberNickname, id);
+		List<PlanDTO> planList = planService.selectPlanList(request);
+		return ResponseEntity.ok(planList);
+	}
 }

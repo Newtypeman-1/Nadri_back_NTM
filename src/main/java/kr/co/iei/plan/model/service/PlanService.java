@@ -15,6 +15,7 @@ import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.util.JwtUtils;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
@@ -122,6 +123,11 @@ public class PlanService {
 		result.put("pageInfo", pi); // 전체 페이징 정보 제공
 
 		return result;
+	}
+
+	public List<PlanDTO> selectPlanList(PlanRequestDTO request) {
+		List planList = planDao.selectPlanList(request);
+		return planList;
 	}
 
 }
