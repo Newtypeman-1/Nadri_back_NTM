@@ -73,10 +73,18 @@
   <update id="updateTitle">
   	update chat set chat_title = #{chatTitle} where chat_no=#{chatNo}
   </update>
-  <select id="selectLatestChatContentNo" resultType="int">
-	  SELECT NVL(MAX(chat_content_no), 0)
-	  FROM chat_content
-	  WHERE chat_no = #{chatNo}
+  <select id="selectLatestChatContentInfo" resultType="chatRoom">
+	  SELECT *
+	  FROM (
+	      SELECT 
+	          c.chat_no,
+	          c.chat_content_no AS latestContentNo,
+	          c.member_nickname AS latestSenderNickname
+	      FROM chat_content c
+	      WHERE c.chat_no = #{chatNo}
+	      ORDER BY c.chat_content_no DESC
+	  )
+	  WHERE ROWNUM = 1
   </select>
   <insert id="updateReadStatus">
 	  MERGE INTO chat_read_status rs
