@@ -23,7 +23,7 @@ import kr.co.iei.search.model.service.SearchService;
 public class SearchController {
 	@Autowired
 	public SearchService searchService;
-	
+
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
 		QueryDTO search = new QueryDTO(query, type);
