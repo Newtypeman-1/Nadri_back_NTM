@@ -39,9 +39,9 @@ public class ReviewController {
 	@Value("${file.root}")
 	private String root;
 	@GetMapping
-	public ResponseEntity<Map> reviewlist(@RequestParam int reqPage, @RequestParam String value){
+	public ResponseEntity<Map> reviewlist(@RequestParam int reqPage, @RequestParam String type){
 	
-		Map map = reviewService.reviewList(reqPage,value);
+		Map map = reviewService.reviewList(reqPage,type);
 		return ResponseEntity.ok(map);
 	}
 	@GetMapping(value="/{reviewNo}")

@@ -6,17 +6,17 @@
 		select count(*) from review
 		<where>
 			<choose>
-				<when test="value == '12'">
+				<when test="type == '12'">
 					place_type_id = 12
 				</when>
-				<when test="value == '39'">
+				<when test="type == '39'">
 					place_type_id = 39
 				</when>
-				<when test="value == '32'">
+				<when test="type == '32'">
 
 					place_type_id = 32
 				</when>
-				<when test="value == '14'">
+				<when test="type == '14'">
 					place_type_id IN (14, 15, 38, 28)
 				</when>
 			</choose>
@@ -124,16 +124,16 @@
 		<where>
 			<choose>
 				
-				<when test="value == '12'">
+				<when test="type == '12'">
 					rv.place_type_id = 12
 				</when>
-				<when test="value == '39'">
+				<when test="type == '39'">
 					rv.place_type_id = 39
 				</when>
-				<when test="value == '32'">
+				<when test="type == '32'">
 					rv.place_type_id = 32
 				</when>
-				<when test="value == '14'">
+				<when test="type == '14'">
 					rv.place_type_id IN (14, 15, 38, 28)
 				</when>
 			</choose>

@@ -26,11 +26,11 @@ public class ReviewService {
 	@Autowired
 	private PageInfoUtil pageInfoUtil;
 
-	public Map reviewList(int reqPage, String value) {
+	public Map reviewList(int reqPage, String type) {
 		int numPerPage = 9;
 		int pageNaviSize = 5;
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("value", value);
+		map.put("type", type);
 		int totalCount = reviewDao.totalCount(map);
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
 		map.put("pi", pi);
