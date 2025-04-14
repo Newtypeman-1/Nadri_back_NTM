@@ -54,7 +54,7 @@
 	</delete>
 
 	<select id="reviewLike" resultType="likes">
-		select member_nickname from likes where review_no=#{reviewNo}
+		select * from likes where review_no=#{reviewNo}
 	</select>
 
 	<select id="reviewCount" resultType="int">
