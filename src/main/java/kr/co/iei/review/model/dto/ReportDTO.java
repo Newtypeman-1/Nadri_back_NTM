@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Alias(value="report")
 public class ReportDTO {
-	private int reportNo;
 	private String reportNickname;
 	private String reportReason;
 	private int reviewNo;
