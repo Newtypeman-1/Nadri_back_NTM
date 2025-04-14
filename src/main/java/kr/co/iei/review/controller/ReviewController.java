@@ -77,7 +77,7 @@ public class ReviewController {
 	public ResponseEntity<Integer> insertReview(@ModelAttribute ReviewDTO review,  @ModelAttribute  MultipartFile[] files){
 		List<PlaceImgDTO> placeImgList = new ArrayList<>();
 		if(files != null) {
-			String savepath = root+"/place/";
+			String savepath = root+"/place/image/";
 			for(MultipartFile file : files ) {
 				PlaceImgDTO placeImg = new PlaceImgDTO();
 				String filepath = fileUtils.upload(savepath, file);
