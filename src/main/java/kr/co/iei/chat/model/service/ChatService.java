@@ -88,7 +88,7 @@ public class ChatService {
 		ChatRoomDTO room = chatDao.selectLatestChatContentInfo(chatNo);
 		return room;
 	}
-
+	@Transactional
 	public void updateReadStatus(ChatRoomDTO crd) {
 		chatDao.updateReadStatus(crd);
 	}
