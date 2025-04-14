@@ -84,10 +84,6 @@
 	
 	<select id="isPlanOwner" resultType="int">
 		SELECT COUNT(*)
-		FROM plan_group pg
-		JOIN member m On pg.member_nickname = m.member_nickname
-		WHERE
-			pg.plan_no = #{planNo}
 		FROM trip_plan tp
 		JOIN member m On tp.member_nickname = m.member_nickname
 		WHERE
