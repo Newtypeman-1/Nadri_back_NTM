@@ -40,7 +40,7 @@ public class PlaceDataApi {
 	    int pageNo = 1;
 
 	    try {
-	        while (pageNo <= 32) {
+	        while (pageNo <= 10) {
 	            String result = Jsoup.connect(url)
 	                    .data("serviceKey", "pvRJJMc1wFDv3/ZHxWYn6lN1hwI7T4OcYmBiX+0kaTuuBpz4Y/l13ZmJKoQgn2utTqNdOcmz3Orokb0SN0yhKA==")
 	                    .data("MobileOS", "ETC")
@@ -48,7 +48,7 @@ public class PlaceDataApi {
 	                    .data("_type", "json")
 	                    .data("numOfRows", "500")
 	                    .data("pageNo", String.valueOf(pageNo))
-	                    .data("contentTypeId", "39") // 관광지
+	                    .data("contentTypeId", "28") // 레포츠
 	                    .ignoreContentType(true)
 	                    .get()
 	                    .text();
