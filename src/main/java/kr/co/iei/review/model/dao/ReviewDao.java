@@ -36,7 +36,7 @@ public interface ReviewDao {
 
 	int deleteReview(int reviewNo);
 
-	LikeDTO reviewLike(int reviewNo);
+	List reviewLike(int reviewNo);
 
 	int reviewCount(int reviewNo);
 

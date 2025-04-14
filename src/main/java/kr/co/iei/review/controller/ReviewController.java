@@ -103,7 +103,6 @@ public class ReviewController {
 	public ResponseEntity<Map> reviewLike(@PathVariable int reviewNo){
 		Map map = reviewService.reviewLike(reviewNo);
 		return ResponseEntity.ok(map);
-	
 	}
 	@PostMapping(value="/likes")
     public ResponseEntity<Integer> addLike(
