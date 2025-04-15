@@ -209,4 +209,8 @@
 <delete id="deletePlaceImg">
 delete from place_img where filepath=#{filepath}
 </delete>
+<update id="updateReviewReadCount">
+update review set
+read_count =read_count+1 where review_no=#{reviewNo}
+</update>
 </mapper>

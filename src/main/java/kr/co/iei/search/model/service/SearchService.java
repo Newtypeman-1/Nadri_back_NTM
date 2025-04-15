@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.ReviewDTO;
@@ -44,20 +45,24 @@ public class SearchService {
 		if (!query.equals("")) {
 			int logResult = searchDao.insertSearchLog(query);
 		}
-		// 장소 정보 조회
 		if (!placeList.isEmpty()) {
-			int[] id = new int[placeList.size()];
+			// 장소 정보 조회
+			int[] placeId = new int[placeList.size()];
 			int i = 0;
 			for (int no : placeList) {
-				id[i] = no;
+				placeId[i] = no;
 			}
-			Map placeInfo = placeService.selectALLPlaceList(1, 1, null, id);
-			// List<ReviewDTO> reviewList = reviewDao.selectReviewsByPlaceIds(placeList);
-			// 3. 묶어서 반환
+			// 1.장소가 포함된 planNo 조회 2. planNo로 리스트 조회
+			int[] planId = searchDao.selectPlanByPlace(placeList);
+			PlanRequestDTO request = new PlanRequestDTO(i, null, null, planId, null, null, null);
+			List planList = planService.selectPlanList(request);
+			Map planInfo = new HashMap<>();
+			planInfo.put("list", planList);
+			// 1. 장소가 포함된 리뷰 조회 2. reviewNo로 리스트 조회
+			int[] reviewId = searchDao.selectReviewByPlace(placeList);
+			//묶어서 반환
 			Map<String, Map> searchResult = new HashMap<>();
-			searchResult.put("PLACE", placeInfo);
-			// searchResult.put("PLAN", planList);
-			// searchResult.put("REVIEW", reviewList);
+			searchResult.put("plan", planInfo);
 			return searchResult;
 		}
 		return null;
