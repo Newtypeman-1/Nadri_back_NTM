@@ -27,6 +27,8 @@ import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.place.model.service.PlaceService;
+import kr.co.iei.review.model.dto.PlaceImgDTO;
+import kr.co.iei.review.model.service.ReviewService;
 
 @CrossOrigin("*")
 @RestController
@@ -94,5 +96,14 @@ public class PlaceController {
 	    result.put("viewCount", updatedCount);
 	    return ResponseEntity.ok(result);
 	}
+	
+	@GetMapping("/images/{placeId}")
+	public ResponseEntity<List<PlaceImgDTO>> selectPlaceImages(@PathVariable int placeId) {
+		List<PlaceImgDTO> list = placeService.selectImagesByPlaceId(placeId);
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
 	
 }

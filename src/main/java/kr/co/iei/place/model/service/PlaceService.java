@@ -15,6 +15,7 @@ import kr.co.iei.util.PageInfo;
 import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -136,6 +137,11 @@ public class PlaceService {
 	public int increaseViewCount(int placeId) {
 		int result = placeDao.updatePlaceViewCount(placeId);
 		return result;
+	}
+
+	public List<PlaceImgDTO> selectImagesByPlaceId(int placeId) {
+		List<PlaceImgDTO> list = placeDao.selectImagesByPlaceId(placeId);
+		return list;
 	}
 
 }

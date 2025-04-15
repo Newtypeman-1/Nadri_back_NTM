@@ -270,4 +270,9 @@
 		select area_code as id,
 		area_name as name from area_code
 	</select>
+	
+	<select id="selectImagesByPlaceId">
+		SELECT * FROM place_img WHERE place_id = #{placeId}
+		order by place_image_no desc
+	</select>
 </mapper>
