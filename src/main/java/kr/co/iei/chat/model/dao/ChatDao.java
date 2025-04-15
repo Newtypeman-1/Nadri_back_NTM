@@ -38,11 +38,10 @@ public interface ChatDao {
 
 	int updateTitle(ChatRoomDTO crd);
 
-	int selectLatestChatContentNo(int chatNo);
+	ChatRoomDTO selectLatestChatContentInfo(int chatNo);
 
 	void updateReadStatus(ChatRoomDTO crd);
 
 	List<ChatMemberDTO> selectGroupInfo(int chatNo);
-
 	
 }
