@@ -125,7 +125,7 @@
 		LEFT JOIN place_info p ON rv.place_id = p.place_id
 		<where>
 			<choose>
-			<when test="id != null and id.size() > 0">
+			<when test="id != null and id.length > 0">
 		rv.review_no IN
 		<foreach collection="id" item="reviewNo" open="(" separator="," close=")">
 			#{reviewNo}
@@ -178,7 +178,7 @@
 	<insert id="insertReview">
 		insert into review values(#{reviewNo}, #{memberNickname},
 		#{reviewTitle}, #{reviewContent}, #{starRate},
-		to_char(sysdate,'yyyy-mm-dd'), null, #{placeId}, #{placeTypeId}, 0)
+		to_char(sysdate,'yyyy-mm-dd'),  #{placeId}, #{placeTypeId}, 0)
 		<selectKey order="BEFORE" resultType="int"
 			keyProperty="reviewNo">
 			select review_seq.nextval from dual

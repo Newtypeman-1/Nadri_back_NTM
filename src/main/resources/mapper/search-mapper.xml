@@ -21,37 +21,92 @@
 	    FROM SEARCH_KEYWORD
 	    WHERE KEYWORD LIKE '%' || #{query} || '%'
 	  ),
-	  filtered_place AS (
-	    SELECT DISTINCT p.PLACE_ID
-	    FROM PLACE_INFO p
-	    WHERE EXISTS (
+	  -- 1순위: 직접 title 매칭
+	  title_matched AS (
+		  SELECT p.PLACE_ID, 1 AS priority, 999 AS score
+		  FROM PLACE_INFO p
+		  <where>
+		    <if test="type != null and type.length > 0">
+		      p.PLACE_TYPE_ID IN
+		      <foreach item="item" collection="type" open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		    </if>
+		    <if test="query != null and query != ''">
+		      AND LOWER(p.PLACE_TITLE) LIKE '%' || LOWER(#{query}) || '%'
+		    </if>
+		  </where>
+		),
+	  -- 2순위: keyword 기반 유사 매칭 + 점수 부여
+		  keyword_matched AS (
+	  SELECT DISTINCT
+	    p.PLACE_ID,
+	    2 AS priority,
+	    (
+	      CASE WHEN EXISTS (
+	        SELECT 1 FROM matched_keywords k WHERE k.PLACE_ID = p.PLACE_ID AND k.PLACE_ID IS NOT NULL
+	      ) THEN 50 ELSE 0 END
+	      +
+	      CASE WHEN EXISTS (
+	        SELECT 1 FROM matched_keywords k WHERE k.CAT1 = p.PLACE_CAT1 AND k.CAT1 IS NOT NULL
+	      ) THEN 20 ELSE 0 END
+	      +
+	      CASE WHEN EXISTS (
+	        SELECT 1 FROM matched_keywords k WHERE k.CAT2 = p.PLACE_CAT2 AND k.CAT2 IS NOT NULL
+	      ) THEN 10 ELSE 0 END
+	      +
+	      CASE WHEN EXISTS (
+	        SELECT 1 FROM matched_keywords k WHERE k.CAT3 = p.PLACE_CAT3 AND k.CAT3 IS NOT NULL
+	      ) THEN 5 ELSE 0 END
+	      +
+	      CASE WHEN EXISTS (
+	        SELECT 1 FROM matched_keywords k WHERE k.AREA_CODE = p.AREA_CODE AND k.AREA_CODE IS NOT NULL
+	      ) THEN 15 ELSE 0 END
+	    ) AS score
+	  FROM PLACE_INFO p
+	  <where>
+	    <if test="type != null and type.length > 0">
+	      p.PLACE_TYPE_ID IN
+	      <foreach item="item" collection="type" open="(" separator="," close=")">
+	        #{item}
+	      </foreach>
+	    </if>
+	    AND EXISTS (
 	      SELECT 1 FROM matched_keywords k
 	      WHERE
-	        (
-	          k.PLACE_ID IS NOT NULL AND k.PLACE_ID = p.PLACE_ID
-	        )
-	        OR (
-	          (k.CAT1 IS NOT NULL AND k.CAT1 = p.PLACE_CAT1)
-	          OR (k.CAT2 IS NOT NULL AND k.CAT2 = p.PLACE_CAT2)
-	          OR (k.CAT3 IS NOT NULL AND k.CAT3 = p.PLACE_CAT3)
-	        )
-	        OR (
-	          k.AREA_CODE IS NOT NULL AND k.AREA_CODE = p.AREA_CODE
-	        )
+	        (k.PLACE_ID IS NOT NULL AND k.PLACE_ID = p.PLACE_ID)
+	        OR (k.CAT1 IS NOT NULL AND k.CAT1 = p.PLACE_CAT1)
+	        OR (k.CAT2 IS NOT NULL AND k.CAT2 = p.PLACE_CAT2)
+	        OR (k.CAT3 IS NOT NULL AND k.CAT3 = p.PLACE_CAT3)
+	        OR (k.AREA_CODE IS NOT NULL AND k.AREA_CODE = p.AREA_CODE)
 	    )
-	    AND p.PLACE_TYPE_ID = #{type[0]} 
-	    
+	    AND NOT EXISTS (
+	      SELECT 1 FROM PLACE_INFO pp
+	      WHERE pp.PLACE_TITLE LIKE '%' || #{query} || '%'
+	        AND pp.PLACE_ID = p.PLACE_ID
+	        <if test="type != null and type.length > 0">
+	          AND pp.PLACE_TYPE_ID IN
+	          <foreach item="item" collection="type" open="(" separator="," close=")">
+	            #{item}
+	          </foreach>
+	        </if>
+	    )
+	  </where>
+	),
+	  -- 합치기
+	  combined AS (
+	    SELECT * FROM title_matched
 	    UNION ALL
-	    
-	    SELECT p.PLACE_ID
-	    FROM PLACE_INFO p
-	    WHERE p.PLACE_TYPE_ID = #{type[0]}
-	      AND p.PLACE_TITLE LIKE '%' || #{query} || '%'
-	      AND NOT EXISTS (
-	        SELECT 1 FROM matched_keywords
-	      )
+	    SELECT * FROM keyword_matched
 	  )
-	  SELECT * FROM filtered_place WHERE ROWNUM &lt;= 30
+	  -- 정렬 후 상위 60개 제한
+	  SELECT PLACE_ID
+	  FROM (
+	    SELECT PLACE_ID
+	    FROM combined
+	    ORDER BY priority, score DESC
+	  )
+	  WHERE ROWNUM &lt;= 60
 	</select>
 
 	<insert id="insertSearchLog">
