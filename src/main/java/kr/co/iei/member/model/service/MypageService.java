@@ -31,7 +31,7 @@ public class MypageService {
 		Map<String, Object> map = new HashMap<>();
 		System.out.println(nickname);
 		System.out.println(value);
-		map.put("nickname",nickname);
+		map.put("nickname", nickname);
 		map.put("value", value);
 		
 		List<PlaceInfoDTO> list = mypageDao.bookmarkList(map);
