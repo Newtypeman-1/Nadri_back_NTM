@@ -33,16 +33,16 @@
 		SELECT
 			tp.*,
 			CASE
-				WHEN pf.plan_favorite_no IS NOT NULL THEN 1
+				WHEN pb.plan_no IS NOT NULL THEN 1
 				ELSE 0
 			END AS bookmarked
 		FROM
 			trip_plan tp
 		LEFT JOIN
-			plan_favorite pf ON (
-				tp.plan_no = pf.plan_no
+			plan_bookmark pb ON (
+				tp.plan_no = pb.plan_no
 				AND
-				pf.member_nickname = #{loginNickname}
+				pb.member_nickname = #{loginNickname}
 			)
 		WHERE
 			tp.plan_no = #{planNo}
@@ -226,17 +226,17 @@
 			</if>
 	</select>
 	
-	<select id="checkBookMark" resultType="int">
-		SELECT COUNT(*) FROM plan_favorite
+	<select id="checkBookmark" resultType="int">
+		SELECT COUNT(*) FROM plan_bookmark
 		WHERE plan_no = #{planNo} AND member_nickname = #{memberNickname}
 	</select>
 	<delete id="deleteBookmark">
-		DELETE FROM plan_favorite
+		DELETE FROM plan_bookmark
 		WHERE plan_no = #{planNo} AND member_nickname = #{memberNickname}
 	</delete>
 	<insert id="insertBookmark">
-		INSERT INTO plan_favorite
-    	VALUES (plan_favorite_seq.NEXTVAL, #{planNo}, #{memberNickname})
+		INSERT INTO plan_bookmark
+    	VALUES (#{planNo}, #{memberNickname})
 	</insert>
 	
 </mapper>
