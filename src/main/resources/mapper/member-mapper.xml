@@ -26,6 +26,14 @@
 		0)
 	</insert>
 	
+	<select id="selectMemberNo" resultType="int">
+		select member_no from member where member_email = #{memberEmail}
+	</select>
+	
+	<select id="loginIsDel" resultType="Integer">
+		select DEL_REASON from del_member where member_no = #{memberNo}
+	</select>
+	
 	<insert id="socialJoin">
 		insert into member values(
 		member_seq.nextval,
@@ -102,4 +110,8 @@
 	<insert id="insertDelMember">
 		insert into del_member values(#{memberNo}, to_char(sysdate,'yyyy-mm-dd'), null)
 	</insert>
+	
+	<update id="deleteDelMember">
+		update member set member_del = 'Y' where member_email = #{memberEmail}
+	</update>
 </mapper>

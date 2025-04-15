@@ -20,6 +20,10 @@ public interface MemberDao {
 
 	MemberDTO selectOneMember(String memberEmail);
 
+	int selectMemberNo(MemberDTO member);
+	
+	Integer loginIsDel(int memberNo);
+	
 	MemberDTO socialLogin(String userEmail);
 	
 	int isSocial(String email);
@@ -37,6 +41,10 @@ public interface MemberDao {
 	int deleteMember(MemberDTO memberNickname);
 
 	int insertDelMember(MemberDTO member);
+
+	int deleteDelMember(MemberDTO member);
+
+
 
 
 

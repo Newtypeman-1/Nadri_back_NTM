@@ -82,6 +82,13 @@ public class MemberService {
 		return null;
 	}
 	
+	//강제 탈퇴 여부 확인
+	public int loginIsDel(MemberDTO member) {
+		int memberNo = memberDao.selectMemberNo(member);
+		Integer deleteMember = memberDao.loginIsDel(memberNo);
+		return deleteMember;
+	}
+	
 	//소셜로그인
 	public LoginMemberDTO socialLogin(String userEmail) {
 		System.out.println(userEmail);
@@ -138,7 +145,9 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
-
-
-	
+	//탈퇴된 회원탈퇴
+	public int deleteDelMember(MemberDTO member) {
+		int result = memberDao.deleteDelMember(member);
+		return result;
+	}	
 }

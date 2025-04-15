@@ -75,6 +75,12 @@ public class MemberController {
 	@PostMapping(value="/login")
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
 		LoginMemberDTO loginMember = memberService.login(member);
+		
+		//강제 탈퇴 여부 확인
+		Integer deleteMember = memberService.loginIsDel(member);
+		if(deleteMember.intValue() == 2) {
+			return null;
+		}
 		if(loginMember != null) {
 			return ResponseEntity.ok(loginMember);
 		}else {
@@ -147,6 +153,12 @@ public class MemberController {
 	@PatchMapping(value="/deleteMember")
 	public ResponseEntity<Integer> deleteMember(@RequestBody MemberDTO member){
 		int result = memberService.deleteMember(member);
+		return ResponseEntity.ok(result);
+	}
+	//탈퇴된 회원탈퇴
+	@PatchMapping(value="/deleteDelMember")
+	public ResponseEntity<Integer> deleteDelMember(@RequestBody MemberDTO member){
+		int result = memberService.deleteDelMember(member);
 		return ResponseEntity.ok(result);
 	}
 }
