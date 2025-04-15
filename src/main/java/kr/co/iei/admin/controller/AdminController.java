@@ -26,6 +26,7 @@ import kr.co.iei.admin.model.dto.KeywordDTO;
 import kr.co.iei.admin.model.service.AdminService;
 import kr.co.iei.member.model.dto.MemberDTO;
 import kr.co.iei.member.model.service.MemberService;
+import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
@@ -45,6 +46,8 @@ public class AdminController {
 	private String root;
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private PlaceService placeService;
 	@GetMapping("/company")
 	private ResponseEntity<CompanyDTO> selectCompanyInfo(){
 		CompanyDTO company = adminService.selectCompanyInfo();
@@ -144,6 +147,12 @@ public class AdminController {
     public ResponseEntity<Integer> kickWarningMember(@PathVariable int memberNo) {
     	System.out.println(memberNo);
         memberService.kickMember(memberNo);
+        return ResponseEntity.ok().build();
+    }
+    
+    @DeleteMapping("/place/image/{placeImageNo}")
+    public ResponseEntity<Void> deletePlaceImage(@PathVariable int placeImageNo) {
+        placeService.deleteByImageNo(placeImageNo);
         return ResponseEntity.ok().build();
     }
     

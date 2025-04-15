@@ -141,7 +141,15 @@ public class PlaceService {
 
 	public List<PlaceImgDTO> selectImagesByPlaceId(int placeId) {
 		List<PlaceImgDTO> list = placeDao.selectImagesByPlaceId(placeId);
+		System.out.println(list);
 		return list;
+	}
+	
+	//상세페이지 이미지 삭제
+	@Transactional
+	public void deleteByImageNo(int placeImageNo) {
+		placeDao.deleteByImageNo(placeImageNo);
+		
 	}
 
 }

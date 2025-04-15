@@ -275,4 +275,8 @@
 		SELECT * FROM place_img WHERE place_id = #{placeId}
 		order by place_image_no desc
 	</select>
+	
+	<delete id="deleteByImageNo">
+		DELETE FROM place_img WHERE place_image_no = #{placeImageNo}
+	</delete>
 </mapper>

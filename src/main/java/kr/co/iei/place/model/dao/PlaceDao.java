@@ -59,5 +59,7 @@ public interface PlaceDao {
 	int selectViewCount(int placeId);
 
 	List<PlaceImgDTO> selectImagesByPlaceId(int placeId);
+
+	void deleteByImageNo(int placeImageNo);
 	
 }

@@ -100,6 +100,7 @@ public class PlaceController {
 	@GetMapping("/images/{placeId}")
 	public ResponseEntity<List<PlaceImgDTO>> selectPlaceImages(@PathVariable int placeId) {
 		List<PlaceImgDTO> list = placeService.selectImagesByPlaceId(placeId);
+
 		return ResponseEntity.ok(list);
 	}
 	
