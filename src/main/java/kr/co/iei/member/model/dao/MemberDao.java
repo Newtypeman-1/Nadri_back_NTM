@@ -1,5 +1,7 @@
 package kr.co.iei.member.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,18 +28,17 @@ public interface MemberDao {
 	
 	MemberDTO selectMemberInfo(String memberNickname);
 
-	int updateMemberNewFile(MemberDTO member);
-	
-	int updateMemberPresFile(MemberDTO member);
+	int updateMember(MemberDTO member);
 
-	int updateMemberDelFile(MemberDTO member);
-	
-	String selectDelImg(String memberNickname);
+	int updateMember2(MemberDTO member);
 	
 	int deleteMember(MemberDTO memberNickname);
 
 	int insertDelMember(MemberDTO member);
 
+	List<MemberDTO> selectWarningMembers();
+
+	int updateMemberLevel(int memberNo, int memberLevel);
 
 
 
