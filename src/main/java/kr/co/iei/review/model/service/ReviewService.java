@@ -47,8 +47,9 @@ public class ReviewService {
 		result.put("pi", pi);
 		return result;
 	}
-
+@Transactional
 	public ReviewDTO selectOneReview(int reviewNo) {
+	int result= reviewDao.updateReviewReadCount(reviewNo);
 		ReviewDTO review = reviewDao.selectOneReview(reviewNo);
 		return review;
 	}
