@@ -23,4 +23,5 @@ public class ReviewDTO {
  private String placeThumb;
 private String placeTitle;
 private String placeAddr;
+private int readCount;
 }
