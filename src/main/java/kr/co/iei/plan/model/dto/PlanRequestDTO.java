@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PlanRequestDTO {
 	private int reqPage;
 	private Integer numPerPage;
+	private String loginNickname;
 	private String memberNickname;
 	private int[] id;
 	private Integer order;

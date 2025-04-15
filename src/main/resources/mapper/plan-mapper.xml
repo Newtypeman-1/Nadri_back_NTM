@@ -240,43 +240,59 @@
 	</insert>
 	
 	<select id="selectPlanList" resultType="plan">
-		 SELECT * FROM (
-		    SELECT ROWNUM AS rn, inner_query.*
-		    FROM (
-		      SELECT tp.*, NVL(pf.favorite_count, 0) AS favorite_count
-		      FROM trip_plan tp
-		      LEFT JOIN (
-		        SELECT plan_no, COUNT(*) AS favorite_count
-		        FROM plan_favorite
-		        GROUP BY plan_no
-		      ) pf ON tp.plan_no = pf.plan_no
-		      <where>
-		        <if test="memberNickname != null">
-		          tp.member_nickname = #{memberNickname}
-		        </if>
-		        <if test="id != null and id.length > 0">
-		          <if test="memberNickname != null">AND</if>
-		          tp.plan_no IN
-		          <foreach item="item" collection="id" open="(" separator="," close=")">
-		            #{item}
-		          </foreach>
-		        </if>
-		      </where>
-		      ORDER BY
-		      <choose>
-		        <when test="order == null">
-		          tp.plan_no DESC
-		        </when>
-		        <when test="order == 1">
-		          favorite_count DESC
-		        </when>
-		        <otherwise>
-		          tp.plan_no DESC
-		        </otherwise>
-		      </choose>
-		    ) inner_query
-		    WHERE ROWNUM &lt; #{end}
-		  )
-		  WHERE rn &gt;= #{start}
-  </select>
+	  SELECT * FROM (
+	    SELECT ROWNUM AS rn, inner_query.*
+	    FROM (
+	      SELECT 
+	        tp.*, 
+	        NVL(pb.bookmark_count, 0) AS bookmark_count,
+	        CASE 
+	          WHEN pb2.member_nickname IS NOT NULL THEN 1 
+	          ELSE 0 
+	        END AS bookmarked
+	      FROM trip_plan tp
+	      <!--  즐겨찾기 수 계산 -->
+	      LEFT JOIN (
+	        SELECT plan_no, COUNT(*) AS bookmark_count
+	        FROM plan_bookmark
+	        GROUP BY plan_no
+	      ) pb ON tp.plan_no = pb.plan_no
+	      
+	       <!-- 현재 로그인 사용자의 즐겨찾기 여부 -->
+	      LEFT JOIN (
+	        SELECT plan_no, member_nickname
+	        FROM plan_bookmark
+	        WHERE member_nickname = #{loginNickname}
+	      ) pb2 ON tp.plan_no = pb2.plan_no
+	      
+	      <where>
+	        <if test="memberNickname != null">
+	          tp.member_nickname = #{memberNickname}
+	        </if>
+	        <if test="id != null and id.length > 0">
+	          <if test="memberNickname != null">AND</if>
+	          tp.plan_no IN
+	          <foreach item="item" collection="id" open="(" separator="," close=")">
+	            #{item}
+	          </foreach>
+	        </if>
+	      </where>
+	      
+	      ORDER BY
+	      <choose>
+	        <when test="order == null">
+	          tp.plan_no DESC
+	        </when>
+	        <when test="order == 1">
+	          bookmark_count DESC
+	        </when>
+	        <otherwise>
+	          tp.plan_no DESC
+	        </otherwise>
+	      </choose>
+	    ) inner_query
+	    WHERE ROWNUM &lt; #{end}
+	  )
+	  WHERE rn &gt;= #{start}
+	</select>
 </mapper>
