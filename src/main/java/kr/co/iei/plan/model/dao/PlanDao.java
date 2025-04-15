@@ -9,6 +9,7 @@ import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 
 @Mapper
 public interface PlanDao {
@@ -40,5 +41,7 @@ public interface PlanDao {
 	List selectPagedNearby(Map<String, Object> map);
 
 	int countNearby(Map<String, Object> map);
+
+	List selectPlanList(PlanRequestDTO request);
 
 }

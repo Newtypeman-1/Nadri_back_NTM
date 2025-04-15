@@ -17,5 +17,6 @@ public class ChatRoomDTO {
 	private String memberNickname;
 	private List<ChatMemberDTO> groupInfo;
 	private int notRead;
-	private int latestContentNo; 
+	private int latestContentNo;
+	private String latestSenderNickname; 
 }

@@ -55,12 +55,14 @@ public class ChatHandler extends TextWebSocketHandler {
 	}
 	// 채팅 그룹 최신화 메소드
 	private void refreshGroup(int chatNo) throws Exception {
+		System.out.println("리프레쉬 그룹 작동");
 		// 1. 그룹 멤버셋 DB에서 다시 조회 후 저장
 	    Set<String> groupSet = chatService.selectGroupSet(chatNo);
 	    chatRooms.put(chatNo, groupSet);
 
 	    // 2. 모든 로그인 유저에게 방 목록 새로 보내기
 	    for (String nick : loginMembers.keySet()) {
+	    	System.out.println("리프레쉬 그룹에서 전송하는 닉네임 : "+nick);
 	        WebSocketSession session = loginMembers.get(nick);
 	        if (session != null && session.isOpen()) {
 	            handleFetchRoomList(session);
@@ -186,11 +188,11 @@ public class ChatHandler extends TextWebSocketHandler {
 	    URI uri = session.getUri();
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();
-		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
+	    ChatRoomDTO latestInfo = chatService.selectLatestChatInfo(chatNo);
 		// 최신 메시지가 없으면 → chat_read_status 업데이트 안 함
-		if (latestContentNo > 0) {
-			ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, null, 0,latestContentNo);
-			chatService.updateReadStatus(crd);
+		if (latestInfo != null && latestInfo.getLatestContentNo() > 0) {
+			latestInfo.setMemberNickname(memberNickname);
+			chatService.updateReadStatus(latestInfo);
 		}
 	}
 	//session 으로 방정보만 전송
@@ -221,6 +223,8 @@ public class ChatHandler extends TextWebSocketHandler {
 	    int result = chatService.insertText(cc);
 
 	    if (result > 0) {
+	    	//당사자는 읽음 처리
+	    	handleReadStatus(session, chat);
 	        Set<String> nickSet = chatRooms.get(chatNo);
 	        for (String nick : loginMembers.keySet()) {
 	            WebSocketSession target = loginMembers.get(nick);
@@ -248,7 +252,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	//채팅방 제목 수정 메소드
 	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
 		int chatNo = chat.getChatNo();
-		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0,null);
 		int result = chatService.updateTitle(crd);
 		if(result>0) {
 			refreshGroup(chatNo);		

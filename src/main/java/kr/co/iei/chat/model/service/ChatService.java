@@ -84,13 +84,15 @@ public class ChatService {
 		return result;
 	}
 
-	public int selectLatestChatContentNo(int chatNo) {
-		int no = chatDao.selectLatestChatContentNo(chatNo);
-		return no;
+	public ChatRoomDTO selectLatestChatInfo(int chatNo) {
+		ChatRoomDTO room = chatDao.selectLatestChatContentInfo(chatNo);
+		return room;
 	}
-
+	@Transactional
 	public void updateReadStatus(ChatRoomDTO crd) {
 		chatDao.updateReadStatus(crd);
 	}
+
+
 	
 }
