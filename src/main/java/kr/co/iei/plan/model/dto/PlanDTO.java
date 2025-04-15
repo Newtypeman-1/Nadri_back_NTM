@@ -18,4 +18,7 @@ public class PlanDTO {
 	private String planThumb;
 	private int planStatus;
 	private String memberNickname;
+	
+	//북마크
+	private int bookmarked; //0 또는 1
 }

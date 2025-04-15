@@ -15,11 +15,11 @@ public interface PlanDao {
 
 	List selectNearby(double lat, double lng, int radius);
 
-	PlanDTO verifyPlan(String memberEmail, int planNo);
+	PlanDTO verifyPlan(String loginNickname, int planNo);
 
 	List selectPlanItineraries(int planNo);
 
-	int isPlanOwner(String memberEmail, int planNo);
+	int isPlanOwner(String loginNickname, int planNo);
 
 	int insertTripPlan(PlanDTO plan);
 
@@ -40,5 +40,11 @@ public interface PlanDao {
 	List selectPagedNearby(Map<String, Object> map);
 
 	int countNearby(Map<String, Object> map);
+
+	int checkBookMark(int planNo, String memberNickname);
+
+	int deleteBookmark(int planNo, String memberNickname);
+
+	int insertBookmark(int planNo, String memberNickname);
 
 }

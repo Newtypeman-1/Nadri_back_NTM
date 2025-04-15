@@ -28,28 +28,54 @@
 		WHERE distance <![CDATA[<=]]> #{radius}
 		ORDER BY distance ASC
 	</select>
-	
-<!-- 
-	<select id="verifyPlan" resultType="group">
-		SELECT pg.*
-		FROM plan_group pg
-		JOIN member m ON pg.member_nickname = m.member_nickname
-		WHERE m.member_email = #{memberEmail} AND pg.plan_no = #{planNo}
-	</select>
- -->
 
 	<select id="verifyPlan" resultType="plan">
-		SELECT tp.*
-		FROM trip_plan tp
-		JOIN member m ON tp.member_nickname = m.member_nickname
-		WHERE tp.plan_no = #{planNo}
+		SELECT
+			tp.*,
+			CASE
+				WHEN pf.plan_favorite_no IS NOT NULL THEN 1
+				ELSE 0
+			END AS bookmarked
+		FROM
+			trip_plan tp
+		LEFT JOIN
+			plan_favorite pf ON (
+				tp.plan_no = pf.plan_no
+				AND
+				pf.member_nickname = #{loginNickname}
+			)
+		WHERE
+			tp.plan_no = #{planNo}
 			AND (
 				tp.plan_status = 1
 				OR
-				m.member_email = #{memberEmail}
+				tp.member_nickname = #{loginNickname}
 			)
 	</select>
+	<select id="isPlanOwner" resultType="int">
+		SELECT COUNT(*)
+		FROM trip_plan tp
+		WHERE
+			tp.plan_no = #{planNo}
+			AND
+			tp.member_nickname = #{loginNickname}
+	</select>
 	
+	<insert id="insertTripPlan">
+		INSERT INTO trip_plan
+		VALUES (
+			#{planNo},
+			#{planName},
+			#{startDate},
+			#{endDate},
+			#{planThumb},
+			#{planStatus},
+			#{memberNickname}
+		)
+		<selectKey order="BEFORE" resultType="int" keyProperty="planNo">
+			select trip_plan_seq.nextval from dual
+		</selectKey>
+	</insert>
 	<select id="selectPlanItinerariesWithPlace" resultType="itineraryWithPlace">
 		SELECT 
 			i.itinerary_date,
@@ -81,32 +107,6 @@
 		WHERE i.plan_no = #{planNo}
 		ORDER BY i.itinerary_order
 	</select>
-	
-	<select id="isPlanOwner" resultType="int">
-		SELECT COUNT(*)
-		FROM trip_plan tp
-		JOIN member m On tp.member_nickname = m.member_nickname
-		WHERE
-			tp.plan_no = #{planNo}
-			AND
-			m.member_email = #{memberEmail}
-	</select>
-	
-	<insert id="insertTripPlan">
-		INSERT INTO trip_plan
-		VALUES (
-			#{planNo},
-			#{planName},
-			#{startDate},
-			#{endDate},
-			#{planThumb},
-			#{planStatus},
-			#{memberNickname}
-		)
-		<selectKey order="BEFORE" resultType="int" keyProperty="planNo">
-			select trip_plan_seq.nextval from dual
-		</selectKey>
-	</insert>
 	
 	<select id="currentPlanNo" resultType="int">
 		SELECT trip_plan_seq.currval FROM dual
@@ -214,7 +214,6 @@
 		)
 		WHERE rnum &gt; #{start}
 	</select>
-	
 	<select id="countNearby" resultType="int">
 		SELECT COUNT(*)
 		FROM place_info p
@@ -226,5 +225,18 @@
 				AND p.place_type_id = #{filterOption}
 			</if>
 	</select>
+	
+	<select id="checkBookMark" resultType="int">
+		SELECT COUNT(*) FROM plan_favorite
+		WHERE plan_no = #{planNo} AND member_nickname = #{memberNickname}
+	</select>
+	<delete id="deleteBookmark">
+		DELETE FROM plan_favorite
+		WHERE plan_no = #{planNo} AND member_nickname = #{memberNickname}
+	</delete>
+	<insert id="insertBookmark">
+		INSERT INTO plan_favorite
+    	VALUES (plan_favorite_seq.NEXTVAL, #{planNo}, #{memberNickname})
+	</insert>
 	
 </mapper>
