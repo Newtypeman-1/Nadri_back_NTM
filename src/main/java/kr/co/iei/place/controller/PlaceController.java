@@ -38,7 +38,8 @@ public class PlaceController {
 	// 플레이스 리스트 조회(북마크 상태 포함)
 	@GetMapping
 	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int order, @RequestParam(required = false) String memberNickname, @RequestParam(required = false) int[] id) {
-		Map map = placeService.selectALLPlaceList(reqPage, order, memberNickname, id);
+		int numPerPage = 12;
+		Map map = placeService.selectALLPlaceList(reqPage, order, memberNickname, numPerPage, id);
 		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}

@@ -26,8 +26,8 @@ public class PlaceService {
 	private PageInfoUtil pageInfoUtil;
 
 	// placeInfo 조회(페이지인포 포함 / 기본 데이터 / 좋아요 상태)
-	public Map selectALLPlaceList(int reqPage, int order, String memberNickname, int[] id) {
-		int numPerPage = 12;
+	public Map selectALLPlaceList(int reqPage, int order, String memberNickname, int numPerPage, int[] id) {
+
 		int pageNaviSize = 5;
 		int totalCount = placeDao.totalCount();
 		PageInfo pi = pageInfoUtil.getPageInfo(reqPage, numPerPage, pageNaviSize, totalCount);
