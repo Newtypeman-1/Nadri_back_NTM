@@ -130,7 +130,7 @@ public class PlanService {
 
 	@Transactional
 	public int toggleBookmark(int planNo, String memberNickname) {
-		int count = planDao.checkBookMark(planNo, memberNickname);
+		int count = planDao.checkBookmark(planNo, memberNickname);
 		if(count > 0) {
 			count += planDao.deleteBookmark(planNo, memberNickname);
 			return 0;
