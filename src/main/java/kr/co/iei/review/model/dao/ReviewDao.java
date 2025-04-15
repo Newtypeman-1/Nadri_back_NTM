@@ -70,6 +70,6 @@ public interface ReviewDao {
 
 	int deletePlaceImg(String filepath);
 
-
+	int updateReviewReadCount(int reviewNo);
 
 }
