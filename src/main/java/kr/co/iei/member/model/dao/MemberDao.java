@@ -40,6 +40,8 @@ public interface MemberDao {
 
 	int updateMemberLevel(int memberNo, int memberLevel);
 
+	void insertDelWarningMember(int memberNo);
+
 
 
 

@@ -2,26 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.place.model.dao.PlaceDao">
 
-	<select id="totalCount">
-		select count(*) from place_info
-		<where>
-			<if test="selectedMenu != 0">
-				<choose>
-					<when test="selectedMenu == 12">
-						place_type_id =12
-					</when>
-					<when test="selectedMenu == 14">
-						place_type_id =14
-					</when>
-					<when test="selectedMenu == 32">
-						place_type_id =32
-					</when>
-					<when test="selectedMenu == 39">
-						place_type_id =39
-					</when>
-				</choose>
-			</if>
-		</where>
+	<select id="totalCount" resultType="int">
+		  SELECT COUNT(*)
+		  FROM place_info
+		  <where>
+		    <if test="selectedMenu != 0">
+		      <choose>
+		        <when test="selectedMenu == 12">
+		          place_type_id = 12
+		        </when>
+		        <when test="selectedMenu == 14">
+		          place_type_id = 14
+		        </when>
+		        <when test="selectedMenu == 32">
+		          place_type_id = 32
+		        </when>
+		        <when test="selectedMenu == 39">
+		          place_type_id = 39
+		        </when>
+		      </choose>
+		    </if>
+		
+		    <if test="id != null and id.length > 0">
+		      AND place_id IN
+		      <foreach item="typeId" collection="id" open="(" separator="," close=")">
+		        #{typeId}
+		      </foreach>
+		    </if>
+		  </where>
 	</select>
 
 	<!-- 기본 전체조회(타입아이디 필터) -->
