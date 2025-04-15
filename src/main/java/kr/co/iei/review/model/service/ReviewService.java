@@ -99,7 +99,6 @@ public class ReviewService {
 		for (PlaceImgDTO placeImg : placeImgList) {
 			placeImg.setPlaceId(review.getPlaceId());
 			placeImg.setReviewNo(review.getReviewNo());
-			System.out.println(placeImg);
 			result += reviewDao.insertPlaceImg(placeImg);
 		}
 		return result;
@@ -111,8 +110,25 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public int updateReview(ReviewDTO reviewDTO) {
+	public int updateReview(ReviewDTO reviewDTO,List<PlaceImgDTO> placeImgList, List<String> deleteFilepaths) {
+		if (deleteFilepaths != null) {
+	        for (String image : deleteFilepaths) {
+	        	String savepath = root+"/place/image/";
+	            String filepath = image;
+	            boolean deleted = fileUtils.delete(savepath, filepath);
+	            if (!deleted) {
+	                System.out.println("파일 삭제 실패: " + savepath + filepath);
+	            }else {
+	            	int delete=reviewDao.deletePlaceImg(filepath);
+	            }
+	        }
+		}
 		int result = reviewDao.updateReview(reviewDTO);
+		for (PlaceImgDTO placeImg : placeImgList) {
+			placeImg.setPlaceId(reviewDTO.getPlaceId());
+			placeImg.setReviewNo(reviewDTO.getReviewNo());
+			result += reviewDao.insertPlaceImg(placeImg);
+		}
 		return result;
 	}
 
