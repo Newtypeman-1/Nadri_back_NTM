@@ -85,7 +85,9 @@ public class MemberService {
 	//강제 탈퇴 여부 확인
 	public Integer loginIsDel(MemberDTO member) {
 		Integer memberNo = memberDao.selectMemberNo(member);
+		System.out.println(member);
 		Integer deleteMember = memberDao.loginIsDel(memberNo);
+		System.out.println(memberNo);
 		return deleteMember;
 	}
 	

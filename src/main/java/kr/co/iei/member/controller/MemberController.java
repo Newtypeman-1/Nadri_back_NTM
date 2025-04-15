@@ -74,18 +74,26 @@ public class MemberController {
 	//로그인
 	@PostMapping(value="/login")
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
-		LoginMemberDTO loginMember = memberService.login(member);
-		System.out.println(member);
-		//강제 탈퇴 여부 확인
-		Integer deleteMember = memberService.loginIsDel(member);
-		if (deleteMember != null && deleteMember.intValue() == 2) {
-			return null;  // 강제 탈퇴된 경우는 null 반환
-		}
-		if(loginMember != null) {
-			return ResponseEntity.ok(loginMember);
-		}else {
-			return ResponseEntity.status(404).build();
-		}
+	    // 로그인 시도
+	    LoginMemberDTO loginMember = memberService.login(member);
+	    System.out.println(member);
+
+	    // 로그인 실패 시 바로 404 응답
+	    if (loginMember == null) {
+	        return ResponseEntity.status(404).build();  // 로그인 실패
+	    }
+
+	    // 강제 탈퇴 여부 확인 (로그인 성공 후 확인)
+	    Integer deleteMember = memberService.loginIsDel(member);
+	    System.out.println(deleteMember);
+
+	    if (deleteMember != null && deleteMember.intValue() == 2) {
+	        System.out.println(deleteMember);
+	        return null;  // 강제 탈퇴된 경우 null 반환 (응답 본문 없음)
+	    }
+
+	    // 로그인 성공한 경우
+	    return ResponseEntity.ok(loginMember);  // 로그인 성공
 	}
 	
 	//소셜로그인
