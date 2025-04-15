@@ -70,7 +70,7 @@
 		select * from member where member_nickname = #{memberNickname}
 	</select>
 	
-	<update id="updateMemberNewFile">
+	<update id="updateMember">
 		update member set
 			member_nickname = #{memberNickname},
 			member_phone = #{memberPhone},
@@ -80,7 +80,7 @@
 		where member_email = #{memberEmail}
 	</update>
 	
-	<update id="updateMemberPresFile">
+	<update id="updateMember2">
 		update member set
 			member_nickname = #{memberNickname},
 			member_phone = #{memberPhone},
@@ -88,20 +88,6 @@
 			member_birth = #{memberBirth}
 		where member_email = #{memberEmail}
 	</update>
-	
-	<update id="updateMemberDelFile">
-		update member set
-			member_nickname = #{memberNickname},
-			member_phone = #{memberPhone},
-			member_gender = #{memberGender},
-			member_birth = #{memberBirth},
-			profile_img = null
-		where member_email = #{memberEmail}
-	</update>
-	
-	<select id="selectDelImg" resultType="String">
-		select profile_Img from member where member_nickname= #{memberNickname}
-	</select>
 	
 	<update id="deleteMember">
 		update member set member_del = 'Y' where member_nickname = #{memberNickname}
@@ -114,4 +100,23 @@
 	<update id="deleteDelMember">
 		update member set member_del = 'Y' where member_email = #{memberEmail}
 	</update>
+	<select id="selectWarningMembers" resultType="member">
+		select
+			member_no,
+		    member_nickname,
+		    member_phone,
+		    member_email,
+	        member_birth,
+		    warning_stack,
+		    member_level
+		from member
+		where member_del ='N' and warning_stack >= 6	
+	</select>
+	
+	<update id="updateMemberLevel">
+	    update member
+	    set member_level = #{memberLevel}
+	    where member_no = #{memberNo}
+ 	 </update>
+	
 </mapper>

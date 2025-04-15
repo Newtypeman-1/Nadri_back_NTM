@@ -26,6 +26,10 @@ public interface SearchDao {
 
 	List searchPlaceTitle(String query);
 
+	int[] selectPlanByPlace(List<Integer> placeList);
+
+	int[] selectReviewByPlace(List<Integer> placeList);
+
 
 
 	

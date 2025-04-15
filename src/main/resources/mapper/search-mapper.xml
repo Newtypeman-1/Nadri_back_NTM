@@ -115,4 +115,16 @@
 	<select id="searchPlaceTitle" resultType="category">
 		select place_id as id, place_title as name from place_info where place_title like '%'||#{query}||'%'
 	</select>
+	<select id="selectPlanByPlace" resultType="int">
+		select plan_no from trip_itinerary where end_location in 
+			<foreach item="placeId" collection="placeList" open="(" separator="," close=")">
+	            #{placeId}
+	        </foreach>
+	</select>
+		<select id="selectReviewByPlace" resultType="int">
+		select review_no from review where place_id in 
+			<foreach item="placeId" collection="placeList" open="(" separator="," close=")">
+	            #{placeId}
+	        </foreach>
+	</select>
 </mapper>

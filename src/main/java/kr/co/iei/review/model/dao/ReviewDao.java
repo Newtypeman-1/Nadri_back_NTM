@@ -66,4 +66,10 @@ public interface ReviewDao {
 
 	List reportList(int reviewNo);
 
+	List<PlaceImgDTO> deleteImg(int reviewNo);
+
+	int deletePlaceImg(String filepath);
+
+	int updateReviewReadCount(int reviewNo);
+
 }
