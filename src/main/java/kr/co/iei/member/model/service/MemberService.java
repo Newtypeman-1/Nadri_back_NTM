@@ -138,8 +138,9 @@ public class MemberService {
 		memberDao.updateMemberLevel(memberNo, memberLevel);
 	}
 
+	@Transactional
 	public void kickMember(int memberNo) {
-		memberDao.insertDelMember(memberNo);
+		memberDao.insertDelWarningMember(memberNo);
 		
 	}
 

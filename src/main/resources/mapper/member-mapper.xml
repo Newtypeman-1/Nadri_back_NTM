@@ -107,5 +107,9 @@
 	    set member_level = #{memberLevel}
 	    where member_no = #{memberNo}
  	 </update>
+ 	 
+ 	 <insert id="insertDelWarningMember">
+	 	 insert into del_member values(#{memberNo}, to_char(sysdate,'yyyy-mm-dd'), 2)	
+ 	 </insert>
 	
 </mapper>

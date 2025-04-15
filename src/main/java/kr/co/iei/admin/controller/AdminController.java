@@ -140,8 +140,9 @@ public class AdminController {
         memberService.updateMemberLevel(memberNo, memberLevel);
         return ResponseEntity.ok().build();
     }
-    @DeleteMapping("/member/{memberNo}")
-    public ResponseEntity<Integer> deleteMember(@PathVariable int memberNo) {
+    @PatchMapping("/member/{memberNo}")
+    public ResponseEntity<Integer> kickWarningMember(@PathVariable int memberNo) {
+    	System.out.println(memberNo);
         memberService.kickMember(memberNo);
         return ResponseEntity.ok().build();
     }
