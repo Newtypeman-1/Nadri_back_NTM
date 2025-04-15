@@ -204,4 +204,10 @@
 	<select id="reportList" resultType="report">
 	select report_nickname  from report where review_no=#{reviewNo}
 	</select>
+<select id="deleteImg" resultType="img">
+	select filepath from place_img where review_no=#{reviewNo}
+</select>
+<delete id="deletePlaceImg">
+delete from place_img where filepath=#{filepath}
+</delete>
 </mapper>

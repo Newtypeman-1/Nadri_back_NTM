@@ -95,8 +95,21 @@ public class ReviewController {
    		return ResponseEntity.ok(list);
     }
 	@PatchMapping
-	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO reviewDTO){
-		int result = reviewService.updateReview(reviewDTO);
+	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO reviewDTO ,
+			  @RequestParam(value = "deleteFilepaths", required = false) List<String> deleteFilepaths,
+			    @RequestParam(value = "multipartFile", required = false) MultipartFile[] files){
+	
+		List<PlaceImgDTO> placeImgList = new ArrayList<>();
+		if(files != null) {
+			String savepath = root+"/place/image/";
+			for(MultipartFile file : files ) {
+				PlaceImgDTO placeImg = new PlaceImgDTO();
+				String filepath = fileUtils.upload(savepath, file);
+				placeImg.setFilepath(filepath);
+				placeImgList.add(placeImg);
+			}
+		}
+		int result = reviewService.updateReview(reviewDTO,placeImgList,deleteFilepaths);
 		return ResponseEntity.ok(result);
 	}
 	@GetMapping(value="/likes/{reviewNo}")
