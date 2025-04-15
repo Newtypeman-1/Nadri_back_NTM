@@ -90,7 +90,7 @@ public class PlanController {
 	// 플래너 썸네일 업로드
 	@PostMapping(value = "/thumb")
 	public ResponseEntity<String> uploadThumb(@RequestParam("file") MultipartFile file, @RequestParam(value="planNo", required = false) Integer planNo) {
-		String savepath = root + "/plan/planner_thumbnail/";
+		String savepath = root + "/plan/thumbnail/";
 		if(planNo != null) {
 			PlanDTO plan = planService.selectOnePlan(planNo);
 			String oldFilepath = plan.getPlanThumb();

@@ -116,15 +116,18 @@
 	</update>
 	<select id="selectWarningMembers" resultType="member">
 		select
-			member_no,
-		    member_nickname,
-		    member_phone,
-		    member_email,
-	        member_birth,
-		    warning_stack,
-		    member_level
-		from member
-		where member_del ='N' and warning_stack >= 6	
+			m.member_no,
+		    m.member_nickname,
+		    m.member_phone,
+		    m.member_email,
+	        m.member_birth,
+		    m.warning_stack,
+		    m.member_level
+		from member m
+		left join del_member d on m.member_no = d.member_no
+		where m.member_del ='N' 
+			and m.warning_stack >= 6
+			and d.member_no is null	
 	</select>
 	
 	<update id="updateMemberLevel">
@@ -132,5 +135,9 @@
 	    set member_level = #{memberLevel}
 	    where member_no = #{memberNo}
  	 </update>
+ 	 
+ 	 <insert id="insertDelWarningMember">
+	 	 insert into del_member values(#{memberNo}, to_char(sysdate,'yyyy-mm-dd'), 2)	
+ 	 </insert>
 	
 </mapper>

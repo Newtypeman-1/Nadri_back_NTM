@@ -50,7 +50,7 @@ public interface MemberDao {
 
 	String selectDelImg(String memberNickname);
 
-
+	void insertDelWarningMember(int memberNo);
 
 
 
