@@ -37,27 +37,28 @@
   </select>
 
 	<select id="bookmarkList" resultType="place">
-	  SELECT * FROM (
-	    SELECT rownum AS rnum, c.* FROM (
-	      SELECT 
-	      	p.place_id,
-	        p.place_thumb,
-	        p.area_code,
-	        a.area_name,
-	        p.sigungu_code,
-	        s.sigungu_name,
-	        p.place_title,
-	        p.place_cat3,
-	        cat.cat3_name,
-	        nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
-            nvl((select count(*) from review where place_id=945221),0) as place_review
-	      FROM place_info p
-	      LEFT JOIN area_code a ON p.area_code = a.area_code
-	      LEFT JOIN sigungu_code s 
-	        ON p.sigungu_code = s.sigungu_code 
-	       AND p.area_code = s.area_code
-	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
-	      JOIN bookmark b ON p.place_id = b.place_id
+	 SELECT *
+        FROM (
+            SELECT ROWNUM AS rnum, data.*
+            FROM (
+                SELECT
+                    p.place_id,
+                    p.place_thumb,
+                    p.area_code,
+                    a.area_name,
+                    p.sigungu_code,
+                    s.sigungu_name,
+                    p.place_title,
+                    p.place_cat3,
+                    cat.cat3_name,
+                    NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
+                    NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
+                    (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = '유저01') AS bookmarked
+                FROM place_info p
+                LEFT JOIN area_code a ON p.area_code = a.area_code
+                LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
+                LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+                JOIN bookmark b ON p.place_id = b.place_id
 	        WHERE b.member_nickname = #{nickname}
 	      
 	          <choose>
