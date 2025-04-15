@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class QueryDTO {
 	private String query;
-	private String[] type;
+	private int[] type;
 }

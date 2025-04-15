@@ -50,7 +50,6 @@ public class SearchService {
 			searchResult.put("place", null);
 			searchResult.put("plan", null);
 			searchResult.put("review", null);
-			System.out.println(placeList);
 			// 1. 장소 정보 조회
 			int[] placeId = new int[placeList.size()];
 			int i = 0;
@@ -63,7 +62,7 @@ public class SearchService {
 			// 2. 플랜 정보 조회
 			int[] planId = searchDao.selectPlanByPlace(placeList);
 			if(planId.length>0) {
-				PlanRequestDTO request = new PlanRequestDTO(i, null, null, planId, null, null, null);
+				PlanRequestDTO request = new PlanRequestDTO(1, null, null, planId, null, null, null);
 				List planList = planService.selectPlanList(request);
 				Map planInfo = new HashMap<>();
 				planInfo.put("list", planList);
