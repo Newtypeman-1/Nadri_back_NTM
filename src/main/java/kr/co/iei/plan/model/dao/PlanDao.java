@@ -42,7 +42,7 @@ public interface PlanDao {
 
 	int countNearby(Map<String, Object> map);
 
-	int checkBookMark(int planNo, String memberNickname);
+	int checkBookmark(int planNo, String memberNickname);
 
 	int deleteBookmark(int planNo, String memberNickname);
 
