@@ -152,4 +152,12 @@ public class PlaceService {
 		
 	}
 
+	@Transactional
+	public int updatePlace(PlaceInfoDTO placeInfoDTO) {
+		int result =  placeDao.updatePlace(placeInfoDTO);
+		return result;
+	}
+
+
+
 }
