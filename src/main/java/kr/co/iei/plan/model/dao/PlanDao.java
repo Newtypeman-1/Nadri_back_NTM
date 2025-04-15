@@ -9,6 +9,7 @@ import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 
 @Mapper
 public interface PlanDao {
@@ -46,5 +47,7 @@ public interface PlanDao {
 	int deleteBookmark(int planNo, String memberNickname);
 
 	int insertBookmark(int planNo, String memberNickname);
+	
+	List selectPlanList(PlanRequestDTO request);
 
 }

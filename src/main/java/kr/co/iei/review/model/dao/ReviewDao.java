@@ -36,7 +36,7 @@ public interface ReviewDao {
 
 	int deleteReview(int reviewNo);
 
-	LikeDTO reviewLike(int reviewNo);
+	List reviewLike(int reviewNo);
 
 	int reviewCount(int reviewNo);
 
@@ -65,5 +65,11 @@ public interface ReviewDao {
 	int updateReview(ReviewDTO reviewDTO);
 
 	List reportList(int reviewNo);
+
+	List<PlaceImgDTO> deleteImg(int reviewNo);
+
+	int deletePlaceImg(String filepath);
+
+	int updateReviewReadCount(int reviewNo);
 
 }

@@ -1,5 +1,6 @@
 package kr.co.iei.member.model.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,24 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
+
+	//관리자페이지 경고회원 조회
+	public List<MemberDTO> getWarningMembers() {
+		List<MemberDTO> list = memberDao.selectWarningMembers();
+		System.out.println(list);
+		return list;
+	}
+
+	public void updateMemberLevel(int memberNo, int memberLevel) {
+		memberDao.updateMemberLevel(memberNo, memberLevel);
+	}
+
+	public void kickMember(int memberNo) {
+		memberDao.insertDelMember(memberNo);
+		
+	}
+
+
 
 
 	

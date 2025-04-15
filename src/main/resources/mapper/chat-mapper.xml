@@ -56,7 +56,7 @@
  	 insert into chat_group values(#{chatNo},#{memberNickname})
   </insert>
     <insert id="insertInviteMsg">
-  	insert into chat_content values(chat_content_seq.nextval, '길우진' ,#{chatNo},null,#{memberNickname}||'님이 채팅방에 초대되었습니다.',default)
+  	insert into chat_content values(chat_content_seq.nextval, '관리자' ,#{chatNo},null,#{memberNickname}||'님이 채팅방에 초대되었습니다.',default)
   </insert>
   <delete id="leaveGroup">
   	delete from chat_group where chat_no=#{chatNo} and member_nickname=#{memberNickname}
@@ -68,15 +68,23 @@
   	delete from chat where chat_no=#{chatNo}
   </delete>
   <insert id="insertLeaveMsg">
-  	insert into chat_content values(chat_content_seq.nextval, '길우진' ,#{chatNo},null,#{memberNickname}||'님이 채팅방을 떠났습니다.',default)
+  	insert into chat_content values(chat_content_seq.nextval, '관리자' ,#{chatNo},null,#{memberNickname}||'님이 채팅방을 떠났습니다.',default)
   </insert>
   <update id="updateTitle">
   	update chat set chat_title = #{chatTitle} where chat_no=#{chatNo}
   </update>
-  <select id="selectLatestChatContentNo" resultType="int">
-	  SELECT NVL(MAX(chat_content_no), 0)
-	  FROM chat_content
-	  WHERE chat_no = #{chatNo}
+  <select id="selectLatestChatContentInfo" resultType="chatRoom">
+	  SELECT *
+	  FROM (
+	      SELECT 
+	          c.chat_no,
+	          c.chat_content_no AS latestContentNo,
+	          c.member_nickname AS latestSenderNickname
+	      FROM chat_content c
+	      WHERE c.chat_no = #{chatNo}
+	      ORDER BY c.chat_content_no DESC
+	  )
+	  WHERE ROWNUM = 1
   </select>
   <insert id="updateReadStatus">
 	  MERGE INTO chat_read_status rs

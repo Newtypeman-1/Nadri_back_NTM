@@ -11,7 +11,7 @@
 						place_type_id =12
 					</when>
 					<when test="selectedMenu == 14">
-						place_type_id IN (14, 15, 28, 38)
+						place_type_id =14
 					</when>
 					<when test="selectedMenu == 32">
 						place_type_id =32
@@ -24,60 +24,53 @@
 		</where>
 	</select>
 
+	<!-- 기본 전체조회(타입아이디 필터) -->
 	<select id="selectALLPlaceList" resultType="place">
-		  select * from (
-		    select rownum as rnum, c.* from (
-		      select
-		        p.place_id,
-		        p.place_thumb,
-		        p.area_code,
-		        a.area_name,
-		        p.sigungu_code,
-		        s.sigungu_name,
-		        p.place_title,
-		        p.place_cat3,
-		        cat.cat3_name,
-		        nvl((select round(avg(star_rate), 1) from review where place_id = p.place_id), 0) as place_rating,
-		        nvl((select count(*) from review where place_id = p.place_id), 0) as place_review,
-		        (select count(*) from bookmark b where b.place_id = p.place_id and b.member_nickname = #{memberNickname}) as bookmarked
-		      from place_info p
-		      left join area_code a on p.area_code = a.area_code
-		      left join sigungu_code s on p.sigungu_code = s.sigungu_code and p.area_code = s.area_code
-		      left join place_cat3 cat on p.place_cat3 = cat.cat3
-		      <where>
-		        <if test="selectedMenu != 0">
-		          <choose>
-		            <when test="selectedMenu == 12">
-		              and p.place_type_id = 12
-		            </when>
-		            <when test="selectedMenu == 14">
-		              and p.place_type_id in (14, 15, 28, 38)
-		            </when>
-		            <when test="selectedMenu == 32">
-		              and p.place_type_id = 32
-		            </when>
-		            <when test="selectedMenu == 39">
-		              and p.place_type_id = 39
-		            </when>
-		          </choose>
-		        </if>
-		      </where>
-		
-		      <choose>
-		        <when test="order == 1">
-		          order by place_review desc
-		        </when>
-		        <when test="order == 2">
-		          order by place_rating desc
-		        </when>
-		        <when test="order == 3">
-		          order by bookmarked desc
-		        </when>
-		      </choose>
-		
-		    ) c
-		  )
-		  where rnum between #{pi.start} and #{pi.end}
+	  SELECT *
+	  FROM (
+	    SELECT ROWNUM AS rnum, c.*
+	    FROM (
+	      SELECT
+	        p.place_id,
+	        p.place_thumb,
+	        p.area_code,
+	        a.area_name,
+	        p.sigungu_code,
+	        s.sigungu_name,
+	        p.place_title,
+	        p.place_cat3,
+	        cat.cat3_name,
+	        NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
+	        NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
+	        (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = #{memberNickname}) AS bookmarked
+	      FROM place_info p
+	      LEFT JOIN area_code a ON p.area_code = a.area_code
+	      LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
+	      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+	
+	      <where>
+	        <if test="id != null and id.length > 0">
+	          AND p.place_id IN
+	          <foreach item="typeId" collection="id" open="(" separator="," close=")">
+	            #{typeId}
+	          </foreach>
+	        </if>
+	      </where>
+	
+	      <choose>
+	        <when test="order == 1">
+	          ORDER BY place_review DESC
+	        </when>
+	        <when test="order == 2">
+	          ORDER BY place_rating DESC
+	        </when>
+	        <when test="order == 3">
+	          ORDER BY bookmarked DESC
+	        </when>
+	      </choose>
+	    ) c
+	  )
+	  WHERE rnum BETWEEN #{pi.start} AND #{pi.end}
 	</select>
 
 

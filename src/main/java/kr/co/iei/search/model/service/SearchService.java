@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
+import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.ReviewDTO;
+import kr.co.iei.review.model.service.ReviewService;
 import kr.co.iei.search.model.dao.SearchDao;
 import kr.co.iei.search.model.dto.QueryDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
@@ -23,9 +27,11 @@ public class SearchService {
 	@Autowired
 	private SearchDao searchDao;
 	@Autowired
-	private PlanDao planDao;
+	public PlaceService placeService;
 	@Autowired
-	private ReviewDao reviewDao;
+	public PlanService planService;
+	@Autowired
+	public ReviewService reviewService;
 
 	public List selectKeyword(QueryDTO search) {
 		List keywordList = searchDao.selectKeyword(search);
@@ -33,24 +39,44 @@ public class SearchService {
 	}
 
 	@Transactional
-	public Map<String, List> searchResult(QueryDTO search) {
+	public Map<String, Map> searchResult(QueryDTO search) {
 		String query = search.getQuery();
-		List placeList = searchDao.selectPlaceByKeyword(search);
-		
-//		 List<PlanDTO> planList = planDao.selectPlansByPlaceIds(placeList);
-//		 List<ReviewDTO> reviewList = reviewDao.selectReviewsByPlaceIds(placeList);
-		
-
-		// 3. 묶어서 반환
-		Map<String, List> searchResult = new HashMap<>();
-		searchResult.put("PLACE", placeList);
-		// searchResult.put("PLAN", planList);
-		// searchResult.put("REVIEW", reviewList);
-
+		List<Integer> placeList = searchDao.selectPlaceByKeyword(search);
 		if (!query.equals("")) {
 			int logResult = searchDao.insertSearchLog(query);
 		}
-		return searchResult;
+		if (!placeList.isEmpty()) {
+			Map<String, Map> searchResult = new HashMap<>();
+			searchResult.put("place", null);
+			searchResult.put("plan", null);
+			searchResult.put("review", null);
+			// 1. 장소 정보 조회
+			int[] placeId = new int[placeList.size()];
+			int i = 0;
+			for (int no : placeList) {
+				placeId[i] = no;
+				i++;
+			}
+			Map placeInfo = placeService.selectALLPlaceList(1, 1, null, placeId);
+			searchResult.put("place", placeInfo);
+			// 2. 플랜 정보 조회
+			int[] planId = searchDao.selectPlanByPlace(placeList);
+			if(planId.length>0) {
+				PlanRequestDTO request = new PlanRequestDTO(1, null, null, planId, null, null, null);
+				List planList = planService.selectPlanList(request);
+				Map planInfo = new HashMap<>();
+				planInfo.put("list", planList);
+				searchResult.put("plan", planInfo);
+			}
+			// 3. 리뷰번호 조회
+			int[] reviewId = searchDao.selectReviewByPlace(placeList);
+			if(reviewId.length>0) {
+				Map reviewInfo = reviewService.reviewList(1, null, reviewId);
+				searchResult.put("review", reviewInfo);
+			}
+			return searchResult;
+		}
+		return null;
 	}
 
 	public Map<String, List<SearchLogDTO>> selectMostSearch(String date) {

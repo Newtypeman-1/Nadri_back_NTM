@@ -26,7 +26,7 @@ public class PlaceService {
 	private PageInfoUtil pageInfoUtil;
 
 	// placeInfo 조회(페이지인포 포함 / 기본 데이터 / 좋아요 상태)
-	public Map selectALLPlaceList(int reqPage, String memberNickname, int order) {
+	public Map selectALLPlaceList(int reqPage, int order, String memberNickname, int[] id) {
 		int numPerPage = 12;
 		int pageNaviSize = 5;
 		int totalCount = placeDao.totalCount();
@@ -36,6 +36,7 @@ public class PlaceService {
 		map.put("pi", pi);
 		map.put("memberNickname", memberNickname);
 		map.put("order", order);
+		map.put("id", id);
 
 		List<PlaceInfoDTO> list = placeDao.selectALLPlaceList(map);
 		// placeTitle 괄호제거
@@ -56,7 +57,7 @@ public class PlaceService {
 	}
 
 	// 상세 필터 적용 플레이스 리스트 조회
-    public Map<String, Object> selectFilteredPlaceList(PlaceFilterRequest request) {
+	public Map<String, Object> selectFilteredPlaceList(PlaceFilterRequest request) {
         Map<String, Object> result = new HashMap<>();
         int numPerPage = 12;
 		int pageNaviSize = 5;
@@ -64,7 +65,14 @@ public class PlaceService {
         PageInfo pi = pageInfoUtil.getPageInfo(request.getReqPage(), numPerPage, pageNaviSize, totalCount);
 
         List<PlaceInfoDTO> list = placeDao.selectPlaceListByFilterPaged(request, pi);
-
+        // placeTitle 괄호제거
+ 		for (PlaceInfoDTO place : list) {
+ 			String title = place.getPlaceTitle();
+ 			if (title != null) {
+ 				String cleanedTitle = title.replaceAll("\\(.*?\\)", "").trim();
+ 				place.setPlaceTitle(cleanedTitle);
+ 			}
+ 		}
         result.put("list", list);
         result.put("pi", pi);
         result.put("totalCount", totalCount);

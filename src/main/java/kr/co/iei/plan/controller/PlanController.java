@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,6 +32,7 @@ import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.util.FileUtils;
 
@@ -152,5 +154,10 @@ public class PlanController {
 		
 		return ResponseEntity.ok(result);
 	}
-
+	
+	@GetMapping
+	public ResponseEntity<List> selectPlanList(@ModelAttribute PlanRequestDTO request){
+		List<PlanDTO> planList = planService.selectPlanList(request);
+		return ResponseEntity.ok(planList);
+	}
 }

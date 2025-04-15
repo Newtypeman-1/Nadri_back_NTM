@@ -93,7 +93,6 @@ public class ChatHandler extends TextWebSocketHandler {
 		MessageDTO chat = om.readValue(message.getPayload(), MessageDTO.class);
 	    String type = chat.getType();
 	    int chatNo = chat.getChatNo();
-	    System.out.println(chat);
 	    switch (type) {
 	        case "FETCH_ROOM_LIST":
 	            handleFetchRoomList(session);
@@ -186,11 +185,11 @@ public class ChatHandler extends TextWebSocketHandler {
 	    URI uri = session.getUri();
 	    String memberNickname = getMemberNickname(uri.getQuery());
 	    int chatNo = chat.getChatNo();
-		int latestContentNo = chatService.selectLatestChatContentNo(chatNo);
+	    ChatRoomDTO latestInfo = chatService.selectLatestChatInfo(chatNo);
 		// 최신 메시지가 없으면 → chat_read_status 업데이트 안 함
-		if (latestContentNo > 0) {
-			ChatRoomDTO crd = new ChatRoomDTO(chatNo, null,memberNickname, null, 0,latestContentNo);
-			chatService.updateReadStatus(crd);
+		if (latestInfo != null && latestInfo.getLatestContentNo() > 0) {
+			latestInfo.setMemberNickname(memberNickname);
+			chatService.updateReadStatus(latestInfo);
 		}
 	}
 	//session 으로 방정보만 전송
@@ -221,6 +220,8 @@ public class ChatHandler extends TextWebSocketHandler {
 	    int result = chatService.insertText(cc);
 
 	    if (result > 0) {
+	    	//당사자는 읽음 처리
+	    	handleReadStatus(session, chat);
 	        Set<String> nickSet = chatRooms.get(chatNo);
 	        for (String nick : loginMembers.keySet()) {
 	            WebSocketSession target = loginMembers.get(nick);
@@ -248,7 +249,7 @@ public class ChatHandler extends TextWebSocketHandler {
 	//채팅방 제목 수정 메소드
 	private void handleUpdateTitle(WebSocketSession session, MessageDTO chat) throws Exception {
 		int chatNo = chat.getChatNo();
-		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0);
+		ChatRoomDTO crd = new ChatRoomDTO(chatNo, chat.getMessage(),null, null,0,0,null);
 		int result = chatService.updateTitle(crd);
 		if(result>0) {
 			refreshGroup(chatNo);		

@@ -1,23 +1,20 @@
 package kr.co.iei.plan.model.service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -141,6 +138,15 @@ public class PlanService {
 			count += planDao.insertBookmark(planNo, memberNickname);
 			return 1;
 		}
+	}
+	public List<PlanDTO> selectPlanList(PlanRequestDTO request) {
+		int numPerPage = request.getNumPerPage()==null?12:request.getNumPerPage();
+		int start = (request.getReqPage()-1)*numPerPage+1;
+		int end = start + numPerPage;
+		request.setStart(start);
+		request.setEnd(end);
+		List planList = planDao.selectPlanList(request);
+		return planList;
 	}
 
 }
