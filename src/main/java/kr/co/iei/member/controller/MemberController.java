@@ -113,18 +113,16 @@ public class MemberController {
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
 		int result = 1;
-		System.out.println("문자 : " + member.getProfileImg());
-		System.out.println("파일 : " + uploadProfile);
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
-		}
-		String filepath = memberService.updateMemberNewFile(member);
-		if(filepath != null) {
-			File file = new File(root+"/profile/"+filepath);
-			if(file.exists()) {
-				file.delete();
+			String delfile = memberService.updateMemberNewFile(member);
+			if(delfile != null) {
+				File file = new File(root+"/profile/"+delfile);
+				if(file.exists()) {
+					file.delete();
+				}
 			}
 		}
 		if(uploadProfile == null) {
@@ -134,7 +132,6 @@ public class MemberController {
 			}else{	
 				//2. 기본으로 변경  -> 기존 파일 삭제
 				String filepath2 = memberService.updateMemberDelFile(member);
-				System.out.println(filepath2);
 				if(filepath2 != null) {
 					File file = new File(root+"/profile/"+filepath2);
 					if(file.exists()) {

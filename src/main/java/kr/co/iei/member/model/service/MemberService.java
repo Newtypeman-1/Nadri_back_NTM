@@ -110,7 +110,6 @@ public class MemberService {
 	}
 	//마이페이지 회원정보 수정
 	public String updateMemberNewFile(MemberDTO member) {
-		System.out.println(member);
 		String filepath = null;
 		if(member.getProfileImg() != null) {
 			filepath = memberDao.selectDelImg(member.getMemberNickname());
@@ -124,10 +123,12 @@ public class MemberService {
 		return result;
 	}
 	//마이페이지 2. 기본으로 변경  -> 기존 파일 삭제
+	@Transactional
 	public String updateMemberDelFile(MemberDTO member) {
 		String filepath = memberDao.selectDelImg(member.getMemberNickname());
-		System.out.println(filepath);
-		int result = memberDao.updateMemberDelFile(member);
+		if(filepath != null) {
+			int result = memberDao.updateMemberDelFile(member);
+		}
 		return filepath;
 	}
 	//회원탈퇴
