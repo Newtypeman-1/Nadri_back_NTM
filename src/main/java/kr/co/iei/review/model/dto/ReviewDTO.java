@@ -17,7 +17,6 @@ public class ReviewDTO {
  private String reviewContent;
  private float starRate;
  private String reviewDate;
- private int planNo;
  private int placeId;
  private int placeTypeId;
  private String placeThumb;
