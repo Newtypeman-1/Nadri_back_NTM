@@ -112,31 +112,34 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		int result = 0;
-		System.out.println("문자 : " + member.getProfileImg());
-		System.out.println("파일 : " + uploadProfile);
+		int result = 1;
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
-		}
-			String filepath = memberService.updateMemberNewFile(member);
-			if(filepath != null) {
-				System.out.println(filepath);
-				File file = new File(root+"/profile/"+filepath);
+			String delfile = memberService.updateMemberNewFile(member);
+			if(delfile != null) {
+				File file = new File(root+"/profile/"+delfile);
 				if(file.exists()) {
 					file.delete();
 				}
 			}
+		}
 		if(uploadProfile == null) {
 			if(member.getProfileImg() != null) {
-				//1. 기존에 프로필 이미지 유지
+				//1. 기존 프로필 이미지 유지
 				result = memberService.updateMemberPresFile(member);
 			}else{	
-				//2. 프로필 이미지가 있었는데 기본으로 변경  -> 기존 파일 삭제
-				result = memberService.updateMemberDelFile(member);
-			}
-		}					
+				//2. 기본으로 변경  -> 기존 파일 삭제
+				String filepath2 = memberService.updateMemberDelFile(member);
+				if(filepath2 != null) {
+					File file = new File(root+"/profile/"+filepath2);
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+			}	
+		}
 		return ResponseEntity.ok(result);
 	}
 	

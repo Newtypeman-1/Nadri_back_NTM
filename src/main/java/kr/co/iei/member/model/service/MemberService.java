@@ -110,26 +110,26 @@ public class MemberService {
 	}
 	//마이페이지 회원정보 수정
 	public String updateMemberNewFile(MemberDTO member) {
-		System.out.println(member);
 		String filepath = null;
 		if(member.getProfileImg() != null) {
 			filepath = memberDao.selectDelImg(member.getMemberNickname());
 		}
-		System.out.println(filepath);
 		int result = memberDao.updateMemberNewFile(member);
 		return filepath;
 	}
-	//마이페이지 회원정보 수정2
+	//마이페이지 1. 기존 프로필 이미지 유지
 	public int updateMemberPresFile(MemberDTO member) {
 		int result = memberDao.updateMemberPresFile(member);
-		System.out.println(member);
 		return result;
 	}
-	//마이페이지 회원정보 수정3
-	public int updateMemberDelFile(MemberDTO member) {
-		int result = memberDao.updateMemberDelFile(member);
-		System.out.println(member);
-		return result;
+	//마이페이지 2. 기본으로 변경  -> 기존 파일 삭제
+	@Transactional
+	public String updateMemberDelFile(MemberDTO member) {
+		String filepath = memberDao.selectDelImg(member.getMemberNickname());
+		if(filepath != null) {
+			int result = memberDao.updateMemberDelFile(member);
+		}
+		return filepath;
 	}
 	//회원탈퇴
 	@Transactional
