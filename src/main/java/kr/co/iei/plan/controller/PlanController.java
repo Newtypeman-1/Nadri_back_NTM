@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -151,9 +152,7 @@ public class PlanController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List> selectPlanList(@RequestParam int reqPage, @RequestParam(required = false) String memberNickname
-			,@RequestParam(required =  false) Integer numPerPage,@RequestParam(required =  false) int[] id){
-		PlanRequestDTO request = new PlanRequestDTO(reqPage,numPerPage, memberNickname, id);
+	public ResponseEntity<List> selectPlanList(@ModelAttribute PlanRequestDTO request){
 		List<PlanDTO> planList = planService.selectPlanList(request);
 		return ResponseEntity.ok(planList);
 	}

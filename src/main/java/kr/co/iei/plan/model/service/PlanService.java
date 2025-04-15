@@ -126,6 +126,11 @@ public class PlanService {
 	}
 
 	public List<PlanDTO> selectPlanList(PlanRequestDTO request) {
+		int numPerPage = request.getNumPerPage()==null?12:request.getNumPerPage();
+		int start = (request.getReqPage()-1)*numPerPage+1;
+		int end = start + numPerPage;
+		request.setStart(start);
+		request.setEnd(end);
 		List planList = planDao.selectPlanList(request);
 		return planList;
 	}

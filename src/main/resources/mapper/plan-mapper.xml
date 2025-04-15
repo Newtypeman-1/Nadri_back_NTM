@@ -227,24 +227,43 @@
 			</if>
 	</select>
 	<select id="selectPlanList" resultType="plan">
-	 SELECT *
-	  FROM (
-	    SELECT * FROM trip_plan
-	    <where>
-	      <if test="memberNickname != null">
-	        member_nickname = #{memberNickname}
-	      </if>
-	      <if test="id != null and id.length > 0">
-	        <if test="memberNickname != null">AND</if>
-	        plan_no IN
-	        <foreach item="item" collection="id" open="(" separator="," close=")">
-	          #{item}
-	        </foreach>
-	      </if>
-	    </where>
-	    <if test="numPerPage != null">
-	      AND ROWNUM &lt;= #{numPerPage}
-	    </if>
-	  )
-	  </select>
+		 SELECT * FROM (
+		    SELECT ROWNUM AS rn, inner_query.*
+		    FROM (
+		      SELECT tp.*, NVL(pf.favorite_count, 0) AS favorite_count
+		      FROM trip_plan tp
+		      LEFT JOIN (
+		        SELECT plan_no, COUNT(*) AS favorite_count
+		        FROM plan_favorite
+		        GROUP BY plan_no
+		      ) pf ON tp.plan_no = pf.plan_no
+		      <where>
+		        <if test="memberNickname != null">
+		          tp.member_nickname = #{memberNickname}
+		        </if>
+		        <if test="id != null and id.length > 0">
+		          <if test="memberNickname != null">AND</if>
+		          tp.plan_no IN
+		          <foreach item="item" collection="id" open="(" separator="," close=")">
+		            #{item}
+		          </foreach>
+		        </if>
+		      </where>
+		      ORDER BY
+		      <choose>
+		        <when test="order == null">
+		          tp.plan_no DESC
+		        </when>
+		        <when test="order == 1">
+		          favorite_count DESC
+		        </when>
+		        <otherwise>
+		          tp.plan_no DESC
+		        </otherwise>
+		      </choose>
+		    ) inner_query
+		    WHERE ROWNUM &lt; #{end}
+		  )
+		  WHERE rn &gt;= #{start}
+  </select>
 </mapper>

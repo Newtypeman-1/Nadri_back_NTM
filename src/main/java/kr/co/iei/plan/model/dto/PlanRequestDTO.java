@@ -14,4 +14,7 @@ public class PlanRequestDTO {
 	private Integer numPerPage;
 	private String memberNickname;
 	private int[] id;
+	private Integer order;
+	private Integer start;
+	private Integer end;
 }
