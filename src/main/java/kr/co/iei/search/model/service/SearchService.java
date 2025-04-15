@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.PlanDTO;
+import kr.co.iei.plan.model.dto.PlanRequestDTO;
 import kr.co.iei.plan.model.service.PlanService;
 import kr.co.iei.review.model.dao.ReviewDao;
 import kr.co.iei.review.model.dto.ReviewDTO;
@@ -44,20 +45,36 @@ public class SearchService {
 		if (!query.equals("")) {
 			int logResult = searchDao.insertSearchLog(query);
 		}
-		// 장소 정보 조회
 		if (!placeList.isEmpty()) {
-			int[] id = new int[placeList.size()];
+			Map<String, Map> searchResult = new HashMap<>();
+			searchResult.put("place", null);
+			searchResult.put("plan", null);
+			searchResult.put("review", null);
+			System.out.println(placeList);
+			// 1. 장소 정보 조회
+			int[] placeId = new int[placeList.size()];
 			int i = 0;
 			for (int no : placeList) {
-				id[i] = no;
+				placeId[i] = no;
+				i++;
 			}
-			Map placeInfo = placeService.selectALLPlaceList(1, 1, null, id);
-			// List<ReviewDTO> reviewList = reviewDao.selectReviewsByPlaceIds(placeList);
-			// 3. 묶어서 반환
-			Map<String, Map> searchResult = new HashMap<>();
-			searchResult.put("PLACE", placeInfo);
-			// searchResult.put("PLAN", planList);
-			// searchResult.put("REVIEW", reviewList);
+			Map placeInfo = placeService.selectALLPlaceList(1, 1, null, placeId);
+			searchResult.put("place", placeInfo);
+			// 2. 플랜 정보 조회
+			int[] planId = searchDao.selectPlanByPlace(placeList);
+			if(planId.length>0) {
+				PlanRequestDTO request = new PlanRequestDTO(i, null, null, planId, null, null, null);
+				List planList = planService.selectPlanList(request);
+				Map planInfo = new HashMap<>();
+				planInfo.put("list", planList);
+				searchResult.put("plan", planInfo);
+			}
+			// 3. 리뷰번호 조회
+			int[] reviewId = searchDao.selectReviewByPlace(placeList);
+			if(reviewId.length>0) {
+				Map reviewInfo = reviewService.reviewList(1, null, reviewId);
+				searchResult.put("review", reviewInfo);
+			}
 			return searchResult;
 		}
 		return null;

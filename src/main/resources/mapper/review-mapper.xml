@@ -125,7 +125,7 @@
 		LEFT JOIN place_info p ON rv.place_id = p.place_id
 		<where>
 			<choose>
-			<when test="id != null and id.size() > 0">
+			<when test="id != null and id.length > 0">
 		rv.review_no IN
 		<foreach collection="id" item="reviewNo" open="(" separator="," close=")">
 			#{reviewNo}

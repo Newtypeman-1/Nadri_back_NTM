@@ -2,6 +2,7 @@ package kr.co.iei.admin.controller;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,8 @@ import kr.co.iei.admin.model.dto.CompanyDTO;
 import kr.co.iei.admin.model.dto.EventDTO;
 import kr.co.iei.admin.model.dto.KeywordDTO;
 import kr.co.iei.admin.model.service.AdminService;
+import kr.co.iei.member.model.dto.MemberDTO;
+import kr.co.iei.member.model.service.MemberService;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
@@ -40,6 +43,8 @@ public class AdminController {
 	private AdminService adminService;
 	@Value("${file.root}")
 	private String root;
+	@Autowired
+	private MemberService memberService;
 	@GetMapping("/company")
 	private ResponseEntity<CompanyDTO> selectCompanyInfo(){
 		CompanyDTO company = adminService.selectCompanyInfo();
@@ -123,4 +128,23 @@ public class AdminController {
 		int result = adminService.updateReport(report);
 		return ResponseEntity.ok(result);
 	}
+    @GetMapping("/member/list")
+    public ResponseEntity<List> getMemberList() {
+    	List<MemberDTO> list = memberService.getWarningMembers();
+    	return ResponseEntity.ok(list);
+    }
+    @PatchMapping("/member/level")
+    public ResponseEntity<Integer> updateMemberLevel(@RequestBody Map<String, Object> param) {
+        int memberNo = (int) param.get("memberNo");
+        int memberLevel = (int) param.get("memberLevel");
+        memberService.updateMemberLevel(memberNo, memberLevel);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/member/{memberNo}")
+    public ResponseEntity<Integer> deleteMember(@PathVariable int memberNo) {
+        memberService.kickMember(memberNo);
+        return ResponseEntity.ok().build();
+    }
+    
+    
 }

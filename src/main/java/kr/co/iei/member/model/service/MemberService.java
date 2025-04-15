@@ -1,5 +1,6 @@
 package kr.co.iei.member.model.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,27 +110,14 @@ public class MemberService {
 		return member;
 	}
 	//마이페이지 회원정보 수정
-	public String updateMemberNewFile(MemberDTO member) {
-		String filepath = null;
-		if(member.getProfileImg() != null) {
-			filepath = memberDao.selectDelImg(member.getMemberNickname());
-		}
-		int result = memberDao.updateMemberNewFile(member);
-		return filepath;
-	}
-	//마이페이지 1. 기존 프로필 이미지 유지
-	public int updateMemberPresFile(MemberDTO member) {
-		int result = memberDao.updateMemberPresFile(member);
+	public int updateMember(MemberDTO member) {
+		int result = memberDao.updateMember(member);
 		return result;
 	}
-	//마이페이지 2. 기본으로 변경  -> 기존 파일 삭제
-	@Transactional
-	public String updateMemberDelFile(MemberDTO member) {
-		String filepath = memberDao.selectDelImg(member.getMemberNickname());
-		if(filepath != null) {
-			int result = memberDao.updateMemberDelFile(member);
-		}
-		return filepath;
+	//마이페이지 회원정보 수정2
+	public int updateMember2(MemberDTO member) {
+		int result = memberDao.updateMember2(member);
+		return result;
 	}
 	//회원탈퇴
 	@Transactional
@@ -138,6 +126,24 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
+
+	//관리자페이지 경고회원 조회
+	public List<MemberDTO> getWarningMembers() {
+		List<MemberDTO> list = memberDao.selectWarningMembers();
+		System.out.println(list);
+		return list;
+	}
+
+	public void updateMemberLevel(int memberNo, int memberLevel) {
+		memberDao.updateMemberLevel(memberNo, memberLevel);
+	}
+
+	public void kickMember(int memberNo) {
+		memberDao.insertDelMember(memberNo);
+		
+	}
+
+
 
 
 	

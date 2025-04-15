@@ -50,7 +50,7 @@
 	
 	      <where>
 	        <if test="id != null and id.length > 0">
-	          AND p.place_type_id IN
+	          AND p.place_id IN
 	          <foreach item="typeId" collection="id" open="(" separator="," close=")">
 	            #{typeId}
 	          </foreach>
