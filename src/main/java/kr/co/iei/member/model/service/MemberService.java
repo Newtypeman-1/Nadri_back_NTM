@@ -1,5 +1,6 @@
 package kr.co.iei.member.model.service;
 
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,15 @@ public class MemberService {
 		return null;
 	}
 	
+	//강제 탈퇴 여부 확인
+	public Integer loginIsDel(MemberDTO member) {
+		Integer memberNo = memberDao.selectMemberNo(member);
+		System.out.println(member);
+		Integer deleteMember = memberDao.loginIsDel(memberNo);
+		System.out.println(memberNo);
+		return deleteMember;
+	}
+	
 	//소셜로그인
 	public LoginMemberDTO socialLogin(String userEmail) {
 		System.out.println(userEmail);
@@ -109,14 +119,27 @@ public class MemberService {
 		return member;
 	}
 	//마이페이지 회원정보 수정
-	public int updateMember(MemberDTO member) {
-		int result = memberDao.updateMember(member);
+	public String updateMemberNewFile(MemberDTO member) {
+		String filepath = null;
+		if(member.getProfileImg() != null) {
+			filepath = memberDao.selectDelImg(member.getMemberNickname());
+		}
+		int result = memberDao.updateMemberNewFile(member);
+		return filepath;
+	}
+	//마이페이지 1. 기존 프로필 이미지 유지
+	public int updateMemberPresFile(MemberDTO member) {
+		int result = memberDao.updateMemberPresFile(member);
 		return result;
 	}
-	//마이페이지 회원정보 수정2
-	public int updateMember2(MemberDTO member) {
-		int result = memberDao.updateMember2(member);
-		return result;
+	//마이페이지 2. 기본으로 변경  -> 기존 파일 삭제
+	@Transactional
+	public String updateMemberDelFile(MemberDTO member) {
+		String filepath = memberDao.selectDelImg(member.getMemberNickname());
+		if(filepath != null) {
+			int result = memberDao.updateMemberDelFile(member);
+		}
+		return filepath;
 	}
 	//회원탈퇴
 	@Transactional
@@ -125,7 +148,30 @@ public class MemberService {
 		int result2 = memberDao.insertDelMember(member);
 		return result+=result2;
 	}
+	//탈퇴된 회원탈퇴
+	public int deleteDelMember(MemberDTO member) {
+		int result = memberDao.deleteDelMember(member);
+		return result;
+	}	
+
+	//관리자페이지 경고회원 조회
+	public List<MemberDTO> getWarningMembers() {
+		List<MemberDTO> list = memberDao.selectWarningMembers();
+		System.out.println(list);
+		return list;
+	}
+
+	public void updateMemberLevel(int memberNo, int memberLevel) {
+		memberDao.updateMemberLevel(memberNo, memberLevel);
+	}
+
+	@Transactional
+	public void kickMember(int memberNo) {
+		memberDao.insertDelWarningMember(memberNo);
+		
+	}
 
 
-	
+
+
 }

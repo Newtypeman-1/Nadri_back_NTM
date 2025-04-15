@@ -34,11 +34,14 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	.addResourceHandler("/profile/**")
 	.addResourceLocations("file:///"+root+"/profile/");
 	
-	registry.addResourceHandler("/event/thumb/**")
+	registry.addResourceHandler("/assets/event/thumb/**")
 	.addResourceLocations("file:///"+root+"/event/thumb/");
 	registry
-	.addResourceHandler("/place/image/**")
+	.addResourceHandler("/assets/place/image/**")
 	.addResourceLocations("file:///"+root+"/place/image/");
+	registry
+	.addResourceHandler("/assets/plan/thumb/**")
+	.addResourceLocations("file:///"+root+"/plan/thumb/");
 	}
 }
 

@@ -1,5 +1,7 @@
 package kr.co.iei.member.controller;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -72,12 +74,26 @@ public class MemberController {
 	//로그인
 	@PostMapping(value="/login")
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
-		LoginMemberDTO loginMember = memberService.login(member);
-		if(loginMember != null) {
-			return ResponseEntity.ok(loginMember);
-		}else {
-			return ResponseEntity.status(404).build();
-		}
+	    // 로그인 시도
+	    LoginMemberDTO loginMember = memberService.login(member);
+	    System.out.println(member);
+
+	    // 로그인 실패 시 바로 404 응답
+	    if (loginMember == null) {
+	        return ResponseEntity.status(404).build();  // 로그인 실패
+	    }
+
+	    // 강제 탈퇴 여부 확인 (로그인 성공 후 확인)
+	    Integer deleteMember = memberService.loginIsDel(member);
+	    System.out.println(deleteMember);
+
+	    if (deleteMember != null && deleteMember.intValue() == 2) {
+	        System.out.println(deleteMember);
+	        return null;  // 강제 탈퇴된 경우 null 반환 (응답 본문 없음)
+	    }
+
+	    // 로그인 성공한 경우
+	    return ResponseEntity.ok(loginMember);  // 로그인 성공
 	}
 	
 	//소셜로그인
@@ -110,18 +126,34 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		int result = 0;
-		//프로필사진을 첨부한 경우에만
+		int result = 1;
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
 			member.setProfileImg(filepath);
-			result = memberService.updateMember(member);
-			//프로필사진을 첨부하지 않은 경우에만
-		}else {			
-			result = memberService.updateMember2(member);
+			String delfile = memberService.updateMemberNewFile(member);
+			if(delfile != null) {
+				File file = new File(root+"/profile/"+delfile);
+				if(file.exists()) {
+					file.delete();
+				}
+			}
 		}
-		
+		if(uploadProfile == null) {
+			if(member.getProfileImg() != null) {
+				//1. 기존 프로필 이미지 유지
+				result = memberService.updateMemberPresFile(member);
+			}else{	
+				//2. 기본으로 변경  -> 기존 파일 삭제
+				String filepath2 = memberService.updateMemberDelFile(member);
+				if(filepath2 != null) {
+					File file = new File(root+"/profile/"+filepath2);
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+			}	
+		}
 		return ResponseEntity.ok(result);
 	}
 	
@@ -129,6 +161,12 @@ public class MemberController {
 	@PatchMapping(value="/deleteMember")
 	public ResponseEntity<Integer> deleteMember(@RequestBody MemberDTO member){
 		int result = memberService.deleteMember(member);
+		return ResponseEntity.ok(result);
+	}
+	//탈퇴된 회원탈퇴
+	@PatchMapping(value="/deleteDelMember")
+	public ResponseEntity<Integer> deleteDelMember(@RequestBody MemberDTO member){
+		int result = memberService.deleteDelMember(member);
 		return ResponseEntity.ok(result);
 	}
 }

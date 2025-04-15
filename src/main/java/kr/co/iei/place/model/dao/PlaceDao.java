@@ -56,12 +56,5 @@ public interface PlaceDao {
 	//조회수 저장 및 가져오기
 	int updatePlaceViewCount(int placeId);
 	int selectViewCount(int placeId);
-
 	
-
-	
-
-
-
-
 }
