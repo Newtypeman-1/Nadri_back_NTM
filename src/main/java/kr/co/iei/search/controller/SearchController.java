@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.iei.place.model.dto.CategoryDTO;
+import kr.co.iei.place.model.service.PlaceService;
+import kr.co.iei.plan.model.service.PlanService;
+import kr.co.iei.review.model.service.ReviewService;
 import kr.co.iei.search.model.dto.QueryDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.search.model.service.SearchService;
@@ -23,6 +26,7 @@ import kr.co.iei.search.model.service.SearchService;
 public class SearchController {
 	@Autowired
 	public SearchService searchService;
+
 
 	@GetMapping("/keyword")
 	public ResponseEntity<List> selectKeyword(@RequestParam String query, @RequestParam(required = false) String[] type){
