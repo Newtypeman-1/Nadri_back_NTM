@@ -26,13 +26,18 @@ public interface MemberDao {
 	
 	MemberDTO selectMemberInfo(String memberNickname);
 
-	int updateMember(MemberDTO member);
+	int updateMemberNewFile(MemberDTO member);
+	
+	int updateMemberPresFile(MemberDTO member);
 
-	int updateMember2(MemberDTO member);
+	int updateMemberDelFile(MemberDTO member);
+	
+	String selectDelImg(String memberNickname);
 	
 	int deleteMember(MemberDTO memberNickname);
 
 	int insertDelMember(MemberDTO member);
+
 
 
 

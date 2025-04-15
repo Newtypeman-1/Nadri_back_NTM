@@ -62,7 +62,7 @@
 		select * from member where member_nickname = #{memberNickname}
 	</select>
 	
-	<update id="updateMember">
+	<update id="updateMemberNewFile">
 		update member set
 			member_nickname = #{memberNickname},
 			member_phone = #{memberPhone},
@@ -72,7 +72,7 @@
 		where member_email = #{memberEmail}
 	</update>
 	
-	<update id="updateMember2">
+	<update id="updateMemberPresFile">
 		update member set
 			member_nickname = #{memberNickname},
 			member_phone = #{memberPhone},
@@ -80,6 +80,20 @@
 			member_birth = #{memberBirth}
 		where member_email = #{memberEmail}
 	</update>
+	
+	<update id="updateMemberDelFile">
+		update member set
+			member_nickname = #{memberNickname},
+			member_phone = #{memberPhone},
+			member_gender = #{memberGender},
+			member_birth = #{memberBirth},
+			profile_img = null
+		where member_email = #{memberEmail}
+	</update>
+	
+	<select id="selectDelImg" resultType="String">
+		select profile_Img from member where member_nickname= #{memberNickname}
+	</select>
 	
 	<update id="deleteMember">
 		update member set member_del = 'Y' where member_nickname = #{memberNickname}

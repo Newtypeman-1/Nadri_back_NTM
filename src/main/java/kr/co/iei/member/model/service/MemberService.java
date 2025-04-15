@@ -109,13 +109,26 @@ public class MemberService {
 		return member;
 	}
 	//마이페이지 회원정보 수정
-	public int updateMember(MemberDTO member) {
-		int result = memberDao.updateMember(member);
-		return result;
+	public String updateMemberNewFile(MemberDTO member) {
+		System.out.println(member);
+		String filepath = null;
+		if(member.getProfileImg() != null) {
+			filepath = memberDao.selectDelImg(member.getMemberNickname());
+		}
+		System.out.println(filepath);
+		int result = memberDao.updateMemberNewFile(member);
+		return filepath;
 	}
 	//마이페이지 회원정보 수정2
-	public int updateMember2(MemberDTO member) {
-		int result = memberDao.updateMember2(member);
+	public int updateMemberPresFile(MemberDTO member) {
+		int result = memberDao.updateMemberPresFile(member);
+		System.out.println(member);
+		return result;
+	}
+	//마이페이지 회원정보 수정3
+	public int updateMemberDelFile(MemberDTO member) {
+		int result = memberDao.updateMemberDelFile(member);
+		System.out.println(member);
 		return result;
 	}
 	//회원탈퇴
