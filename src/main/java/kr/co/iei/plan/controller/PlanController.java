@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,24 +48,19 @@ public class PlanController {
 	private String root;
 
 	// 플래너 진입 시 새 플래너인지, 기존 플래너인지 체크 (+ 자신의 플래너가 맞는지도 체크)
-	@GetMapping(value = "/verify/{planNo}")
-	public ResponseEntity<Map> verifyPlan(@RequestHeader("Authorization") String refreshToken,
-			@PathVariable int planNo) {
-		// plan_status가 1(공개 상태)이거나, 작성자 본인인지
-		// 즉, "열람 권한"이 있는지 체크
-		PlanDTO plan = planService.verifyPlan(refreshToken, planNo);
-
-		// 열람 권한이 없다면 취소
-		if (plan == null) {
-			return ResponseEntity.ok(null);
-		}
+	@GetMapping(value = "/verify")
+	public ResponseEntity<Map> verifyPlan(@RequestParam String loginNickname, @RequestParam int planNo) {
+		// plan_status가 1(공개 상태)이거나, 그렇지 않다면 작성자 본인인지
+		// 즉 열람 권한이 있는지 체크 (없을 시 403/404 예외 처리)
+		PlanDTO plan = planService.verifyPlan(loginNickname, planNo);
 
 		// 열람 권한이 있다면, 반환할 map을 구성: 플랜 정보 + 저장된 여행지들 + 수정/삭제 권한 여부
+		List list = planService.selectPlanItineraries(planNo);
+		boolean isOwner = planService.isPlanOwner(loginNickname, planNo);
+
 		Map<String, Object> map = new HashMap<>();
 		map.put("plan", plan);
-		List list = planService.selectPlanItineraries(planNo);
 		map.put("itineraries", list);
-		boolean isOwner = planService.isPlanOwner(refreshToken, planNo);
 		map.put("isOwner", isOwner);
 
 		return ResponseEntity.ok(map);
@@ -148,6 +144,14 @@ public class PlanController {
 		}
 		boolean result = planService.updatePlan(plan, list);
 
+		return ResponseEntity.ok(result);
+	}
+	
+	//플래너 즐겨찾기
+	@PatchMapping(value="{planNo}/{memberNickname}")
+	public ResponseEntity<Integer> toggleBookmark(@PathVariable int planNo, @PathVariable String memberNickname){
+		int result = planService.toggleBookmark(planNo, memberNickname);
+		
 		return ResponseEntity.ok(result);
 	}
 	

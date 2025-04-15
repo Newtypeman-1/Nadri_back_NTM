@@ -1,22 +1,20 @@
 package kr.co.iei.plan.model.service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.management.RuntimeErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.web.server.ResponseStatusException;
 import kr.co.iei.admin.model.dto.AdminStatsDTO;
-import kr.co.iei.member.model.dto.LoginMemberDTO;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.plan.model.dao.PlanDao;
 import kr.co.iei.plan.model.dto.ItineraryDTO;
 import kr.co.iei.plan.model.dto.ItineraryWithPlaceDTO;
 import kr.co.iei.plan.model.dto.PlanDTO;
 import kr.co.iei.plan.model.dto.PlanRequestDTO;
-import kr.co.iei.util.JwtUtils;
 import kr.co.iei.util.PageInfo;
 import kr.co.iei.util.PageInfoUtil;
 
@@ -26,15 +24,26 @@ public class PlanService {
 	private PlanDao planDao;
 
 	@Autowired
-	private JwtUtils jwtUtils;
-	
-	@Autowired
 	private PageInfoUtil pageInfoUtil;
 
-	public PlanDTO verifyPlan(String refreshToken, int planNo) {
-		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
-		PlanDTO plan = planDao.verifyPlan(loginMember.getMemberEmail(), planNo);
-		return plan;
+	public PlanDTO verifyPlan(String loginNickname, int planNo) {
+		//1. 존재하는 플래너인지 먼저 확인
+		PlanDTO plan = planDao.selectOnePlan(planNo);
+		if(plan == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+		
+		//2. 존재한다면 열람 권한 확인(+ 계정 즐겨찾기 여부도 조회)
+		PlanDTO p = planDao.verifyPlan(loginNickname, planNo);
+		if(p == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		}
+		return p;
+	}
+
+	public boolean isPlanOwner(String loginNickname, int planNo) {
+		int count = planDao.isPlanOwner(loginNickname, planNo);
+		return count > 0;
 	}
 
 	public List selectNearby(double lat, double lng, int radius) {
@@ -45,12 +54,6 @@ public class PlanService {
 	public List selectPlanItineraries(int planNo) {
 		List<ItineraryWithPlaceDTO> list = planDao.selectPlanItinerariesWithPlace(planNo);
 		return list;
-	}
-
-	public boolean isPlanOwner(String refreshToken, int planNo) {
-		LoginMemberDTO loginMember = jwtUtils.checkToken(refreshToken);
-		int count = planDao.isPlanOwner(loginMember.getMemberEmail(), planNo);
-		return count > 0;
 	}
 
 	@Transactional
@@ -125,6 +128,17 @@ public class PlanService {
 		return result;
 	}
 
+	@Transactional
+	public int toggleBookmark(int planNo, String memberNickname) {
+		int count = planDao.checkBookMark(planNo, memberNickname);
+		if(count > 0) {
+			count += planDao.deleteBookmark(planNo, memberNickname);
+			return 0;
+		}else {
+			count += planDao.insertBookmark(planNo, memberNickname);
+			return 1;
+		}
+	}
 	public List<PlanDTO> selectPlanList(PlanRequestDTO request) {
 		int numPerPage = request.getNumPerPage()==null?12:request.getNumPerPage();
 		int start = (request.getReqPage()-1)*numPerPage+1;
