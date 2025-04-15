@@ -22,7 +22,7 @@ public interface MemberDao {
 
 	MemberDTO selectOneMember(String memberEmail);
 
-	int selectMemberNo(MemberDTO member);
+	Integer selectMemberNo(MemberDTO member);
 	
 	Integer loginIsDel(int memberNo);
 	
@@ -32,9 +32,11 @@ public interface MemberDao {
 	
 	MemberDTO selectMemberInfo(String memberNickname);
 
-	int updateMember(MemberDTO member);
+	int updateMemberNewFile(MemberDTO member);
 
-	int updateMember2(MemberDTO member);
+	int updateMemberPresFile(MemberDTO member);
+	
+	int updateMemberDelFile(MemberDTO member);
 	
 	int deleteMember(MemberDTO memberNickname);
 
@@ -45,6 +47,9 @@ public interface MemberDao {
 	List<MemberDTO> selectWarningMembers();
 
 	int updateMemberLevel(int memberNo, int memberLevel);
+
+	String selectDelImg(String memberNickname);
+
 
 
 

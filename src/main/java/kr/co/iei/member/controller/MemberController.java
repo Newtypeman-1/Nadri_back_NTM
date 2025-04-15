@@ -75,11 +75,11 @@ public class MemberController {
 	@PostMapping(value="/login")
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
 		LoginMemberDTO loginMember = memberService.login(member);
-		
+		System.out.println(member);
 		//강제 탈퇴 여부 확인
 		Integer deleteMember = memberService.loginIsDel(member);
-		if(deleteMember.intValue() == 2) {
-			return null;
+		if (deleteMember != null && deleteMember.intValue() == 2) {
+			return null;  // 강제 탈퇴된 경우는 null 반환
 		}
 		if(loginMember != null) {
 			return ResponseEntity.ok(loginMember);

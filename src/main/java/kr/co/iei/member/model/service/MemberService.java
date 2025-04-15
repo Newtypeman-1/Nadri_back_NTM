@@ -83,8 +83,8 @@ public class MemberService {
 	}
 	
 	//강제 탈퇴 여부 확인
-	public int loginIsDel(MemberDTO member) {
-		int memberNo = memberDao.selectMemberNo(member);
+	public Integer loginIsDel(MemberDTO member) {
+		Integer memberNo = memberDao.selectMemberNo(member);
 		Integer deleteMember = memberDao.loginIsDel(memberNo);
 		return deleteMember;
 	}
