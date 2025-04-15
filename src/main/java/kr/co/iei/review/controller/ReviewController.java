@@ -98,9 +98,7 @@ public class ReviewController {
 	public ResponseEntity<Integer> updateReview(@ModelAttribute ReviewDTO reviewDTO ,
 			  @RequestParam(value = "deleteFilepaths", required = false) List<String> deleteFilepaths,
 			    @RequestParam(value = "multipartFile", required = false) MultipartFile[] files){
-		System.out.println(reviewDTO);
-		System.out.println(files);
-		System.out.println(deleteFilepaths);
+	
 		List<PlaceImgDTO> placeImgList = new ArrayList<>();
 		if(files != null) {
 			String savepath = root+"/place/image/";
