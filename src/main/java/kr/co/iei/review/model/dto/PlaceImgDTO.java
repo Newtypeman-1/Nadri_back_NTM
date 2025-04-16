@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Alias(value="img")
 public class PlaceImgDTO {
-private int placeImgNo;
+private int placeImageNo; //placeImgNo아님
 private int placeId;
 private String filepath;
 private int reviewNo;

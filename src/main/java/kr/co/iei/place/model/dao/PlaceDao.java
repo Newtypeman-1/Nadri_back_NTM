@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.util.PageInfo;
 
 @Mapper
@@ -56,5 +57,16 @@ public interface PlaceDao {
 	//조회수 저장 및 가져오기
 	int updatePlaceViewCount(int placeId);
 	int selectViewCount(int placeId);
+
+	List<PlaceImgDTO> selectImagesByPlaceId(int placeId);
+
+	void deleteByImageNo(int placeImageNo);
+
+	int updatePlace(PlaceInfoDTO placeInfoDTO);
+
+
+
+
+	
 	
 }

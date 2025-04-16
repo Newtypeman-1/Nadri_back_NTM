@@ -161,12 +161,14 @@ public class MemberService {
 		return list;
 	}
 
+	//회원등급 업뎃
 	public void updateMemberLevel(int memberNo, int memberLevel) {
 		memberDao.updateMemberLevel(memberNo, memberLevel);
 	}
 
+	//탈퇴회원 테이블에 추가
 	@Transactional
-	public void kickMember(int memberNo) {
+	public void insertDelWarningMember(int memberNo) {
 		memberDao.insertDelWarningMember(memberNo);
 		
 	}
