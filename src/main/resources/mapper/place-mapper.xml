@@ -39,6 +39,7 @@
 	    SELECT ROWNUM AS rnum, c.*
 	    FROM (
 	      SELECT
+	      	p.place_type_id,
 	        p.place_id,
 	        p.place_thumb,
 	        p.area_code,
@@ -155,6 +156,7 @@
             SELECT ROWNUM AS rnum, data.*
             FROM (
                 SELECT
+   		            p.place_type_id,
                     p.place_id,
                     p.place_thumb,
                     p.area_code,
@@ -293,5 +295,14 @@
 	  WHERE place_id = #{placeId}
 	</update>
 	
+	<update id="updatePlaceOverview">
+		UPDATE place_info
+	    SET place_overview = #{overview}
+	    WHERE place_id = #{placeId}
+	</update>
+	
+	<select id="selectPlaceById" resultType="place">
+		select * from place_info
+	</select>
 	
 </mapper>

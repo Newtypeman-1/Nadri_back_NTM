@@ -64,6 +64,10 @@ public interface PlaceDao {
 
 	int updatePlace(PlaceInfoDTO placeInfoDTO);
 
+	void updatePlaceOverview(int placeId, String overview);
+
+	PlaceInfoDTO selectPlaceById(int placeId);
+
 
 
 

@@ -29,6 +29,7 @@ import kr.co.iei.place.model.dto.PlaceInfoDTO;
 import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.review.model.service.ReviewService;
+import kr.co.iei.util.PlaceDataApi;
 
 @CrossOrigin("*")
 @RestController
@@ -36,6 +37,8 @@ import kr.co.iei.review.model.service.ReviewService;
 public class PlaceController {
 	@Autowired
 	private PlaceService placeService;
+	@Autowired
+	private PlaceDataApi placeDataApi;
 
 	// 플레이스 리스트 조회(북마크 상태 포함)
 	@GetMapping
@@ -104,6 +107,11 @@ public class PlaceController {
 		return ResponseEntity.ok(list);
 	}
 	
+	//개요 없을 때 api요청, 오버뷰 수정
+	@GetMapping("/overview/fetch")
+	public void fetchAndSaveOverview(@RequestParam int placeId) {
+	    placeDataApi.fetchOverviewFromApi(placeId);
+	}
 	
 	
 	
