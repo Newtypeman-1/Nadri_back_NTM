@@ -1,5 +1,6 @@
 package kr.co.iei.member.model.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -155,10 +156,13 @@ public class MemberService {
 	}	
 
 	//관리자페이지 경고회원 조회
-	public List<MemberDTO> getWarningMembers() {
-		List<MemberDTO> list = memberDao.selectWarningMembers();
-		System.out.println(list);
-		return list;
+	public List<MemberDTO> getMembersByStatus(int status) {
+	    switch (status) {
+	        case 0: return memberDao.selectWarningMembers();
+	        case 1: return memberDao.selectPendingKickedMembers();
+	        case 2: return memberDao.selectKickedMembersConfirmed();
+	        default: return Collections.emptyList();
+	    }
 	}
 
 	//회원등급 업뎃
