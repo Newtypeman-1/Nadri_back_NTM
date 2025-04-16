@@ -247,39 +247,45 @@
 	        tp.*, 
 	        NVL(pb.bookmark_count, 0) AS bookmark_count,
 	        CASE 
-	          WHEN pb2.member_nickname IS NOT NULL THEN 1 
+	          WHEN pb2.plan_no IS NOT NULL THEN 1 
 	          ELSE 0 
 	        END AS bookmarked
 	      FROM trip_plan tp
-	      <!-- 즐겨찾기 수 계산 -->
+	
+	      <!-- 전체 북마크 수 계산 -->
 	      LEFT JOIN (
 	        SELECT plan_no, COUNT(*) AS bookmark_count
 	        FROM plan_bookmark
 	        GROUP BY plan_no
 	      ) pb ON tp.plan_no = pb.plan_no
 	
-	      <!-- 현재 로그인 사용자의 즐겨찾기 여부 -->
+	      <!-- 로그인 유저의 북마크 여부 확인 -->
 	      LEFT JOIN (
-	        SELECT plan_no, member_nickname
+	        SELECT plan_no
 	        FROM plan_bookmark
 	        WHERE member_nickname = #{loginNickname}
 	      ) pb2 ON tp.plan_no = pb2.plan_no
 	
 	      <where>
-	        <!-- memberNickname이 null이 아니면 내가 작성한 플랜만 조회, bookmarked가 1인 것만 조회 -->
-	        <if test="memberNickname != null">
-	          AND pb2.member_nickname IS NOT NULL
-	        </if>
-	
-	        <!-- memberNickname이 null이면 내가 작성한 플랜을 제외하고 모든 플랜을 조회 -->
+	        <!-- 기본은 공개 플랜만 조회 -->
 	        <if test="memberNickname == null">
-	          1=1 <!-- 모든 플랜을 조회 -->
+	          tp.plan_status = 1
 	        </if>
 	
-	        <!-- 특정 plan_no 리스트로 필터링 (id가 있을 경우) -->
+	        <!-- 내가 작성한 플랜 조회 시 비공개도 포함 -->
+	        <if test="memberNickname != null and memberNickname != ''">
+	          tp.member_nickname = #{memberNickname}
+	          AND tp.plan_status IN (1, 2)
+	        </if>
+	
+	        <!-- 북마크 필터 (내가 즐겨찾기한 플랜만) -->
+	        <if test="isBookmark == true">
+	          AND pb2.plan_no IS NOT NULL
+	        </if>
+	
+	        <!-- 특정 플랜 번호로 필터링 -->
 	        <if test="id != null and id.length > 0">
-	          <if test="memberNickname != null">AND</if>
-	          tp.plan_no IN
+	          AND tp.plan_no IN
 	          <foreach item="item" collection="id" open="(" separator="," close=")">
 	            #{item}
 	          </foreach>

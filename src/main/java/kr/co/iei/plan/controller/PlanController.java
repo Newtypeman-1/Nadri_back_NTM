@@ -160,7 +160,6 @@ public class PlanController {
 	public ResponseEntity<List> selectPlanList(@ModelAttribute PlanRequestDTO request){
 		System.out.println(request);
 		List<PlanDTO> planList = planService.selectPlanList(request);
-		System.out.println(planList);
 		return ResponseEntity.ok(planList);
 	}
 }

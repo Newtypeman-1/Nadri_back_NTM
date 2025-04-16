@@ -62,7 +62,7 @@ public class SearchService {
 			// 2. 플랜 정보 조회
 			int[] planId = searchDao.selectPlanByPlace(placeList);
 			if(planId.length>0) {
-				PlanRequestDTO request = new PlanRequestDTO(1, null,null, null, planId, null, null, null);
+				PlanRequestDTO request = new PlanRequestDTO(1, null,null, null, planId, null, null, null,false);
 				List planList = planService.selectPlanList(request);
 				Map planInfo = new HashMap<>();
 				planInfo.put("list", planList);
