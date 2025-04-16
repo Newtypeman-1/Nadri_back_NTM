@@ -172,21 +172,33 @@
 							AND p.place_type_id NOT IN (32, 39, 12)
 						</when>
 					</choose>
-				<choose>
-					<when test="sortOption == 1">
-						ORDER BY 6371000 * ACOS(
-							COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
-							COS((p.map_lng - #{lng}) * 3.141592 / 180) +
-							SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
-						)
-					</when>
-					<when test="sortOption == 2">
-						ORDER BY place_review DESC
-					</when>
-					<when test="sortOption == 3">
-						ORDER BY p.place_title ASC
-					</when>
-				</choose>
+					<choose>
+						<when test="sortOption == 1">
+							ORDER BY
+								CASE
+									WHEN b.place_id IS NOT NULL THEN 1 ELSE 0
+								END DESC,
+								6371000 * ACOS(
+									COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
+									COS((p.map_lng - #{lng}) * 3.141592 / 180) +
+									SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
+								)
+						</when>
+						<when test="sortOption == 2">
+							ORDER BY
+								CASE
+									WHEN b.place_id IS NOT NULL THEN 1 ELSE 0
+								END DESC,
+								place_review DESC
+						</when>
+						<when test="sortOption == 3">
+							ORDER BY
+								CASE 
+									WHEN b.place_id IS NOT NULL THEN 1 ELSE 0 
+								END DESC,
+								p.place_title ASC
+						</when>
+					</choose>
 			) sub
 			WHERE ROWNUM &lt;= #{start} + #{size}
 		)
@@ -296,6 +308,10 @@
 			AND
 			member_nickname = #{memberNickname}
 	</delete>
+	
+	<update id="updatePlanThumb">
+		UPDATE trip_plan SET plan_thumb = #{filepath} WHERE plan_no = #{planNo}
+	</update>
 	
 <!--
 	<select id="selectTripItineraries" resultType="itinerary">

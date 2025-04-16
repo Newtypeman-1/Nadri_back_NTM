@@ -32,7 +32,7 @@ public interface PlanDao {
 
 	List<ItineraryWithPlaceDTO> selectPlanItinerariesWithPlace(int planNo);
 
-	PlanDTO selectOnePlan(Integer planNo);
+	PlanDTO selectOnePlan(int planNo);
 
 	int updatePlan(PlanDTO plan);
 
@@ -51,6 +51,8 @@ public interface PlanDao {
 	List selectPlanList(PlanRequestDTO request);
 
 	int deletePlan(int planNo, String memberNickname);
+
+	void updatePlanThumb(int planNo, String filepath);
 
 //	int copyPlan(int planNo, String memberNickname);
 

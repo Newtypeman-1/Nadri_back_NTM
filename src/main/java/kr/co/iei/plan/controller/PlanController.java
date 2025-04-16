@@ -48,8 +48,8 @@ public class PlanController {
 	private String root;
 
 	// 플래너 진입 시 새 플래너인지, 기존 플래너인지 체크 (+ 자신의 플래너가 맞는지도 체크)
-	@GetMapping(value = "/verify")
-	public ResponseEntity<Map> verifyPlan(@RequestParam String loginNickname, @RequestParam int planNo) {
+	@GetMapping("{planNo}")
+	public ResponseEntity<Map> verifyPlan(@PathVariable int planNo, @RequestParam String loginNickname) {
 		// plan_status가 1(공개 상태)이거나, 그렇지 않다면 작성자 본인인지
 		// 즉 열람 권한이 있는지 체크 (없을 시 403/404 예외 처리)
 		PlanDTO plan = planService.verifyPlan(loginNickname, planNo);
@@ -67,7 +67,7 @@ public class PlanController {
 	}
 
 	// 반경 내 장소 데이터 수집
-	@GetMapping(value = "{memberNickname}/nearby")
+	@GetMapping("{memberNickname}/nearby")
 	public ResponseEntity<Map<String, Object>> selectPagedNearby(@PathVariable String memberNickname, @RequestParam double lat, @RequestParam double lng,
 			@RequestParam double width, @RequestParam double height, @RequestParam int page, @RequestParam int size, @RequestParam int sortOption, @RequestParam(required = false) Integer filterOption) {
 		Map<String, Object> map = planService.selectPagedNearby(memberNickname, lat, lng, width, height, page, size, sortOption, filterOption);
@@ -87,21 +87,41 @@ public class PlanController {
 		return ResponseEntity.ok(mostPlace);
 	}
 
-	// 플래너 썸네일 업로드
-	@PostMapping(value = "/thumb")
-	public ResponseEntity<String> uploadThumb(@RequestParam("file") MultipartFile file, @RequestParam(value="planNo", required = false) Integer planNo) {
-		String savepath = root + "/plan/thumbnail/";
-		if(planNo != null) {
-			PlanDTO plan = planService.selectOnePlan(planNo);
-			String oldFilepath = plan.getPlanThumb();
-			fileUtils.delete(savepath, oldFilepath);
-		}
-		String filepath = fileUtils.upload(savepath, file);
-		return ResponseEntity.ok(filepath);
+//	// 플래너 썸네일 업로드
+//	@PostMapping("/thumb")
+//	public ResponseEntity<String> uploadThumb(@RequestParam("file") MultipartFile file, @RequestParam(value="planNo", required = false) Integer planNo) {
+//		String savepath = root + "/plan/thumbnail/";
+//		if(planNo != null) {
+//			PlanDTO plan = planService.selectOnePlan(planNo);
+//			String oldFilepath = plan.getPlanThumb();
+//			fileUtils.delete(savepath, oldFilepath);
+//		}
+//		String filepath = fileUtils.upload(savepath, file);
+//		return ResponseEntity.ok(filepath);
+//	}
+	
+	// 새 플랜의 썸네일 업로드
+	@PostMapping("/thumb")
+	public ResponseEntity<String> uploadThumb(@RequestParam("file") MultipartFile file) {
+	    String savepath = root + "/plan/thumb/";
+	    String filepath = fileUtils.upload(savepath, file);
+	    return ResponseEntity.ok(filepath);
+	}
+
+	// 기존 플랜의 썸네일 교체
+	@PostMapping("{planNo}/thumb")
+	public ResponseEntity<String> changeThumb(@PathVariable int planNo, @RequestParam("file") MultipartFile file) {
+	    String savepath = root + "/plan/thumb/";
+	    PlanDTO plan = planService.selectOnePlan(planNo);
+	    String oldFilepath = plan.getPlanThumb();
+	    fileUtils.delete(savepath, oldFilepath);
+	    String filepath = fileUtils.upload(savepath, file);
+	    planService.updatePlanThumb(planNo, filepath);
+	    return ResponseEntity.ok(filepath);
 	}
 
 	// 플래너 저장
-	@PostMapping(value = "/save")
+	@PostMapping
 	public ResponseEntity<Boolean> savePlanner(@RequestBody Map<String, Object> planData) {
 		ObjectMapper om = new ObjectMapper();
 		PlanDTO plan = om.convertValue(planData.get("tripPlanData"), PlanDTO.class);
@@ -124,10 +144,11 @@ public class PlanController {
 	}
 
 	// 플래너 수정
-	@PutMapping(value = "/update")
-	public ResponseEntity<Boolean> updatePlanner(@RequestBody Map<String, Object> planData) {
+	@PutMapping("{planNo}")
+	public ResponseEntity<Boolean> updatePlanner(@PathVariable int planNo, @RequestBody Map<String, Object> planData) {
 		ObjectMapper om = new ObjectMapper();
 		PlanDTO plan = om.convertValue(planData.get("tripPlanData"), PlanDTO.class);
+		plan.setPlanNo(planNo);
 
 		List raw = (List) planData.get("itineraryList");
 		List<ItineraryDTO> list = new ArrayList<>();
@@ -139,7 +160,7 @@ public class PlanController {
 			i.setTransport((String) map.get("transport"));
 			i.setEndLocation((Integer) map.get("endLocation"));
 			i.setItineraryOrder((Integer) map.get("itineraryOrder"));
-			i.setPlanNo(plan.getPlanNo());
+			i.setPlanNo(planNo);
 			list.add(i);
 		}
 		boolean result = planService.updatePlan(plan, list);
@@ -148,7 +169,7 @@ public class PlanController {
 	}
 	
 	//플래너 즐겨찾기
-	@PatchMapping(value="{planNo}/{memberNickname}")
+	@PatchMapping("{planNo}/{memberNickname}")
 	public ResponseEntity<Integer> toggleBookmark(@PathVariable int planNo, @PathVariable String memberNickname){
 		int result = planService.toggleBookmark(planNo, memberNickname);
 		return ResponseEntity.ok(result);
@@ -161,7 +182,7 @@ public class PlanController {
 	}
 	
 	//플래너 삭제
-	@DeleteMapping(value="{planNo}/{memberNickname}")
+	@DeleteMapping("{planNo}/{memberNickname}")
 	public ResponseEntity<Integer> deletePlan(@PathVariable int planNo, @PathVariable String memberNickname){
 		int result = planService.deletePlan(planNo, memberNickname);
 		return ResponseEntity.ok(result);
