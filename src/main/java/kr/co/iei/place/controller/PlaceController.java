@@ -42,7 +42,6 @@ public class PlaceController {
 	public ResponseEntity<Map> placeList(@RequestParam int reqPage, @RequestParam int order, @RequestParam(required = false) String memberNickname, @RequestParam(required = false) int[] id) {
 		int numPerPage = 12;
 		Map map = placeService.selectALLPlaceList(reqPage, order, memberNickname, numPerPage, id);
-		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}
 	
@@ -82,7 +81,6 @@ public class PlaceController {
 	// 즐겨찾기 토글
 	@PostMapping("/bookmark/toggle")
 	public ResponseEntity<Integer> toggleBookmark(@RequestParam String memberNickname, @RequestParam int placeId) {
-		System.out.println("추가하려는 플레이스 아이디 :"+placeId);
 		int result = placeService.toggleBookmark(memberNickname, placeId);
 		return ResponseEntity.ok(result); // 1: 등록, 0: 해제
 	}

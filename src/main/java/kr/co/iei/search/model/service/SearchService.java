@@ -46,23 +46,34 @@ public class SearchService {
 			int logResult = searchDao.insertSearchLog(query);
 		}
 		if (!placeList.isEmpty()) {
-			// 장소 정보 조회
+			Map<String, Map> searchResult = new HashMap<>();
+			searchResult.put("place", null);
+			searchResult.put("plan", null);
+			searchResult.put("review", null);
+			// 1. 장소 정보 조회
 			int[] placeId = new int[placeList.size()];
 			int i = 0;
 			for (int no : placeList) {
 				placeId[i] = no;
+				i++;
 			}
-			// 1.장소가 포함된 planNo 조회 2. planNo로 리스트 조회
+			Map placeInfo = placeService.selectALLPlaceList(1, 1, null,60, placeId);
+			searchResult.put("place", placeInfo);
+			// 2. 플랜 정보 조회
 			int[] planId = searchDao.selectPlanByPlace(placeList);
-			PlanRequestDTO request = new PlanRequestDTO(i, null, null,null, planId, null, null, null);
-			List planList = planService.selectPlanList(request);
-			Map planInfo = new HashMap<>();
-			planInfo.put("list", planList);
-			// 1. 장소가 포함된 리뷰 조회 2. reviewNo로 리스트 조회
+			if(planId.length>0) {
+				PlanRequestDTO request = new PlanRequestDTO(1, null,null, null, planId, null, null, null,false);
+				List planList = planService.selectPlanList(request);
+				Map planInfo = new HashMap<>();
+				planInfo.put("list", planList);
+				searchResult.put("plan", planInfo);
+			}
+			// 3. 리뷰번호 조회
 			int[] reviewId = searchDao.selectReviewByPlace(placeList);
-			//묶어서 반환
-			Map<String, Map> searchResult = new HashMap<>();
-			searchResult.put("plan", planInfo);
+			if(reviewId.length>0) {
+				Map reviewInfo = reviewService.reviewList(1, null, reviewId);
+				searchResult.put("review", reviewInfo);
+			}
 			return searchResult;
 		}
 		return null;
@@ -96,3 +107,4 @@ public class SearchService {
 	}
 
 }
+

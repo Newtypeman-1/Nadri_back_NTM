@@ -22,8 +22,6 @@ public class MypageController {
 	//내가 쓴 리뷰 불러오기
 	@GetMapping("/reviews")
 	public ResponseEntity<Map> reviewslist(@RequestParam String nickname, @RequestParam String value){
-		System.out.println(value);
-		System.out.println(nickname);
 		Map map = mypageService.reviewsList(nickname,value);
 		return ResponseEntity.ok(map);
 	}
@@ -31,18 +29,13 @@ public class MypageController {
 	//즐겨찾기 한 여행지 불러오기
 	@GetMapping("/bookmark")
 	public ResponseEntity<Map> bookmarkList(@RequestParam String nickname, @RequestParam String value){
-		System.out.println(nickname);
-		System.out.println(value);
 		Map map = mypageService.bookmarkList(nickname, value);
-		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}
 	
 	//플래너 불러오기
 	@GetMapping("/planner")
 	public ResponseEntity<Map> plannerList(@RequestParam String nickname, @RequestParam String value){
-		System.out.println(nickname);
-		System.out.println(value);
 		Map map = mypageService.plannerList(nickname, value);
 		return ResponseEntity.ok(map);
 	}

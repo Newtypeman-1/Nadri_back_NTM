@@ -151,7 +151,6 @@ public class PlanController {
 	@PatchMapping(value="{planNo}/{memberNickname}")
 	public ResponseEntity<Integer> toggleBookmark(@PathVariable int planNo, @PathVariable String memberNickname){
 		int result = planService.toggleBookmark(planNo, memberNickname);
-		
 		return ResponseEntity.ok(result);
 	}
 	

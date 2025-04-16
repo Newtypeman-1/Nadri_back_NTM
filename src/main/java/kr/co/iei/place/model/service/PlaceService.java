@@ -141,7 +141,6 @@ public class PlaceService {
 
 	public List<PlaceImgDTO> selectImagesByPlaceId(int placeId) {
 		List<PlaceImgDTO> list = placeDao.selectImagesByPlaceId(placeId);
-		System.out.println(list);
 		return list;
 	}
 	

@@ -46,38 +46,47 @@
   		select * from search_keyword where keyword=#{keyword}
   	</select>
   	<update id="upsertKeywordInfo">
-		MERGE INTO search_keyword k
-		  USING (SELECT #{keyword} AS keyword FROM dual) src
-		  ON (k.keyword = src.keyword)
-		  WHEN MATCHED THEN
-		    UPDATE SET
-		      place_type = #{type},
-		      cat1 = #{cat1},
-		      cat2 = #{cat2},
-		      cat3 = #{cat3},
-		      place_id = #{placeId},
-		      area_code = #{area}
-		  WHEN NOT MATCHED THEN
-		    INSERT (
-		      keyword_no,
-		      keyword,
-		      place_type,
-		      cat1,
-		      cat2,
-		      cat3,
-		      place_id,
-		      area_code
-		    )
-		    VALUES (
-		      keyword_seq.nextval,
-		      #{keyword},
-		      #{type},
-		      #{cat1},
-		      #{cat2},
-		      #{cat3},
-		      #{placeId},
-		      #{area}
-		    )
+	  MERGE INTO search_keyword k
+	  USING (SELECT #{keyword} AS keyword FROM dual) src
+	  ON (k.keyword = src.keyword)
+	  WHEN MATCHED THEN
+	    UPDATE SET
+	      place_type = #{placeType},
+	      cat1 = #{cat1},
+	      cat2 = #{cat2},
+	      cat3 = #{cat3},
+	      place_id = #{placeId},
+	      area_code = #{area}
+	    WHERE 
+	      (
+	        (k.place_type != #{placeType} OR (k.place_type IS NULL AND #{placeType} IS NOT NULL) OR (k.place_type IS NOT NULL AND #{placeType} IS NULL))
+	        OR (k.cat1 != #{cat1} OR (k.cat1 IS NULL AND #{cat1} IS NOT NULL) OR (k.cat1 IS NOT NULL AND #{cat1} IS NULL))
+	        OR (k.cat2 != #{cat2} OR (k.cat2 IS NULL AND #{cat2} IS NOT NULL) OR (k.cat2 IS NOT NULL AND #{cat2} IS NULL))
+	        OR (k.cat3 != #{cat3} OR (k.cat3 IS NULL AND #{cat3} IS NOT NULL) OR (k.cat3 IS NOT NULL AND #{cat3} IS NULL))
+	        OR (k.place_id != #{placeId} OR (k.place_id IS NULL AND #{placeId} IS NOT NULL) OR (k.place_id IS NOT NULL AND #{placeId} IS NULL))
+	        OR (k.area_code != #{area} OR (k.area_code IS NULL AND #{area} IS NOT NULL) OR (k.area_code IS NOT NULL AND #{area} IS NULL))
+	      )
+	  WHEN NOT MATCHED THEN
+	    INSERT (
+	      keyword_no,
+	      keyword,
+	      place_type,
+	      cat1,
+	      cat2,
+	      cat3,
+	      place_id,
+	      area_code
+	    )
+	    VALUES (
+	      keyword_seq.nextval,
+	      #{keyword},
+	      #{placeType},
+	      #{cat1},
+	      #{cat2},
+	      #{cat3},
+	      #{placeId},
+	      #{area}
+	    )
 	</update>
 	<update id="updateReport">
 		update report set report_status=#{reportStatus} 

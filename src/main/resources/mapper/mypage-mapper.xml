@@ -37,29 +37,29 @@
   </select>
 
 	<select id="bookmarkList" resultType="place">
-      SELECT * 
-		FROM (
-		    SELECT ROWNUM AS rnum, data.* 
+		SELECT *
+		  FROM (
+		    SELECT ROWNUM AS rnum, c.*
 		    FROM (
-		        SELECT 
-		            p.place_id,
-		            p.place_thumb,
-		            p.area_code,
-		            a.area_name,
-		            p.sigungu_code,
-		            s.sigungu_name,
-		            p.place_title,
-		            p.place_cat3,
-		            cat.cat3_name,
-		            NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
-		            NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
-		            (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = '유저01') AS bookmarked
-		        FROM place_info p
-		        LEFT JOIN area_code a ON p.area_code = a.area_code
-		        LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
-		        LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
-		        JOIN bookmark b ON p.place_id = b.place_id
-		        WHERE b.member_nickname = #{memberNickname}
+		      SELECT
+		        p.place_id,
+		        p.place_thumb,
+		        p.area_code,
+		        a.area_name,
+		        p.sigungu_code,
+		        s.sigungu_name,
+		        p.place_title,
+		        p.place_cat3,
+		        cat.cat3_name,
+		        NVL((SELECT ROUND(AVG(star_rate), 1) FROM review WHERE place_id = p.place_id), 0) AS place_rating,
+		        NVL((SELECT COUNT(*) FROM review WHERE place_id = p.place_id), 0) AS place_review,
+		        (SELECT COUNT(*) FROM bookmark b WHERE b.place_id = p.place_id AND b.member_nickname = #{memberNickname}) AS bookmarked
+		      FROM place_info p
+		      LEFT JOIN area_code a ON p.area_code = a.area_code
+		      LEFT JOIN sigungu_code s ON p.sigungu_code = s.sigungu_code AND p.area_code = s.area_code
+		      LEFT JOIN place_cat3 cat ON p.place_cat3 = cat.cat3
+			  JOIN bookmark b ON p.place_id = b.place_id
+		      WHERE b.member_nickname = #{memberNickname}
 	      
 	          <choose>
 	            <when test="value == 'spot'">
@@ -76,7 +76,7 @@
 	            </when>
 	          </choose>
         ORDER BY b.bookmark_no DESC
-    ) data
+    ) c
 )
 	</select>
 
@@ -89,12 +89,6 @@
 			<when test="value == 2">
 				select * from trip_plan
 				where end_date &lt; TRUNC(CURRENT_DATE) and member_nickname = #{nickname} order by plan_no desc
-			</when>
-			<when test="value == 3">
-				SELECT tp.*
-				FROM trip_plan tp
-				JOIN plan_favorite pf ON tp.plan_no = pf.plan_no
-				WHERE pf.member_nickname = #{nickname} order by plan_favorite_no desc
 			</when>
 		 </choose>
 	</select>
