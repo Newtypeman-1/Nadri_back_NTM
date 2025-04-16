@@ -129,7 +129,6 @@ public class MemberService {
 	public String updateMemberDelFile(MemberDTO member) {
 		String filepath = memberDao.selectDelImg(member.getMemberNickname());
 		int result = memberDao.updateMemberDelFile(member);
-		System.out.println("업데이트 서비스 결과:"+result);
 		if(filepath != null) {
 			return filepath;
 		}
