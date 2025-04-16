@@ -302,7 +302,7 @@
 	</update>
 	
 	<select id="selectPlaceById" resultType="place">
-		select * from place_info
+		select * from place_info where place_id= #{placeId}
 	</select>
 	
 	<insert id="insertRequest" parameterType="updateRequest">
