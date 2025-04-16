@@ -54,7 +54,7 @@ public class SearchService {
 			}
 			// 1.장소가 포함된 planNo 조회 2. planNo로 리스트 조회
 			int[] planId = searchDao.selectPlanByPlace(placeList);
-			PlanRequestDTO request = new PlanRequestDTO(i, null, null, planId, null, null, null);
+			PlanRequestDTO request = new PlanRequestDTO(i, null, null,null, planId, null, null, null);
 			List planList = planService.selectPlanList(request);
 			Map planInfo = new HashMap<>();
 			planInfo.put("list", planList);
