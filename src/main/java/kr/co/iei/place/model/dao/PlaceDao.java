@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.place.model.dto.PlaceUpdateRequestDTO;
 import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.util.PageInfo;
 
@@ -63,6 +64,19 @@ public interface PlaceDao {
 	void deleteByImageNo(int placeImageNo);
 
 	int updatePlace(PlaceInfoDTO placeInfoDTO);
+
+	void updatePlaceOverview(int placeId, String overview);
+	
+	//사용자 수정요청(요청인서트 - 관지자 셀렉트 - 수정요청 업데이트 - 요청상태처리)
+	int insertRequest(PlaceUpdateRequestDTO dto);
+	List<PlaceUpdateRequestDTO> selectAllRequests();
+	int updatePlaceInfoByRequest(PlaceUpdateRequestDTO dto);
+	int markRequestChecked(int requestNo);
+
+	List<PlaceUpdateRequestDTO> selectRequests(Integer status);
+
+	//api요청을 위한 기본 select
+	PlaceInfoDTO selectPlaceById(int placeId);
 
 
 

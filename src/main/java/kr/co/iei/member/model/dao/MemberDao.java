@@ -44,7 +44,10 @@ public interface MemberDao {
 
 	int deleteDelMember(MemberDTO member);
 
+	//관리자 회원관리 탭별 메소드
 	List<MemberDTO> selectWarningMembers();
+	List<MemberDTO> selectPendingKickedMembers(); 
+	List<MemberDTO> selectKickedMembersConfirmed(); 
 
 	int updateMemberLevel(int memberNo, int memberLevel);
 

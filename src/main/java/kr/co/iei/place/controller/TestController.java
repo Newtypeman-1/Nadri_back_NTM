@@ -22,10 +22,10 @@ public class TestController {
 		placeDataApi.insertPlaceInfoFromApi();
 	}
 	
-	@GetMapping(value="/overview")
-	private void insertOverview() {
-		placeDataApi.insertOverview();
-	}
+//	@GetMapping(value="/overview")
+//	private void insertOverview() {
+//		placeDataApi.insertOverview();
+//	}
 	
 
 	

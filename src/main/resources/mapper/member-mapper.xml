@@ -114,6 +114,8 @@
 	<update id="deleteDelMember">
 		update member set member_del = 'Y' where member_email = #{memberEmail}
 	</update>
+	
+	<!-- 강퇴 단계별 멤버조회 -->
 	<select id="selectWarningMembers" resultType="member">
 		select
 			m.member_no,
@@ -128,6 +130,20 @@
 		where m.member_del ='N' 
 			and m.warning_stack >= 6
 			and d.member_no is null	
+	</select>
+	<select id="selectPendingKickedMembers" resultType="member">
+	  SELECT m.*
+	  FROM member m
+	  INNER JOIN del_member d ON m.member_no = d.member_no
+	  WHERE m.member_del = 'N'
+	    AND d.del_reason = 2
+	</select>
+	<select id="selectKickedMembersConfirmed" resultType="member">
+	  SELECT m.*
+	  FROM member m
+	  INNER JOIN del_member d ON m.member_no = d.member_no
+	  WHERE m.member_del = 'Y'
+	    AND d.del_reason = 2
 	</select>
 	
 	<update id="updateMemberLevel">
