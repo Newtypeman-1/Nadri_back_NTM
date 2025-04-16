@@ -124,6 +124,7 @@ public class AdminController {
 	}
 	@PatchMapping("/keyword")
 	public ResponseEntity<Integer> upsertKeywordInfo(@RequestBody KeywordDTO keyword){
+		System.out.println(keyword);
 		int result = adminService.upsertKeywordInfo(keyword);
 		return ResponseEntity.ok(result);
 	}
