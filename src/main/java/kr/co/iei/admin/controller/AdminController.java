@@ -162,12 +162,10 @@ public class AdminController {
         placeService.deleteByImageNo(placeImageNo);
         return ResponseEntity.ok().build();
     }
-
     
-    //플레이스 상세페이지 수정
+    //플레이스 상세페이지 수정(관리자 계정 상세페이지)
     @PatchMapping("/place/update")
     public ResponseEntity<Integer> updatePlace(@RequestBody PlaceInfoDTO placeInfoDTO) {
-    	System.out.println("업데이트 요청 placeId: " + placeInfoDTO.getPlaceId());
     	int result = placeService.updatePlace(placeInfoDTO);
     	return ResponseEntity.ok(result);
     	}
@@ -179,10 +177,11 @@ public class AdminController {
         return ResponseEntity.ok("요청이 접수되었습니다");
     }
     
-    //관리자 요청 셀렉트
+    //사용자 요청 셀렉트
     @GetMapping("/place/request")
-    public List<PlaceUpdateRequestDTO> getRequests() {
-        return placeService.getAllRequests();
+    public ResponseEntity<List<PlaceUpdateRequestDTO>> getRequests(@RequestParam(required = false) Integer status) {
+        List<PlaceUpdateRequestDTO> list = placeService.selectRequestsByStatus(status);
+        return ResponseEntity.ok(list);
     }
 
     //관리자 정보수정 및 기록
