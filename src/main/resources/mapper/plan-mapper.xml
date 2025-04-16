@@ -2,33 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.iei.plan.model.dao.PlanDao">
 
-	<select id="selectNearby" resultType="place">
-		SELECT
-			*
-		FROM (
-			SELECT
-			    p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr, p.map_lat, p.map_lng,
-			    NVL(r.avg_rate, 0) as place_rating, NVL(r.review_count, 0) AS place_review,
-			    6371000 * ACOS(
-			        COS(#{lat} * 3.141592 / 180) * COS(p.map_lat * 3.141592 / 180) *
-			        COS((p.map_lng - #{lng}) * 3.141592 / 180) +
-			        SIN(#{lat} * 3.141592 / 180) * SIN(p.map_lat * 3.141592 / 180)
-				) AS distance
-			FROM
-			    place_info p
-			LEFT JOIN (
-			    SELECT
-			        place_id, AVG(star_rate) as avg_rate, COUNT(review_no) AS review_count
-			    FROM
-			        review
-			    GROUP BY
-			        place_id
-			) r ON p.place_id = r.place_id
-		) inner
-		WHERE distance <![CDATA[<=]]> #{radius}
-		ORDER BY distance ASC
-	</select>
-
 	<select id="verifyPlan" resultType="plan">
 		SELECT
 			tp.*,
@@ -175,13 +148,18 @@
 					p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr,
 					p.map_lat, p.map_lng,
 					NVL(r.avg_rate, 0) AS place_rating,
-					NVL(r.review_count, 0) AS place_review
+					NVL(r.review_count, 0) AS place_review,
+					CASE
+						WHEN b.place_id IS NOT NULL THEN 1 ELSE 0
+					END AS bookmarked
 				FROM place_info p
 				LEFT JOIN (
 					SELECT place_id, AVG(star_rate) AS avg_rate, COUNT(*) AS review_count
 					FROM review
 					GROUP BY place_id
 				) r ON p.place_id = r.place_id
+				LEFT JOIN bookmark b
+					ON p.place_id = b.place_id AND b.member_nickname = #{memberNickname}
 				WHERE
 					p.map_lat BETWEEN #{lat} - #{height} / 2.0 AND #{lat} + #{height} / 2.0
 					AND

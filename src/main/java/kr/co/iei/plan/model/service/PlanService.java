@@ -46,11 +46,6 @@ public class PlanService {
 		return count > 0;
 	}
 
-	public List selectNearby(double lat, double lng, int radius) {
-		List list = planDao.selectNearby(lat, lng, radius);
-		return list;
-	}
-
 	public List selectPlanItineraries(int planNo) {
 		List<ItineraryWithPlaceDTO> list = planDao.selectPlanItinerariesWithPlace(planNo);
 		return list;
@@ -96,13 +91,14 @@ public class PlanService {
 		return true;
 	}
 
-	public Map<String, Object> selectPagedNearby(double lat, double lng, double width, double height, int page, int size, int sortOption,
+	public Map<String, Object> selectPagedNearby(String memberNickname, double lat, double lng, double width, double height, int page, int size, int sortOption,
 			Integer filterOption) {
 		// 시작 인덱스 계산
 		int start = (page - 1) * size;
 
 		// 쿼리용 파라미터 구성
 		Map<String, Object> map = new HashMap<>();
+		map.put("memberNickname", memberNickname);
 		map.put("lat", lat);
 		map.put("lng", lng);
 		map.put("width", width);
@@ -119,7 +115,7 @@ public class PlanService {
 		// PageInfo 계산
 		PageInfo pi = pageInfoUtil.getPageInfo(page, size, 5, totalCount); // 5는 네비게이션 버튼 개수
 
-		// 결과 구성
+		// 반환 map 구성
 		Map<String, Object> result = new HashMap<>();
 		result.put("list", list);
 		result.put("totalCount", totalCount);
