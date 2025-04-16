@@ -304,4 +304,11 @@
 			member_nickname = #{memberNickname}
 	</delete>
 	
+<!--
+	<select id="selectTripItineraries" resultType="itinerary">
+	</select>
+	<insert id="copyPlan">
+	</insert>
+-->
+	
 </mapper>

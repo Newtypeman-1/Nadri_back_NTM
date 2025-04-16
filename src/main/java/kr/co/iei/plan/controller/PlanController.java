@@ -167,4 +167,11 @@ public class PlanController {
 		int result = planService.deletePlan(planNo, memberNickname);
 		return ResponseEntity.ok(result);
 	}
+	
+//	//플래너 복사(다른 사용자 플래너를 내 플래너에 추가)
+//	@PostMapping(value="{planNo}/copy/{memberNickname}")
+//	public ResponseEntity<Integer> copyPlan(@PathVariable int planNo, @PathVariable String memberNickname){
+//		int result = planService.copyPlan(planNo, memberNickname);
+//		return ResponseEntity.ok(result);
+//	}
 }

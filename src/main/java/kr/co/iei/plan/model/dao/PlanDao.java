@@ -18,7 +18,7 @@ public interface PlanDao {
 
 	PlanDTO verifyPlan(String loginNickname, int planNo);
 
-	List selectPlanItineraries(int planNo);
+//	List selectPlanItineraries(int planNo);
 
 	int isPlanOwner(String loginNickname, int planNo);
 
@@ -51,5 +51,7 @@ public interface PlanDao {
 	List selectPlanList(PlanRequestDTO request);
 
 	int deletePlan(int planNo, String memberNickname);
+
+//	int copyPlan(int planNo, String memberNickname);
 
 }

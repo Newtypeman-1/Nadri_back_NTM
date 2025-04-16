@@ -155,4 +155,15 @@ public class PlanService {
 		return result;
 	}
 
+//	@Transactional
+//	public int copyPlan(int planNo, String memberNickname) {
+//		//기존 플랜 정보 조회
+//		PlanDTO plan = planDao.selectOnePlan(planNo);
+//		List list = planDao.selectPlanItineraries(planNo);
+//		
+//		plan.getStartDate()
+//		int result = planDao.copyPlan(planNo, memberNickname);
+//		return result;
+//	}
+
 }
