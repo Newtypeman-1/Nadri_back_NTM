@@ -59,7 +59,6 @@ public class MemberController {
 	//소셜회원가입
 	@PostMapping(value="/socialJoin")
 	private ResponseEntity<Integer> socialJoin(@RequestBody MemberDTO member){
-		System.out.println(member);
 		int result = memberService.socialJoin(member);
 		return ResponseEntity.ok(result);
 	}
@@ -76,8 +75,6 @@ public class MemberController {
 	public ResponseEntity<LoginMemberDTO> login(@RequestBody MemberDTO member){
 	    // 로그인 시도
 	    LoginMemberDTO loginMember = memberService.login(member);
-	    System.out.println(member);
-
 	    // 로그인 실패 시 바로 404 응답
 	    if (loginMember == null) {
 	        return ResponseEntity.status(404).build();  // 로그인 실패
@@ -85,10 +82,8 @@ public class MemberController {
 
 	    // 강제 탈퇴 여부 확인 (로그인 성공 후 확인)
 	    Integer deleteMember = memberService.loginIsDel(member);
-	    System.out.println(deleteMember);
 
 	    if (deleteMember != null && deleteMember.intValue() == 2) {
-	        System.out.println(deleteMember);
 	        return null;  // 강제 탈퇴된 경우 null 반환 (응답 본문 없음)
 	    }
 
@@ -99,7 +94,6 @@ public class MemberController {
 	//소셜로그인
 	@GetMapping(value="/socialLogin")
 	public ResponseEntity<LoginMemberDTO> socialLogin(@RequestParam String userEmail){
-		System.out.println("userEmail : " + userEmail);
 		LoginMemberDTO loginMember = memberService.socialLogin(userEmail);
 		if(loginMember != null) {
 			return ResponseEntity.ok(loginMember);
@@ -111,7 +105,6 @@ public class MemberController {
 	//소셜 이메일 확인
     @GetMapping(value="/isSocial")
     public ResponseEntity<Integer> isSocial(@RequestParam String email) {
-    	System.out.println(email);
     	int result = memberService.isSocial(email);
     	return ResponseEntity.ok(result);
     }
@@ -126,7 +119,7 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		int result = 1;
+		int result = 0;
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
@@ -138,14 +131,14 @@ public class MemberController {
 					file.delete();
 				}
 			}
-		}
-		if(uploadProfile == null) {
+		}else {
 			if(member.getProfileImg() != null) {
 				//1. 기존 프로필 이미지 유지
 				result = memberService.updateMemberPresFile(member);
 			}else{	
-				//2. 기본으로 변경  -> 기존 파일 삭제
+				//2. 기본으로 변경  -> 기존 파일이 있으면 삭제
 				String filepath2 = memberService.updateMemberDelFile(member);
+				//기본 프로필로 돌린 경우
 				if(filepath2 != null) {
 					File file = new File(root+"/profile/"+filepath2);
 					if(file.exists()) {

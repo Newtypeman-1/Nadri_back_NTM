@@ -34,13 +34,10 @@ public class KakaoLoginService {
     }
 
     public String getAccessToken(String accessCode) {
-    	System.out.println(accessCode);
         String url = "https://kauth.kakao.com/oauth/token";       
         
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        System.out.println(clientId);
-        System.out.println(redirectUri);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", clientId);
@@ -53,11 +50,6 @@ public class KakaoLoginService {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-
-            // 응답 상태 코드와 바디를 출력하여 확인
-            System.out.println("Response Code: " + response.getStatusCode());
-            System.out.println("Response Body: " + response.getBody());
-
             // 액세스 토큰 파싱
             return parseAccessToken(response.getBody());
         } catch (Exception e) {
@@ -74,27 +66,20 @@ public class KakaoLoginService {
     }
 
     public KakaoUser getUserInfo(String accessToken) {
-        System.out.println("accessToken : " + accessToken);
         String url = "https://kapi.kakao.com/v2/user/me";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        System.out.println("response : " + response);
         return parseUserInfo(response.getBody());
     }
 
     private KakaoUser parseUserInfo(String response) {
         JsonObject jsonObject = JsonParser.parseString(response).getAsJsonObject();
-        System.out.println("jsonObject : " + jsonObject);
-        
         JsonObject kakaoAccount = jsonObject.getAsJsonObject("kakao_account");
-        System.out.println("kakaoAccount : " + kakaoAccount);
         String userEmail = kakaoAccount.get("email").getAsString();
-        System.out.println("email : " + userEmail);
 
         return new KakaoUser(userEmail);
     }

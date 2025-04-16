@@ -118,9 +118,7 @@ public class AdminController {
 	}
 	@GetMapping("/keyword/{keyword}")
 	public ResponseEntity<KeywordDTO> selectKeywordInfo(@PathVariable String keyword){
-		System.out.println(keyword);
 		KeywordDTO keywordInfo = adminService.selectKeywordInfo(keyword);
-		System.out.println(keywordInfo);
 		return ResponseEntity.ok(keywordInfo);
 	}
 	@PatchMapping("/keyword")
@@ -130,7 +128,6 @@ public class AdminController {
 	}
 	@PatchMapping("/report")
 	public ResponseEntity<Integer> updateReport(@RequestBody ReportDTO report){
-		System.out.println(report);
 		int result = adminService.updateReport(report);
 		return ResponseEntity.ok(result);
 	}
@@ -168,7 +165,7 @@ public class AdminController {
     public ResponseEntity<Integer> updatePlace(@RequestBody PlaceInfoDTO placeInfoDTO) {
     	int result = placeService.updatePlace(placeInfoDTO);
     	return ResponseEntity.ok(result);
-    	}
+    }
     
     //사용자 상세페이지 수정 요청
     @PostMapping("/place/request")
@@ -190,5 +187,6 @@ public class AdminController {
     	System.out.println(dto);
         placeService.updateFromRequest(dto);
         return ResponseEntity.ok("장소 정보가 수정되었습니다");
+
     }
 }

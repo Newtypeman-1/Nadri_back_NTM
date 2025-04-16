@@ -29,13 +29,10 @@ public class MypageService {
 
 	public Map bookmarkList(String nickname, String value) {
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(nickname);
-		System.out.println(value);
-		map.put("nickname", nickname);
+		map.put("memberNickname", nickname);
 		map.put("value", value);
 		
 		List<PlaceInfoDTO> list = mypageDao.bookmarkList(map);
-		System.out.println(list);
 		  //placeTitle 괄호제거
 		  for (PlaceInfoDTO place : list) {
 	            String title = place.getPlaceTitle();
@@ -44,10 +41,9 @@ public class MypageService {
 	                place.setPlaceTitle(cleanedTitle);
 	            }
 	        }
-		map.put("list", list);
-		System.out.println(list);
-		
-		return map;
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("list", list);
+		return map2;
 	}
 
 	public Map plannerList(String nickname, String value) {

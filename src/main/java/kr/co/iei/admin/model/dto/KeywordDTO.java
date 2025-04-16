@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("keyword")
 public class KeywordDTO {
 	private String keyword;
-	private Integer type;
+	private Integer placeType;
 	private String cat1;
 	private String cat2;
 	private String cat3;

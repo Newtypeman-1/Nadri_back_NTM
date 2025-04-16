@@ -57,7 +57,6 @@ public class MemberService {
 	//소셜회원가입
     @Transactional
     public int socialJoin(MemberDTO member) {
-    	System.out.println(member);
 		int result = memberDao.socialJoin(member);
     	return result;
     }
@@ -75,10 +74,8 @@ public class MemberService {
 		MemberDTO m = memberDao.selectOneMember(member.getMemberEmail());
 		if(m != null && encoder.matches(member.getMemberPw(), m.getMemberPw())) {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
-			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
 			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
-			System.out.println(loginMember);
 			return loginMember;
 		}
 		return null;
@@ -87,22 +84,17 @@ public class MemberService {
 	//강제 탈퇴 여부 확인
 	public Integer loginIsDel(MemberDTO member) {
 		Integer memberNo = memberDao.selectMemberNo(member);
-		System.out.println(member);
 		Integer deleteMember = memberDao.loginIsDel(memberNo);
-		System.out.println(memberNo);
 		return deleteMember;
 	}
 	
 	//소셜로그인
 	public LoginMemberDTO socialLogin(String userEmail) {
-		System.out.println(userEmail);
 		MemberDTO m = memberDao.socialLogin(userEmail);
 		if(m != null) {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
-			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
 			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
-			System.out.println(loginMember);
 			return loginMember;
 		}
 		return null;
@@ -137,10 +129,11 @@ public class MemberService {
 	@Transactional
 	public String updateMemberDelFile(MemberDTO member) {
 		String filepath = memberDao.selectDelImg(member.getMemberNickname());
+		int result = memberDao.updateMemberDelFile(member);
 		if(filepath != null) {
-			int result = memberDao.updateMemberDelFile(member);
+			return filepath;
 		}
-		return filepath;
+		return null;
 	}
 	//회원탈퇴
 	@Transactional
@@ -163,6 +156,12 @@ public class MemberService {
 	        case 2: return memberDao.selectKickedMembersConfirmed();
 	        default: return Collections.emptyList();
 	    }
+	}
+
+	public List<MemberDTO> getWarningMembers() {
+		List<MemberDTO> list = memberDao.selectWarningMembers();
+		return list;
+
 	}
 
 	//회원등급 업뎃
