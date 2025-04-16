@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,8 @@ import kr.co.iei.admin.model.dto.KeywordDTO;
 import kr.co.iei.admin.model.service.AdminService;
 import kr.co.iei.member.model.dto.MemberDTO;
 import kr.co.iei.member.model.service.MemberService;
+import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
 import kr.co.iei.review.model.service.ReviewService;
@@ -45,6 +48,8 @@ public class AdminController {
 	private String root;
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private PlaceService placeService;
 	@GetMapping("/company")
 	private ResponseEntity<CompanyDTO> selectCompanyInfo(){
 		CompanyDTO company = adminService.selectCompanyInfo();
@@ -128,11 +133,13 @@ public class AdminController {
 		int result = adminService.updateReport(report);
 		return ResponseEntity.ok(result);
 	}
+	//경고멤버 조회
     @GetMapping("/member/list")
     public ResponseEntity<List> getMemberList() {
     	List<MemberDTO> list = memberService.getWarningMembers();
     	return ResponseEntity.ok(list);
     }
+    //레벨등급 조정
     @PatchMapping("/member/level")
     public ResponseEntity<Integer> updateMemberLevel(@RequestBody Map<String, Object> param) {
         int memberNo = (int) param.get("memberNo");
@@ -140,12 +147,26 @@ public class AdminController {
         memberService.updateMemberLevel(memberNo, memberLevel);
         return ResponseEntity.ok().build();
     }
+    //경고멤버 강퇴(탈퇴회원 테이블에 추가 : 최종 delete는 member에서 수행)
     @PatchMapping("/member/{memberNo}")
     public ResponseEntity<Integer> kickWarningMember(@PathVariable int memberNo) {
-    	System.out.println(memberNo);
-        memberService.kickMember(memberNo);
+        memberService.insertDelWarningMember(memberNo);
         return ResponseEntity.ok().build();
     }
     
+    //플레이스 상세페이지 사진 삭제
+    @DeleteMapping("/place/image/{placeImageNo}")
+    public ResponseEntity<Void> deletePlaceImage(@PathVariable int placeImageNo) {
+        placeService.deleteByImageNo(placeImageNo);
+        return ResponseEntity.ok().build();
+    }
+
     
+    //플레이스 상세페이지 수정
+    @PatchMapping("/place/update")
+    public ResponseEntity<Integer> updatePlace(@RequestBody PlaceInfoDTO placeInfoDTO) {
+    	System.out.println("업데이트 요청 placeId: " + placeInfoDTO.getPlaceId());
+    	int result = placeService.updatePlace(placeInfoDTO);
+    	return ResponseEntity.ok(result);
+    	}
 }

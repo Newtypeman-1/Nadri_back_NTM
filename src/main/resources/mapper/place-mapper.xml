@@ -103,6 +103,7 @@
 			p.place_tel,
 			place_thumb,
 			place_type_id,
+			place_id,
 			nvl((select round(avg(star_rate),1) from review where place_id=p.place_id),0) as place_rating,
 			nvl((select count(*) from review where place_id=p.place_id),0) as place_review,
 			(select count(*) from bookmark b where b.place_id = p.place_id and b.member_nickname = #{memberNickname}) as bookmarked
@@ -270,4 +271,27 @@
 		select area_code as id,
 		area_name as name from area_code
 	</select>
+	
+	<select id="selectImagesByPlaceId">
+		SELECT * FROM place_img WHERE place_id = #{placeId}
+		order by place_image_no desc
+	</select>
+	
+	<delete id="deleteByImageNo">
+		DELETE FROM place_img WHERE place_image_no = #{placeImageNo}
+	</delete>
+	
+	<update id="updatePlace" parameterType="Place">
+	  UPDATE place_info
+	  SET
+	    place_title = #{placeTitle},
+	    place_tel = #{placeTel},
+	    use_time = #{useTime},
+	    rest_date = #{restDate},
+	    parking = #{parking},
+	    place_overview = #{placeOverview}
+	  WHERE place_id = #{placeId}
+	</update>
+	
+	
 </mapper>
