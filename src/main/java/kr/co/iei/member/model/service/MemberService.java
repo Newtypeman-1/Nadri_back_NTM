@@ -128,10 +128,12 @@ public class MemberService {
 	@Transactional
 	public String updateMemberDelFile(MemberDTO member) {
 		String filepath = memberDao.selectDelImg(member.getMemberNickname());
+		int result = memberDao.updateMemberDelFile(member);
+		System.out.println("업데이트 서비스 결과:"+result);
 		if(filepath != null) {
-			int result = memberDao.updateMemberDelFile(member);
+			return filepath;
 		}
-		return filepath;
+		return null;
 	}
 	//회원탈퇴
 	@Transactional
