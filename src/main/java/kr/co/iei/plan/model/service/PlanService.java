@@ -74,7 +74,7 @@ public class PlanService {
 		return mostPlace;
 	}
 
-	public PlanDTO selectOnePlan(Integer planNo) {
+	public PlanDTO selectOnePlan(int planNo) {
 		PlanDTO plan = planDao.selectOnePlan(planNo);
 		return plan;
 	}
@@ -149,6 +149,10 @@ public class PlanService {
 	public int deletePlan(int planNo, String memberNickname) {
 		int result = planDao.deletePlan(planNo, memberNickname);
 		return result;
+	}
+
+	public void updatePlanThumb(int planNo, String filepath) {
+		planDao.updatePlanThumb(planNo, filepath);
 	}
 
 //	@Transactional

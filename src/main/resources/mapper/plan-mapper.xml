@@ -309,6 +309,10 @@
 			member_nickname = #{memberNickname}
 	</delete>
 	
+	<update id="updatePlanThumb">
+		UPDATE trip_plan SET plan_thumb = #{filepath} WHERE plan_no = #{planNo}
+	</update>
+	
 <!--
 	<select id="selectTripItineraries" resultType="itinerary">
 	</select>
