@@ -150,15 +150,12 @@ public class PlanController {
 	//플래너 즐겨찾기
 	@PatchMapping(value="{planNo}/{memberNickname}")
 	public ResponseEntity<Integer> toggleBookmark(@PathVariable int planNo, @PathVariable String memberNickname){
-		System.out.println(memberNickname);
 		int result = planService.toggleBookmark(planNo, memberNickname);
-		
 		return ResponseEntity.ok(result);
 	}
 	
 	@GetMapping
 	public ResponseEntity<List> selectPlanList(@ModelAttribute PlanRequestDTO request){
-		System.out.println(request);
 		List<PlanDTO> planList = planService.selectPlanList(request);
 		return ResponseEntity.ok(planList);
 	}

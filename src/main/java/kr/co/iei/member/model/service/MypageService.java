@@ -33,7 +33,6 @@ public class MypageService {
 		map.put("value", value);
 		
 		List<PlaceInfoDTO> list = mypageDao.bookmarkList(map);
-		System.out.println(list);
 		  //placeTitle 괄호제거
 		  for (PlaceInfoDTO place : list) {
 	            String title = place.getPlaceTitle();
@@ -44,8 +43,6 @@ public class MypageService {
 	        }
 		Map<String, Object> map2 = new HashMap<>();
 		map2.put("list", list);
-		System.out.println(list);
-		
 		return map2;
 	}
 

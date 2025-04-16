@@ -29,18 +29,14 @@ public class KakaoController {
 
     @PostMapping(value="/login")
     public ResponseEntity<String> kakaoLogin(@RequestBody String code) {
-    	System.out.println(code);      
         // "code" 부분에서 값을 추출
         String accessCode = code.split(":\"")[1].split("\"")[0];     
         // 결과 출력
-        System.out.println(accessCode);
         try {
             // Step 1: 카카오에서 액세스 토큰을 요청
             String accessToken = kakaoLoginService.getAccessToken(accessCode);
-            System.out.println("accessToken : " + accessToken);
             // Step 2: 액세스 토큰을 이용해 사용자 정보를 요청
             KakaoUser kakaoUser = kakaoLoginService.getUserInfo(accessToken);
-            System.out.println("kakaoUser : " + kakaoUser.getEmail());
             // 사용자 이메일 정보 반환
             return ResponseEntity.ok(kakaoUser.getEmail());
 

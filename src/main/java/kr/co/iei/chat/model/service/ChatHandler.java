@@ -162,7 +162,6 @@ public class ChatHandler extends TextWebSocketHandler {
 	    ChatContentDTO cc = new ChatContentDTO(chat.getChatNo(), memberNickname, null, null);
 	    int result = chatService.leaveRoom(cc);
 	    if(result>0) {
-	    	System.out.println(cc.getMemberNickname()+"님이 떠남");
 	    	refreshGroup(cc.getChatNo());
 	    	handleFetchRoomList(session);
 	    }

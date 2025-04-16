@@ -56,7 +56,6 @@ public class MemberService {
 	//소셜회원가입
     @Transactional
     public int socialJoin(MemberDTO member) {
-    	System.out.println(member);
 		int result = memberDao.socialJoin(member);
     	return result;
     }
@@ -74,10 +73,8 @@ public class MemberService {
 		MemberDTO m = memberDao.selectOneMember(member.getMemberEmail());
 		if(m != null && encoder.matches(member.getMemberPw(), m.getMemberPw())) {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
-			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
 			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
-			System.out.println(loginMember);
 			return loginMember;
 		}
 		return null;
@@ -86,22 +83,17 @@ public class MemberService {
 	//강제 탈퇴 여부 확인
 	public Integer loginIsDel(MemberDTO member) {
 		Integer memberNo = memberDao.selectMemberNo(member);
-		System.out.println(member);
 		Integer deleteMember = memberDao.loginIsDel(memberNo);
-		System.out.println(memberNo);
 		return deleteMember;
 	}
 	
 	//소셜로그인
 	public LoginMemberDTO socialLogin(String userEmail) {
-		System.out.println(userEmail);
 		MemberDTO m = memberDao.socialLogin(userEmail);
 		if(m != null) {
 			String accessToken = jwtUtil.createAccessToken(m.getMemberEmail(), m.getMemberLevel());
-			System.out.println("accessToken : "+accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(m.getMemberEmail(),m.getMemberLevel());
 			LoginMemberDTO loginMember = new LoginMemberDTO(accessToken, refreshToken, m.getMemberEmail(), m.getMemberNickname(), m.getMemberLevel(), m.getMemberNo());
-			System.out.println(loginMember);
 			return loginMember;
 		}
 		return null;
@@ -157,7 +149,6 @@ public class MemberService {
 	//관리자페이지 경고회원 조회
 	public List<MemberDTO> getWarningMembers() {
 		List<MemberDTO> list = memberDao.selectWarningMembers();
-		System.out.println(list);
 		return list;
 	}
 

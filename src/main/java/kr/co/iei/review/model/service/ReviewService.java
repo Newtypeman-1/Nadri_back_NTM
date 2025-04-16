@@ -63,7 +63,6 @@ public class ReviewService {
 	            String filepath = image.getFilepath();
 	            boolean deleted = fileUtils.delete(savepath, filepath);
 	            if (!deleted) {
-	                System.out.println("파일 삭제 실패: " + savepath + filepath);
 	            }
 	        }
 		}
