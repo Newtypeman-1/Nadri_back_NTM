@@ -29,9 +29,7 @@ public class MypageService {
 
 	public Map bookmarkList(String nickname, String value) {
 		Map<String, Object> map = new HashMap<>();
-		System.out.println(nickname);
-		System.out.println(value);
-		map.put("nickname", nickname);
+		map.put("memberNickname", nickname);
 		map.put("value", value);
 		
 		List<PlaceInfoDTO> list = mypageDao.bookmarkList(map);
@@ -44,10 +42,11 @@ public class MypageService {
 	                place.setPlaceTitle(cleanedTitle);
 	            }
 	        }
-		map.put("list", list);
+		Map<String, Object> map2 = new HashMap<>();
+		map2.put("list", list);
 		System.out.println(list);
 		
-		return map;
+		return map2;
 	}
 
 	public Map plannerList(String nickname, String value) {
