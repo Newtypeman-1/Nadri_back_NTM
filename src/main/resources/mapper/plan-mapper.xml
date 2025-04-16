@@ -170,7 +170,7 @@
 	
 	<select id="selectPagedNearby" resultType="place">
 		SELECT * FROM (
-			SELECT ROWNUM AS rnum, inner.* FROM (
+			SELECT ROWNUM AS rnum, sub.* FROM (
 				SELECT
 					p.place_id, p.place_thumb, p.place_title, p.place_type_id, p.place_addr,
 					p.map_lat, p.map_lng,
@@ -209,7 +209,7 @@
 						ORDER BY p.place_title ASC
 					</when>
 				</choose>
-			) inner
+			) sub
 			WHERE ROWNUM &lt;= #{start} + #{size}
 		)
 		WHERE rnum &gt; #{start}
