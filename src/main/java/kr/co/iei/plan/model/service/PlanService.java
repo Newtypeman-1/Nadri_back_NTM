@@ -149,4 +149,10 @@ public class PlanService {
 		return planList;
 	}
 
+	@Transactional
+	public int deletePlan(int planNo, String memberNickname) {
+		int result = planDao.deletePlan(planNo, memberNickname);
+		return result;
+	}
+
 }

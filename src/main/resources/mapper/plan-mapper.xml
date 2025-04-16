@@ -295,4 +295,13 @@
 	  )
 	  WHERE rn &gt;= #{start}
 	</select>
+	
+	<delete id="deletePlan">
+		DELETE FROM trip_plan
+		WHERE
+			plan_no = #{planNo}
+			AND
+			member_nickname = #{memberNickname}
+	</delete>
+	
 </mapper>

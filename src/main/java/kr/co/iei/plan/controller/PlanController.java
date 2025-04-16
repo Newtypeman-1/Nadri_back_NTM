@@ -160,4 +160,11 @@ public class PlanController {
 		List<PlanDTO> planList = planService.selectPlanList(request);
 		return ResponseEntity.ok(planList);
 	}
+	
+	//플래너 삭제
+	@DeleteMapping(value="{planNo}/{memberNickname}")
+	public ResponseEntity<Integer> deletePlan(@PathVariable int planNo, @PathVariable String memberNickname){
+		int result = planService.deletePlan(planNo, memberNickname);
+		return ResponseEntity.ok(result);
+	}
 }

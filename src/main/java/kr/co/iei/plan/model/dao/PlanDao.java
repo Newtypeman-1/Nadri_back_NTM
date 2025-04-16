@@ -50,4 +50,6 @@ public interface PlanDao {
 	
 	List selectPlanList(PlanRequestDTO request);
 
+	int deletePlan(int planNo, String memberNickname);
+
 }
