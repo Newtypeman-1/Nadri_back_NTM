@@ -251,24 +251,32 @@
 	          ELSE 0 
 	        END AS bookmarked
 	      FROM trip_plan tp
-	      <!--  즐겨찾기 수 계산 -->
+	      <!-- 즐겨찾기 수 계산 -->
 	      LEFT JOIN (
 	        SELECT plan_no, COUNT(*) AS bookmark_count
 	        FROM plan_bookmark
 	        GROUP BY plan_no
 	      ) pb ON tp.plan_no = pb.plan_no
-	      
-	       <!-- 현재 로그인 사용자의 즐겨찾기 여부 -->
+	
+	      <!-- 현재 로그인 사용자의 즐겨찾기 여부 -->
 	      LEFT JOIN (
 	        SELECT plan_no, member_nickname
 	        FROM plan_bookmark
 	        WHERE member_nickname = #{loginNickname}
 	      ) pb2 ON tp.plan_no = pb2.plan_no
-	      
+	
 	      <where>
+	        <!-- memberNickname이 null이 아니면 내가 작성한 플랜만 조회, bookmarked가 1인 것만 조회 -->
 	        <if test="memberNickname != null">
-	          tp.member_nickname = #{memberNickname}
+	          AND pb2.member_nickname IS NOT NULL
 	        </if>
+	
+	        <!-- memberNickname이 null이면 내가 작성한 플랜을 제외하고 모든 플랜을 조회 -->
+	        <if test="memberNickname == null">
+	          1=1 <!-- 모든 플랜을 조회 -->
+	        </if>
+	
+	        <!-- 특정 plan_no 리스트로 필터링 (id가 있을 경우) -->
 	        <if test="id != null and id.length > 0">
 	          <if test="memberNickname != null">AND</if>
 	          tp.plan_no IN
@@ -277,7 +285,7 @@
 	          </foreach>
 	        </if>
 	      </where>
-	      
+	
 	      ORDER BY
 	      <choose>
 	        <when test="order == null">
@@ -290,6 +298,7 @@
 	          tp.plan_no DESC
 	        </otherwise>
 	      </choose>
+	
 	    ) inner_query
 	    WHERE ROWNUM &lt; #{end}
 	  )
