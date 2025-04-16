@@ -119,7 +119,7 @@ public class MemberController {
 	//마이페이지 회원정보 수정
 	@PatchMapping
 	public ResponseEntity<Integer> updateMember(@ModelAttribute MemberDTO member, @ModelAttribute MultipartFile uploadProfile){
-		int result = 1;
+		int result = 0;
 		if(uploadProfile != null) {
 			String savepath = root +"/profile/";
 			String filepath = fileUtils.upload(savepath, uploadProfile);
@@ -131,14 +131,14 @@ public class MemberController {
 					file.delete();
 				}
 			}
-		}
-		if(uploadProfile == null) {
+		}else {
 			if(member.getProfileImg() != null) {
 				//1. 기존 프로필 이미지 유지
 				result = memberService.updateMemberPresFile(member);
 			}else{	
-				//2. 기본으로 변경  -> 기존 파일 삭제
+				//2. 기본으로 변경  -> 기존 파일이 있으면 삭제
 				String filepath2 = memberService.updateMemberDelFile(member);
+				//기본 프로필로 돌린 경우
 				if(filepath2 != null) {
 					File file = new File(root+"/profile/"+filepath2);
 					if(file.exists()) {

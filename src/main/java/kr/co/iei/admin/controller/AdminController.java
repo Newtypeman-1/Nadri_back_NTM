@@ -28,6 +28,7 @@ import kr.co.iei.admin.model.service.AdminService;
 import kr.co.iei.member.model.dto.MemberDTO;
 import kr.co.iei.member.model.service.MemberService;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.place.model.dto.PlaceUpdateRequestDTO;
 import kr.co.iei.place.model.service.PlaceService;
 import kr.co.iei.review.model.dto.ReportDTO;
 import kr.co.iei.review.model.dto.ReviewDTO;
@@ -130,12 +131,13 @@ public class AdminController {
 		int result = adminService.updateReport(report);
 		return ResponseEntity.ok(result);
 	}
+	
 	//경고멤버 조회
-    @GetMapping("/member/list")
-    public ResponseEntity<List> getMemberList() {
-    	List<MemberDTO> list = memberService.getWarningMembers();
-    	return ResponseEntity.ok(list);
-    }
+	@GetMapping("/member/list")
+	public ResponseEntity<List<MemberDTO>> getMemberList(@RequestParam int status) {
+	    return ResponseEntity.ok(memberService.getMembersByStatus(status));
+	}
+	
     //레벨등급 조정
     @PatchMapping("/member/level")
     public ResponseEntity<Integer> updateMemberLevel(@RequestBody Map<String, Object> param) {
@@ -157,12 +159,34 @@ public class AdminController {
         placeService.deleteByImageNo(placeImageNo);
         return ResponseEntity.ok().build();
     }
-
     
-    //플레이스 상세페이지 수정
+    //플레이스 상세페이지 수정(관리자 계정 상세페이지)
     @PatchMapping("/place/update")
     public ResponseEntity<Integer> updatePlace(@RequestBody PlaceInfoDTO placeInfoDTO) {
     	int result = placeService.updatePlace(placeInfoDTO);
     	return ResponseEntity.ok(result);
+    }
+    
+    //사용자 상세페이지 수정 요청
+    @PostMapping("/place/request")
+    public ResponseEntity<String> requestUpdate(@RequestBody PlaceUpdateRequestDTO dto) {
+        placeService.saveRequest(dto);
+        return ResponseEntity.ok("요청이 접수되었습니다");
+    }
+    
+    //사용자 요청 셀렉트
+    @GetMapping("/place/request")
+    public ResponseEntity<List<PlaceUpdateRequestDTO>> getRequests(@RequestParam(required = false) Integer status) {
+        List<PlaceUpdateRequestDTO> list = placeService.selectRequestsByStatus(status);
+        return ResponseEntity.ok(list);
+    }
+
+    //관리자 정보수정 및 기록
+    @PatchMapping("/place/update/request")
+    public ResponseEntity<String> updatePlace(@RequestBody PlaceUpdateRequestDTO dto) {
+    	System.out.println(dto);
+        placeService.updateFromRequest(dto);
+        return ResponseEntity.ok("장소 정보가 수정되었습니다");
+
     }
 }

@@ -39,6 +39,7 @@
 	    SELECT ROWNUM AS rnum, c.*
 	    FROM (
 	      SELECT
+	      	p.place_type_id,
 	        p.place_id,
 	        p.place_thumb,
 	        p.area_code,
@@ -155,6 +156,7 @@
             SELECT ROWNUM AS rnum, data.*
             FROM (
                 SELECT
+   		            p.place_type_id,
                     p.place_id,
                     p.place_thumb,
                     p.area_code,
@@ -293,5 +295,55 @@
 	  WHERE place_id = #{placeId}
 	</update>
 	
+	<update id="updatePlaceOverview">
+		UPDATE place_info
+	    SET place_overview = #{overview}
+	    WHERE place_id = #{placeId}
+	</update>
+	
+	<select id="selectPlaceById" resultType="place">
+		select * from place_info
+	</select>
+	
+	<insert id="insertRequest" parameterType="updateRequest">
+	  INSERT INTO place_update_request (
+	    request_no, place_id, place_title, place_addr, place_tel, request_date
+	  ) VALUES (
+	    place_request_seq.NEXTVAL, #{placeId}, #{placeTitle}, #{placeAddr}, #{placeTel}, TO_CHAR(SYSDATE,'yyyy-mm-dd hh24:mi:ss')
+	  )
+	</insert>
+	
+	<!-- 사용자 요청 저장 -->
+	<update id="markRequestChecked" parameterType="int">
+	  UPDATE place_update_request SET is_checked = 'Y' WHERE request_no = #{requestNo}
+	</update>
+	
+	<!-- SELECT: 관리자용 요청 목록 -->
+	<select id="selectRequests" resultType="updateRequest">
+	  SELECT * FROM place_update_request
+	  <where>
+	    <if test="status != null">
+	      <choose>
+	        <when test="status == 0">
+	          is_checked = 'N'
+	        </when>
+	        <when test="status == 1">
+	          is_checked = 'Y'
+	        </when>
+	      </choose>
+	    </if>
+	  </where>
+	  ORDER BY request_no DESC
+	</select>
+	
+	<!-- 리퀘스트에 따른 플레이스 수정 -->
+	<update id="updatePlaceInfoByRequest" parameterType="updateRequest">
+	  UPDATE place_info
+	  SET place_title = #{placeTitle},
+	      place_addr = #{placeAddr},
+	      place_tel = #{placeTel}
+	  WHERE place_id = #{placeId}
+	</update>
+
 	
 </mapper>

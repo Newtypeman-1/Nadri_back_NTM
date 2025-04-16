@@ -15,6 +15,7 @@ import kr.co.iei.util.PageInfo;
 import kr.co.iei.place.model.dto.CategoryDTO;
 import kr.co.iei.place.model.dto.PlaceFilterRequest;
 import kr.co.iei.place.model.dto.PlaceInfoDTO;
+import kr.co.iei.place.model.dto.PlaceUpdateRequestDTO;
 import kr.co.iei.review.model.dto.PlaceImgDTO;
 import kr.co.iei.search.model.dto.SearchLogDTO;
 import kr.co.iei.util.PageInfoUtil;
@@ -155,6 +156,21 @@ public class PlaceService {
 	public int updatePlace(PlaceInfoDTO placeInfoDTO) {
 		int result =  placeDao.updatePlace(placeInfoDTO);
 		return result;
+	}
+	
+	@Transactional
+	public void saveRequest(PlaceUpdateRequestDTO dto) {
+	       placeDao.insertRequest(dto);
+	    }
+
+    @Transactional
+    public void updateFromRequest(PlaceUpdateRequestDTO dto) {
+        placeDao.updatePlaceInfoByRequest(dto);
+        placeDao.markRequestChecked(dto.getRequestNo());
+    }
+
+	public List<PlaceUpdateRequestDTO> selectRequestsByStatus(Integer status) {
+		return placeDao.selectRequests(status);
 	}
 
 
